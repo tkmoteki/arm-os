@@ -7,7 +7,7 @@
 #include "intr.h"
 
 
-#define INTC_DEFAULT_BASE 0x48200000
+#define INTC_DEFAULT_BASE     0x48200000
 #define INTCPS_SIR_IRQ        (INTC_DEFAULT_BASE + 0x40)
 #define INTCPS_CONTROL        (INTC_DEFAULT_BASE + 0x48)
 

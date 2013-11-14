@@ -2,10 +2,10 @@
 #define _SERIAL_DRIVER_H_INCLUDED_
 
 
-#define	UART3_BASE_ADR		0x49020000																			/*! UART3のポートアドレス(メモリマップアドレス) */
+#define UART3_BASE_ADR    0x49020000                                      /*! UART3のポートアドレス(メモリマップアドレス) */
 
-#define	UIIR			(UART3_BASE_ADR + 0x08)																	/*! まだ未使用 */
-#define UFCR UIIR																													/*! レジスタリネーム．送受信FIFOバッファ無効有効化とクリア制御 */
+#define UIIR      (UART3_BASE_ADR + 0x08)                                 /*! まだ未使用 */
+#define UFCR UIIR                                                         /*! レジスタリネーム．送受信FIFOバッファ無効有効化とクリア制御 */
 
 /* デバイス初期化 */
 void uart3_init(void);

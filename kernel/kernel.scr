@@ -12,33 +12,33 @@
 * -BE-32 : 従来のビッグエンディアンでリンク
 */
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm") /* 引数指定を行う場合は3つ記述 */
-OUTPUT_ARCH(arm) 																										/* 出力アーキテクチャの指定 */
+OUTPUT_ARCH(arm)                                                    /* 出力アーキテクチャの指定 */
 
 
 /* MEMORYディレクティブ(区画と大きさ) */
 MEMORY
 {
-	/* Boot ROM(使用しない(リマップされ,0x00000000に見える)) */
-	romall(rx)			: o = 0x40000000, l = 0x00100000 /* 1MB */
-	rom(rx)					: o = 0x40014020, l = 0x00100000 - 0x00014021
-	/* low vector */
-	romvector(r)		: o = 0x00014000, l = 0x00000020 
+  /* Boot ROM(使用しない(リマップされ,0x00000000に見える)) */
+  romall(rx)      : o = 0x40000000, l = 0x00100000 /* 1MB */
+  rom(rx)         : o = 0x40014020, l = 0x00100000 - 0x00014021
+  /* low vector */
+  romvector(r)    : o = 0x00014000, l = 0x00000020 
 
-	/* SRAM(64KB) */
-	sramall(rwx)		: o = 0x40200000, l = 0x00010000
-	sram(rwx)				: o = 0x40200000, l = 0x00010000 - 0x40
-	/* low vetor時の中継テーブル */
-	sramvector(rwx)	: o = 0x4020FFC4, l = 0x00000040 /* 64B */
+  /* SRAM(64KB) */
+  sramall(rwx)    : o = 0x40200000, l = 0x00010000
+  sram(rwx)       : o = 0x40200000, l = 0x00010000 - 0x40
+  /* low vetor時の中継テーブル */
+  sramvector(rwx) : o = 0x4020FFC4, l = 0x00000040 /* 64B */
 
-	/* DDRSDRAM (512MB) */
-	dramall(rwx)		: o = 0x80000000, l = 0x20000000
-	dram(rwx)				: o = 0x80200000, l = 0x10000000 - 0x200000
-	tskstack(rw)		: o = 0x90000000, l = 0x00002000
-	stack(rw)				: o = 0x90002000, l = 0x00001000
-	logbuffer(rwx)	: o = 0x90003000,	l = 0x00001000 /* temp(4096B) */
-	/* high vector */
-	dramvector(rwx)	: o = 0xFFFF0000, l = 0x00000040
-	
+  /* DDRSDRAM (512MB) */
+  dramall(rwx)    : o = 0x80000000, l = 0x20000000
+  dram(rwx)       : o = 0x80200000, l = 0x10000000 - 0x200000
+  tskstack(rw)    : o = 0x90000000, l = 0x00002000
+  stack(rw)       : o = 0x90002000, l = 0x00001000
+  logbuffer(rwx)  : o = 0x90003000, l = 0x00001000 /* temp(4096B) */
+  /* high vector */
+  dramvector(rwx) : o = 0xFFFF0000, l = 0x00000040
+  
 }
 
 /*
@@ -47,91 +47,91 @@ MEMORY
 */
 SECTIONS
 {
-	/* sramvectorセクションの定義(lowvector) */
-	.sramvector : {
-		_sramvector_start = . ;
-		*(.lowvector)
-		. = ALIGN(4); /* アライメント調整 */
-		_sramvector_end = .;
-	} > sramvector
+  /* sramvectorセクションの定義(lowvector) */
+  .sramvector : {
+    _sramvector_start = . ;
+    *(.lowvector)
+    . = ALIGN(4); /* アライメント調整 */
+    _sramvector_end = .;
+  } > sramvector
 
-	
-	/* textセクション定義 */
-	.text : {
-		_text_start = . ;
-		*(.text)
-		. = ALIGN(4); /* アライメント調整 */
-		_etext = . ;
-	} > dram
+  
+  /* textセクション定義 */
+  .text : {
+    _text_start = . ;
+    *(.text)
+    . = ALIGN(4); /* アライメント調整 */
+    _etext = . ;
+  } > dram
 
-	/* rodataセクション定義(定数値を格納するセクション) */
-	.rodata : {
-		_rodata_start = . ;
-		*(.strings)
-		*(.rodata)
-		*(.rodata.*)
-		_erodata = . ;
-	} > dram
+  /* rodataセクション定義(定数値を格納するセクション) */
+  .rodata : {
+    _rodata_start = . ;
+    *(.strings)
+    *(.rodata)
+    *(.rodata.*)
+    _erodata = . ;
+  } > dram
 
-	/* dataセクション定義 */
-	.data : {
-		_data_start = . ;
-		*(.data)
-		. = ALIGN(4); /* アライメント調整 */
-		_data_end = . ;
-		_edata = . ;
-	} > dram
+  /* dataセクション定義 */
+  .data : {
+    _data_start = . ;
+    *(.data)
+    . = ALIGN(4); /* アライメント調整 */
+    _data_end = . ;
+    _edata = . ;
+  } > dram
 
-	/* bssセクション定義 */
-	.bss : {
-		_bss_start = . ;
-		*(.bss)
-		*(COMMON)
-		. = ALIGN(4); /* アライメント調整 */
-		_bss_end = . ;
-		_ebss = . ;
-	} > dram
+  /* bssセクション定義 */
+  .bss : {
+    _bss_start = . ;
+    *(.bss)
+    *(COMMON)
+    . = ALIGN(4); /* アライメント調整 */
+    _bss_end = . ;
+    _ebss = . ;
+  } > dram
 
-	. = ALIGN(4); /* アライメント調整 */
-	_end = . ;
+  . = ALIGN(4); /* アライメント調整 */
+  _end = . ;
 
 /* endシンブルから下はheap領域とタスクスタックに使用 */
 
-	/* heapセクションの定義 */
-	.heap : {
-		_heap = . ;
-	} > dram
+  /* heapセクションの定義 */
+  .heap : {
+    _heap = . ;
+  } > dram
 
-	.schdul_area : {
-		_schdul_area = . ;
-	} > dram
+  .schdul_area : {
+    _schdul_area = . ;
+  } > dram
 
-	.tskstack : {
-		_tskstack = . ;
-	} > tskstack
+  .tskstack : {
+    _tskstack = . ;
+  } > tskstack
 
-	.stack : {
-		_sys_stack = . + 0x0000;
-		_svc_stack = . + 0x0fc0;
-		_irq_stack = . + 0x0fd0;
-		_fiq_stack = . + 0x0fe0;
-		_abt_stack = . + 0x0ff0;
-		_und_stack = . + 0x1000;
+  .stack : {
+    _sys_stack = . + 0x0000;
+    _svc_stack = . + 0x0fc0;
+    _irq_stack = . + 0x0fd0;
+    _fiq_stack = . + 0x0fe0;
+    _abt_stack = . + 0x0ff0;
+    _und_stack = . + 0x1000;
   } > stack
 
-	.logbuffer : {
-		_logbuffer_start = . ;
-		*(.logbuffer)
-		. = ALIGN(4); /* アライメント調整 */
-		_logbuffer_end = . ;
-	} > logbuffer
+  .logbuffer : {
+    _logbuffer_start = . ;
+    *(.logbuffer)
+    . = ALIGN(4); /* アライメント調整 */
+    _logbuffer_end = . ;
+  } > logbuffer
 
-	/* dramvectorセクションの定義(highvector) */
-	.dramvector : {
-		_dramvector_start = . ;
-		*(.highvector)
-		. = ALIGN(4); /* アライメント調整 */
-		_dramvector_end = .;
-	} > dramvector
+  /* dramvectorセクションの定義(highvector) */
+  .dramvector : {
+    _dramvector_start = . ;
+    *(.highvector)
+    . = ALIGN(4); /* アライメント調整 */
+    _dramvector_end = .;
+  } > dramvector
 
 }

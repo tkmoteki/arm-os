@@ -1,23 +1,23 @@
 #include "kernel/defines.h"
-#include "serial_driver.h"																								/*! arm cortex-A8 UARTシリアル定義 */
+#include "serial_driver.h"                                                /*! arm cortex-A8 UARTシリアル定義 */
 
 
-#define	UARTClock		(48000000 / 1)																				/*! クロック(Hz) */
-#define	UARTSpeed		115200																								/*! bps */
-#define	UARTDivisor		(UARTClock / (UARTSpeed * 16))
+#define UARTClock   (48000000 / 1)                                        /*! クロック(Hz) */
+#define UARTSpeed   115200                                                /*! bps */
+#define UARTDivisor   (UARTClock / (UARTSpeed * 16))
 
 
 /* 各レジスタ定義 */
-#define	URBR			(UART3_BASE_ADR + 0x00)																	/*! 文字の読み込み */
-#define UTHR URBR																													/*! レジスタリネーム．文字の書き込み */
-#define	UIER			(UART3_BASE_ADR + 0x04)																	/*! 割込みチェックと有効無効化の操作 */
-#define	ULCR			(UART3_BASE_ADR + 0x0c)																	/*! データーフォーマット設定 */
-#define	UMCR			(UART3_BASE_ADR + 0x10)
-#define	ULSR			(UART3_BASE_ADR + 0x14)																	/*! 送信FIFOバッファチェック */
-//#define	UMSR			(UART3_BASE_ADR + 0x18)	// R-
+#define URBR      (UART3_BASE_ADR + 0x00)                                 /*! 文字の読み込み */
+#define UTHR URBR                                                         /*! レジスタリネーム．文字の書き込み */
+#define UIER      (UART3_BASE_ADR + 0x04)                                 /*! 割込みチェックと有効無効化の操作 */
+#define ULCR      (UART3_BASE_ADR + 0x0c)                                 /*! データーフォーマット設定 */
+#define UMCR      (UART3_BASE_ADR + 0x10)
+#define ULSR      (UART3_BASE_ADR + 0x14)                                 /*! 送信FIFOバッファチェック */
+//#define UMSR      (UART3_BASE_ADR + 0x18) // R-
 
-#define UDLL URBR																													/*! レジスタリネーム．ボーレートの設定など */
-#define	UDLM			(UART3_BASE_ADR + 0x04)																	/*! ボーレートの設定など */
+#define UDLL URBR                                                         /*! レジスタリネーム．ボーレートの設定など */
+#define UDLM      (UART3_BASE_ADR + 0x04)                                 /*! ボーレートの設定など */
 
 
 
@@ -34,10 +34,10 @@ void uart3_init(void)
 
   REG8_WRITE(UIER, 0x00); /* 割込み無効化 */
 
-	/* 送信完了まで待機(FIFOバッファを使用しない) */
+  /* 送信完了まで待機(FIFOバッファを使用しない) */
   while (!(REG8_READ(ULSR) & 0x40)) {
-		;
-	}
+    ;
+  }
   REG8_WRITE(ULCR, 0x80); /* 分周比レジスタ(操作レジスタ)の変更 */
   REG8_WRITE(UDLM, 0xff); /* (分周比0の防止する */
   REG8_WRITE(UDLL, UARTDivisor & 0xff); /* ボーレート(115200bpsの設定) */
@@ -50,9 +50,9 @@ void uart3_init(void)
 
 
 /*!
-* 送信可能かチェック
-* (返却値) :
-*/
+ * 送信可能かチェック
+ * (返却値) :
+ */
 static int is_send_serial_enable(void)
 {
   return REG8_READ(ULSR) & 0x20;
@@ -60,15 +60,15 @@ static int is_send_serial_enable(void)
 
 
 /*!
-* 1文字送信
-* c:
-*/
+ * 1文字送信
+ * c:
+ */
 void send_serial_byte(unsigned char c)
 {
   /* 送信完了まで待機(FIFOバッファを使用しない) */
   while (!is_send_serial_enable()) {
-		;
-	}
+    ;
+  }
 
   /* 送信開始 */
   REG8_WRITE(UTHR, c);
@@ -76,9 +76,9 @@ void send_serial_byte(unsigned char c)
 
 
 /*!
-* 受信可能かチェック
-* (返却値) :
-*/
+ * 受信可能かチェック
+ * (返却値) :
+ */
 static int is_recv_serial_enable(void)
 {
   return REG8_READ(ULSR) & 0x1f;
@@ -86,9 +86,9 @@ static int is_recv_serial_enable(void)
 
 
 /*!
-* １文字受信
-* (返却値) :
-*/
+ * １文字受信
+ * (返却値) :
+ */
 unsigned char recv_serial_byte(void)
 {
   unsigned char s, c;
@@ -97,16 +97,16 @@ unsigned char recv_serial_byte(void)
 
     /* 受信完了まで待機(FIFOバッファを使用しない) */
     while (!(s = is_recv_serial_enable())) {
-			;
-		}
+      ;
+    }
 
     /* 受信終了 */
     c = REG8_READ(URBR);
 
     /* 受信エラーチェック */
     if (!(s & 0x1e)) {
-			break;
-		}
+      break;
+    }
   }
 
   return c;
@@ -114,9 +114,9 @@ unsigned char recv_serial_byte(void)
 
 
 /*
-* 送信割込みが有効か検査
-* (返却値)
-*/
+ * 送信割込みが有効か検査
+ * (返却値)
+ */
 int serial_intr_is_send_enable(void)
 {
   return REG8_READ(UIER) & 0x02;
@@ -138,9 +138,9 @@ void serial_intr_send_disable(void)
 
 
 /* 
-* 受信割込みが有効か検査
-* (返却値)
-*/
+ * 受信割込みが有効か検査
+ * (返却値)
+ */
 int serial_intr_is_recv_enable(void)
 {
   return REG8_READ(UIER) & 0x01;

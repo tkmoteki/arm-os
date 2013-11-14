@@ -32,9 +32,9 @@ static mem_pool pool[] = {
 
 
 /*!
-* メモリプールの初期化
-* *p : 指定されたメモリプールポインタ
-*/
+ * メモリプールの初期化
+ * *p : 指定されたメモリプールポインタ
+ */
 static void mem_init_pool(mem_pool *p)
 {
   int i;
@@ -68,24 +68,24 @@ void mem_init(void)
 }
 
 /*!
-* 動的メモリの獲得
-* size : 要求サイズ
-*/
+ * 動的メモリの獲得
+ * size : 要求サイズ
+ */
 void* get_mpf_isr(int size)
 {
   int i;
   mem_block *mp;
   mem_pool *p;
 
-	DEBUG_OUTVLE(size, 0);
-	DEBUG_OUTMSG(" memory size.\n");
+  DEBUG_OUTVLE(size, 0);
+  DEBUG_OUTMSG(" memory size.\n");
   for (i = 0; i < MEMORY_AREA_NUM; i++) {
     p = &pool[i];
     if (size <= p->size - sizeof(mem_block)) {
       if (p->free == NULL) { /* 解放済み領域が無い(メモリブロック不足) */
-				KERNEL_OUTMSG("error: get_mpf_isr()1 \n");
-				down_system();
-				return NULL;
+        KERNEL_OUTMSG("error: get_mpf_isr()1 \n");
+        down_system();
+        return NULL;
       }
       /* 解放済みリンクリストから領域を取得する */
       mp = p->free;
@@ -101,16 +101,16 @@ void* get_mpf_isr(int size)
   }
 
   /* 指定されたサイズの領域を格納できるメモリプールが無い */
-	KERNEL_OUTMSG("error: get_mpf_isr2() \n");
+  KERNEL_OUTMSG("error: get_mpf_isr2() \n");
   down_system();
   
   return NULL;
 }
 
 /*! 
-* メモリの解放
-* *mem : 解放ブロック先頭ポインタ
-*/
+ * メモリの解放
+ * *mem : 解放ブロック先頭ポインタ
+ */
 void rel_mpf_isr(void *mem)
 {
   int i;
@@ -130,6 +130,6 @@ void rel_mpf_isr(void *mem)
     }
   }
 
-	KERNEL_OUTMSG("error: rel_mpf_isr() \n");
+  KERNEL_OUTMSG("error: rel_mpf_isr() \n");
   down_system();
 }

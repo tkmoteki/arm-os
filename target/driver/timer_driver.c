@@ -3,18 +3,18 @@
 
 
 /* Timer Instance Summary(汎用タイマ1〜11のマップアドレス) */
-#define GPT1_BASE_ADR           0x48318000 								/* General Purpose Timer1(汎用タイマ1のマップアドレス) Module */
-#define GPT2_BASE_ADR           0x49032000 								/* General Purpose Timer2(汎用タイマ2のマップアドレス) Module */
-#define GPT3_BASE_ADR           0x49034000 								/* General Purpose Timer3(汎用タイマ3のマップアドレス) Module */
-#define GPT4_BASE_ADR           0x49036000 								/* General Purpose Timer4(汎用タイマ4のマップアドレス) Module */
-#define GPT5_BASE_ADR           0x49038000 								/* General Purpose Timer5(汎用タイマ5のマップアドレス) Module */
-#define GPT6_BASE_ADR           0x4903A000 								/* General Purpose Timer6(汎用タイマ6のマップアドレス) Module */
-#define GPT7_BASE_ADR           0x4903C000 								/* General Purpose Timer7(汎用タイマ7のマップアドレス) Module */
-#define GPT8_BASE_ADR           0x4903E000 								/* General Purpose Timer8(汎用タイマ8のマップアドレス) Module */
-#define GPT9_BASE_ADR           0x49040000 								/* General Purpose Timer9(汎用タイマ9のマップアドレス) Module */
+#define GPT1_BASE_ADR           0x48318000                /* General Purpose Timer1(汎用タイマ1のマップアドレス) Module */
+#define GPT2_BASE_ADR           0x49032000                /* General Purpose Timer2(汎用タイマ2のマップアドレス) Module */
+#define GPT3_BASE_ADR           0x49034000                /* General Purpose Timer3(汎用タイマ3のマップアドレス) Module */
+#define GPT4_BASE_ADR           0x49036000                /* General Purpose Timer4(汎用タイマ4のマップアドレス) Module */
+#define GPT5_BASE_ADR           0x49038000                /* General Purpose Timer5(汎用タイマ5のマップアドレス) Module */
+#define GPT6_BASE_ADR           0x4903A000                /* General Purpose Timer6(汎用タイマ6のマップアドレス) Module */
+#define GPT7_BASE_ADR           0x4903C000                /* General Purpose Timer7(汎用タイマ7のマップアドレス) Module */
+#define GPT8_BASE_ADR           0x4903E000                /* General Purpose Timer8(汎用タイマ8のマップアドレス) Module */
+#define GPT9_BASE_ADR           0x49040000                /* General Purpose Timer9(汎用タイマ9のマップアドレス) Module */
 /* 以下のGPT10とGPT11を使用する場合，初期化を行う */
-#define GPT10_BASE_ADR          0x48086000 								/* General Purpose Timer10(汎用タイマ10のマップアドレス) Module */
-#define GPT11_BASE_ADR          0x48088000 								/* General Purpose Timer11(汎用タイマ11のマップアドレス) Module */
+#define GPT10_BASE_ADR          0x48086000                /* General Purpose Timer10(汎用タイマ10のマップアドレス) Module */
+#define GPT11_BASE_ADR          0x48088000                /* General Purpose Timer11(汎用タイマ11のマップアドレス) Module */
 
 
 /* General Purpose Timer1(汎用タイマ1)の各レジスタ定義 */
@@ -251,110 +251,110 @@ static BOOL is_running_timer(int index);
 /* ~タイマ周りのレジスタ定義~ */
 /*! This register controls optional features specific to the timer functionality */
 static unsigned long gpt_tclr[NUM_TIMER] = {
-																								GPT1_TCLR,
-					     																	GPT2_TCLR,
-					     																	GPT3_TCLR,
-					     																	GPT4_TCLR,
-					     																	GPT5_TCLR,
-					    																	GPT6_TCLR,
-					     																	GPT7_TCLR,
-					     																	GPT8_TCLR,
-					     																	GPT9_TCLR,
-					     																	GPT10_TCLR,
-					     																	GPT11_TCLR
-																							};
+  GPT1_TCLR,
+  GPT2_TCLR,
+  GPT3_TCLR,
+  GPT4_TCLR,
+  GPT5_TCLR,
+  GPT6_TCLR,
+  GPT7_TCLR,
+  GPT8_TCLR,
+  GPT9_TCLR,
+  GPT10_TCLR,
+  GPT11_TCLR
+};
 
 /*! This register holds the timer load values. */
 static unsigned long gpt_tldr[NUM_TIMER] = {
-																								GPT1_TLDR,
-					     																	GPT2_TLDR,
-					     																	GPT3_TLDR,
-					    																	GPT4_TLDR,
-					     																	GPT5_TLDR,
-					     																	GPT6_TLDR,
-					     																	GPT7_TLDR,
-					     																	GPT8_TLDR,
-					     																	GPT9_TLDR,
-					     																	GPT10_TLDR,
-					     																	GPT11_TLDR
-																							};
+  GPT1_TLDR,
+  GPT2_TLDR,
+  GPT3_TLDR,
+  GPT4_TLDR,
+  GPT5_TLDR,
+  GPT6_TLDR,
+  GPT7_TLDR,
+  GPT8_TLDR,
+  GPT9_TLDR,
+  GPT10_TLDR,
+  GPT11_TLDR
+};
 
 /*! This register  triggers a counter reload of timer by writing any value in it. */
 static unsigned long gpt_ttgr[NUM_TIMER] = {
-																								GPT1_TTGR,
-					     																	GPT2_TTGR,
-					     																	GPT3_TTGR,
-					     																	GPT4_TTGR,
-					     																	GPT5_TTGR,
-					     																	GPT6_TTGR,
-					     																	GPT7_TTGR,
-					     																	GPT8_TTGR,
-					     																	GPT9_TTGR,
-					     																	GPT10_TTGR,
-					     																	GPT11_TTGR
-																							};
+  GPT1_TTGR,
+  GPT2_TTGR,
+  GPT3_TTGR,
+  GPT4_TTGR,
+  GPT5_TTGR,
+  GPT6_TTGR,
+  GPT7_TTGR,
+  GPT8_TTGR,
+  GPT9_TTGR,
+  GPT10_TTGR,
+  GPT11_TTGR
+};
 
 /*! This register holds the vlaue of the internal counter. */
 static unsigned long gpt_tcrr[NUM_TIMER] = {
-																								GPT1_TCRR,
-					     																	GPT2_TCRR,
-					     																	GPT3_TCRR,
-					     																	GPT4_TCRR,
-					     																	GPT5_TCRR,
-					     																	GPT6_TCRR,
-					     																	GPT7_TCRR,
-					     																	GPT8_TCRR,
-					     																	GPT9_TCRR,
-					     																	GPT10_TCRR,
-					     																	GPT11_TCRR
-																							};
+  GPT1_TCRR,
+  GPT2_TCRR,
+  GPT3_TCRR,
+  GPT4_TCRR,
+  GPT5_TCRR,
+  GPT6_TCRR,
+  GPT7_TCRR,
+  GPT8_TCRR,
+  GPT9_TCRR,
+  GPT10_TCRR,
+  GPT11_TCRR
+};
 
 /*! This register shows which interrput events are pending inside the module. */
 static unsigned long gpt_tisr[NUM_TIMER] = {
-																								GPT1_TISR,
-					     																	GPT2_TISR,
-					    																	GPT3_TISR,
-					     																	GPT4_TISR,
-					     																	GPT5_TISR,
-					     																	GPT6_TISR,
-					     																	GPT7_TISR,
-					     																	GPT8_TISR,
-					     																	GPT9_TISR,
-					     																	GPT10_TISR,
-					     																	GPT11_TISR
-																							};
+  GPT1_TISR,
+  GPT2_TISR,
+  GPT3_TISR,
+  GPT4_TISR,
+  GPT5_TISR,
+  GPT6_TISR,
+  GPT7_TISR,
+  GPT8_TISR,
+  GPT9_TISR,
+  GPT10_TISR,
+  GPT11_TISR
+};
 
 /*! This register controls (enable/disable) the interrput events. */
 static unsigned long gpt_tier[NUM_TIMER] = {
-																								GPT1_TIER,
-					     																	GPT2_TIER,
-					     																	GPT3_TIER,
-					     																	GPT4_TIER,
-					     																	GPT5_TIER,
-					     																	GPT6_TIER,
-					     																	GPT7_TIER,
-					     																	GPT8_TIER,
-					     																	GPT9_TIER,
-					     																	GPT10_TIER,
-					     																	GPT11_TIER
-																							};
+  GPT1_TIER,
+  GPT2_TIER,
+  GPT3_TIER,
+  GPT4_TIER,
+  GPT5_TIER,
+  GPT6_TIER,
+  GPT7_TIER,
+  GPT8_TIER,
+  GPT9_TIER,
+  GPT10_TIER,
+  GPT11_TIER
+};
 
 /*
  * 汎用タイマのtmarは本OSでは使用しない.
  * 使用するならば，以下のように定義する
-static unsigned long gpt_tmar[NUM_TIMER] = {
-																								GPT1_TMAR,
-					     																	GPT2_TMAR,
-					     																	GPT3_TMAR,
-					     																	GPT4_TMAR,
-					     																	GPT5_TMAR,
-					     																	GPT6_TMAR,
-					     																	GPT7_TMAR,
-					     																	GPT8_TMAR,
-					     																	GPT9_TMAR,
-					     																	GPT10_TMAR,
-					     																	GPT11_TMAR
-																							};
+ static unsigned long gpt_tmar[NUM_TIMER] = {
+ GPT1_TMAR,
+ GPT2_TMAR,
+ GPT3_TMAR,
+ GPT4_TMAR,
+ GPT5_TMAR,
+ GPT6_TMAR,
+ GPT7_TMAR,
+ GPT8_TMAR,
+ GPT9_TMAR,
+ GPT10_TMAR,
+ GPT11_TMAR
+ };
 */
 
 
@@ -369,21 +369,21 @@ static unsigned long gpt_tmar[NUM_TIMER] = {
  */
 void start_cycle_timer(int index, int usec)
 {
-	/* タイマ初期設定 */
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x20); /* プリスケーラ(分周器)の無効化  */
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) | 0x2); /* 周期タイマとして使用する事を設定 */
+  /* タイマ初期設定 */
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x20); /* プリスケーラ(分周器)の無効化  */
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) | 0x2); /* 周期タイマとして使用する事を設定 */
 
-	/*
-	 * TLDRレジスタに初期値を書き込み，TTGRレジスタに任意の値(1)を書きこむ．
-	 * この方式だと，タイマーが満了した時に，TLDRの値が自動的にTCRRレジスタにコピーされる
-	 */
-	REG32_WRITE(gpt_tldr[index], 0xFFFFFFFF - 13 * usec); /* タイマ値のセット */
-	REG32_WRITE(gpt_ttgr[index], 0x1); /* TCRRレジスタにTLDRレジスタがコピーされる */
+  /*
+   * TLDRレジスタに初期値を書き込み，TTGRレジスタに任意の値(1)を書きこむ．
+   * この方式だと，タイマーが満了した時に，TLDRの値が自動的にTCRRレジスタにコピーされる
+   */
+  REG32_WRITE(gpt_tldr[index], 0xFFFFFFFF - 13 * usec); /* タイマ値のセット */
+  REG32_WRITE(gpt_ttgr[index], 0x1); /* TCRRレジスタにTLDRレジスタがコピーされる */
 
-	REG32_WRITE(gpt_tisr[index], OVF_IT_BIT); /* 念のため，割込みを無効化しておく */
-	REG32_WRITE(gpt_tier[index], OVF_IT_BIT); /* タイマのイベントをオーバーフロー割込みを有効化 */
+  REG32_WRITE(gpt_tisr[index], OVF_IT_BIT); /* 念のため，割込みを無効化しておく */
+  REG32_WRITE(gpt_tier[index], OVF_IT_BIT); /* タイマのイベントをオーバーフロー割込みを有効化 */
 
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) | 0x1); /* タイマカウントスタート */
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) | 0x1); /* タイマカウントスタート */
 }
 
 
@@ -398,23 +398,23 @@ void start_cycle_timer(int index, int usec)
  */
 void start_oneshot_timer(int index, int usec)
 {
-	/* タイマ初期設定 */
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x20); /* プリスケーラ(分周器)の無効化  */
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x2); /* ワンショットタイマとして使用する事を設定 */
+  /* タイマ初期設定 */
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x20); /* プリスケーラ(分周器)の無効化  */
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x2); /* ワンショットタイマとして使用する事を設定 */
 
-	/*
-	 * TLDRレジスタに初期値を書き込み，TTGRレジスタに任意の値(1)を書きこむ．
-	 * この方式だと，タイマーが満了した時に，TLDRの値が自動的にTCRRレジスタにコピーされる
-	 */
-	REG32_WRITE(gpt_tldr[index], 0xFFFFFFFF - 13 * usec); /* タイマ値のセット */
-	REG32_WRITE(gpt_ttgr[index], 0x1); /* TCRRレジスタにTLDRレジスタがコピーされる */
+  /*
+   * TLDRレジスタに初期値を書き込み，TTGRレジスタに任意の値(1)を書きこむ．
+   * この方式だと，タイマーが満了した時に，TLDRの値が自動的にTCRRレジスタにコピーされる
+   */
+  REG32_WRITE(gpt_tldr[index], 0xFFFFFFFF - 13 * usec); /* タイマ値のセット */
+  REG32_WRITE(gpt_ttgr[index], 0x1); /* TCRRレジスタにTLDRレジスタがコピーされる */
 
-	REG32_WRITE(gpt_tisr[index], OVF_IT_BIT); /* 念のため，割込みを無効化しておく */
-	REG32_WRITE(gpt_tier[index], OVF_IT_BIT); /* タイマのイベントをオーバーフロー割込みを有効化(コンペアマッチとキャプチャは無効にする) */
+  REG32_WRITE(gpt_tisr[index], OVF_IT_BIT); /* 念のため，割込みを無効化しておく */
+  REG32_WRITE(gpt_tier[index], OVF_IT_BIT); /* タイマのイベントをオーバーフロー割込みを有効化(コンペアマッチとキャプチャは無効にする) */
 
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) | 0x1); /* タイマカウントスタート */
-	
-	//stop_timer(index); /* タイマカウントの停止 */
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) | 0x1); /* タイマカウントスタート */
+  
+  //stop_timer(index); /* タイマカウントの停止 */
 }
 
 
@@ -424,7 +424,7 @@ void start_oneshot_timer(int index, int usec)
  */
 void expire_cycle_timer(int index)
 {
-	REG32_WRITE(gpt_tisr[index],OVF_IT_BIT);
+  REG32_WRITE(gpt_tisr[index],OVF_IT_BIT);
 }
 
 
@@ -434,7 +434,7 @@ void expire_cycle_timer(int index)
  */
 void expire_oneshot_timer(int index)
 {
-	REG32_WRITE(gpt_tisr[index], REG32_READ(gpt_tisr[index]));
+  REG32_WRITE(gpt_tisr[index], REG32_READ(gpt_tisr[index]));
 }
 
 
@@ -444,7 +444,7 @@ void expire_oneshot_timer(int index)
  */
 void stop_timer(int index)
 {
-	REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x01);
+  REG32_WRITE(gpt_tclr[index], REG32_READ(gpt_tclr[index]) & ~0x01);
 }
 
 
@@ -454,9 +454,9 @@ void stop_timer(int index)
  */
 void cancel_timer(int index)
 {
-	stop_timer(index);
+  stop_timer(index);
 
-	REG32_WRITE(gpt_tier[index], ~OVF_IT_BIT); /* タイマのイベントをオーバーフロー割込みを無効化 */
+  REG32_WRITE(gpt_tier[index], ~OVF_IT_BIT); /* タイマのイベントをオーバーフロー割込みを無効化 */
 }
 
 
@@ -465,15 +465,15 @@ void cancel_timer(int index)
  * index : タイマ資源番号
  * (返却値)TRUE : タイマ動作中
  * (返却値)FALSE : タイマ未動作
-*/
+ */
 static BOOL is_running_timer(int index)
 {
-	if (REG32_READ(gpt_tier[index]) && OVF_IT_BIT) {
-		return TRUE;
-	}
-	else {
-		return FALSE;
-	}
+  if (REG32_READ(gpt_tier[index]) && OVF_IT_BIT) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
 }
 
 
@@ -485,13 +485,13 @@ static BOOL is_running_timer(int index)
  */
 ER_VLE get_timervalue(int index)
 {
-	int usec;
-	 usec = (0xFFFFFFFF - REG32_READ(gpt_tcrr[index])) / 13; /* 逆算 */
+  int usec;
+  usec = (0xFFFFFFFF - REG32_READ(gpt_tcrr[index])) / 13; /* 逆算 */
 
-	if (is_running_timer(index)) {
-		return (ER_VLE)usec;
-	}
-	else {
-		return E_NG;
-	}
+  if (is_running_timer(index)) {
+    return (ER_VLE)usec;
+  }
+  else {
+    return E_NG;
+  }
 }

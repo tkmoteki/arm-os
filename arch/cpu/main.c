@@ -37,46 +37,46 @@ void uart_handler(void)
    * シリアル受信割込み : 0x2
    * タイムアウト割込み(シリアル受信割込みを有効化すると同時に有効化される) : 0x6
    */
-	it_type = (REG8_READ(UIIR) & 0x3E) >> 1;
+  it_type = (REG8_READ(UIIR) & 0x3E) >> 1;
 
   if (it_type == 2 || it_type == 6) {
 
-		c = getc(); /* 受信FIFOからデータを読み出す事によって，割込み要因をクリア */
+    c = getc(); /* 受信FIFOからデータを読み出す事によって，割込み要因をクリア */
 
-		if (c != '\n') {
-			buf[len++] = c;
+    if (c != '\n') {
+      buf[len++] = c;
     }
     else {
-			buf[len++] = '\0';
-			/* echoコマンドの場合 */
-    	if (!strncmp(buf, "echo ", 5)) {
-      	echo_command(buf); /* echoコマンド(標準出力にテキストを出力する)呼び出し */
-    	}
-			/* helpコマンドの場合 */
-   		else if (!strncmp(buf, "help", 4)) {
-     		help_command(&buf[4]); /* helpコマンド呼び出し */
-    	}
+      buf[len++] = '\0';
+      /* echoコマンドの場合 */
+      if (!strncmp(buf, "echo ", 5)) {
+        echo_command(buf); /* echoコマンド(標準出力にテキストを出力する)呼び出し */
+      }
+      /* helpコマンドの場合 */
+      else if (!strncmp(buf, "help", 4)) {
+        help_command(&buf[4]); /* helpコマンド呼び出し */
+      }
 #ifdef TSK_LIBRARY
-			/* runコマンドの場合 */
-			else if (!strncmp(buf, "run", 3)) {
-				run_command(&buf[3]); /* runコマンド(タスクセットの起動)呼び出し */
-			}
+      /* runコマンドの場合 */
+      else if (!strncmp(buf, "run", 3)) {
+        run_command(&buf[3]); /* runコマンド(タスクセットの起動)呼び出し */
+      }
 #endif
-			/* sendlogの場合 */
-			else if (!strncmp(buf, "sendlog", 7)) {
-      	sendlog_command(); /* sendlogコマンド(xmodem送信モード)呼び出し */
-			}
-			/* 本システムに存在しないコマンド */
-    	else {
-      	puts("command unknown.\n");
-    	}
-			puts("> ");
-			len = 0;
+      /* sendlogの場合 */
+      else if (!strncmp(buf, "sendlog", 7)) {
+        sendlog_command(); /* sendlogコマンド(xmodem送信モード)呼び出し */
+      }
+      /* 本システムに存在しないコマンド */
+      else {
+        puts("command unknown.\n");
+      }
+      puts("> ");
+      len = 0;
     }
   }
-	else {
-		DEBUG_OUTMSG("not uart3 handler.\n");
-	}
+  else {
+    DEBUG_OUTMSG("not uart3 handler.\n");
+  }
 }
 
 

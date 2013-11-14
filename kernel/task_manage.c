@@ -1,48 +1,50 @@
-/**********************************************************************************
- * ・task.cにはタスク管理機能割込みサービスルーチン，タスク付属同期機能の								*
- *   割込みサービスルーチンの順に各割込みサービスルーチン及び，主にそれらが使用する			*
- *   内部関数が記述されている.																												*
- * -タスク管理機能																																	*
- *  ・実装しているシステムコールcre_tsk():タスク生成，del_tsk():タスク排除，		*
- *    sta_tsk():タスク起動，ext_tsk():自タスクの終了，													*
- *    exd_tsk():自タスクの終了と排除，ter_tsk():タスクの強制終了，							*
- *    chg_pri():タスクの優先度変更，get_pri():タスクの優先度参照となる.					*
- *  ・acre_tsk()は静的と動的を組み合わせた方法である.返却値にTCBのポインタを返却し，	*
- *    sta_tsk()などタスクIDを指定するものはすべて返却されたポインタを使用する.				*
- *    acre_tsk()の属性(高級言語インターフェースやアセンブリ言語インターフェース)			*
- *    はよくわからないので，指定していない.またacre_tsk()はタスク生成を行うだけで，	*
- *    起動はしない(そのような属性を用意していない).よって起動するときは必ず，						*
- *    sta_tsk()を発行する.																												*
- *  ・システムコール処理(ter_tsk():タスクの強制終了)																*
- *    自タスク以外のタスクを強制終了する(実行可能状態と待ち状態にあるもの)							*
- *    実行可能状態にあるものはレディーキューから抜き取る処理，													*
- *    待ち状態にあるものは待ち要件を調べ該当の待ちキューから抜き取る										*
- *    強制終了なので，待ち状態に入っているシステムコールの返却値は書き換えない						*
- * -タスク付属同期機能																																*
- *  ・実装しているシステムコールはslp_tsk():起床待ち，															*
- *    tslp_tsk():起床待ち(タイムアウトあり)，wup_tsk():タスクの起床，						*
- *    rel_wai():待ち状態強制解除，dly_tsk():自タスクの遅延となる.								*
- *  ・wup_tsk()について																													*
- *		起動要求キューイング機能はない.また任意の待ち要因がある時は起床できない						*
- * 	E_ILUSEの返却値はμITRON4.0にはないものである.act_tsk()との整合性を考えて					*
- *		自タスクの起床もできるとあるが，よくわからんのでE_ILUSEとした.										*
- *   また，何らかの待ち要因を持っている時はwup_tsk()はできない													*
- *   (ただし，タイムアウトスリープは起床できる.このときのtslp_tsk()の								*
- *   返却値はE_OKとなる)																														*
- *  ・違うシステムコールで前に呼んだ待ちになるシステムコールの返却値を書き換える方法			*
- *   (代表的なものにrel_wai)																											*
- *   待ち状態強制解除を行った場合，μITRON4.0ではE_RLWAIを待ち状態に入った							*
- *   システムコールの返却値として返すとある.これはTCBのwait_infoにwait_erというメンバ		*
- *   を追加し，待ち強制解除(rel_wai)された時，このメンバのポインタを経由して，				*
- *   書き換えることで可能となる.																											*
- *   この書き換える方法自体はrel_waiだけでなく，tslp_tskなど待ち状態となる				*
- *   すべてのシステムコールに適用している.																						*
- *  ・dly_tsk()																																	*
- *   μITRON仕様にはtslp_tsk()とdly_tsk()の違いは待ちの間にwup_tsk()が発行		*
- *   できるかできないかで，dly_tsk()はできない.また0がmsecに指定された場合は				*
- *   ポーリングとならずに，最初のタイムスティックで待ち解除を行う.											*
- *   これはあんま意味がないので，実装しない.																					*
- ***********************************************************************************/
+/*
+ * ・task.cにはタスク管理機能割込みサービスルーチン，タスク付属同期機能の
+ *   割込みサービスルーチンの順に各割込みサービスルーチン及び，主にそれらが使用する
+ *   内部関数が記述されている
+ * -タスク管理機能
+ *  ・実装しているシステムコールcre_tsk():タスク生成，del_tsk():タスク排除，
+ *    sta_tsk():タスク起動，ext_tsk():自タスクの終了,
+ *    exd_tsk():自タスクの終了と排除，ter_tsk():タスクの強制終了.
+ *    chg_pri():タスクの優先度変更，get_pri():タスクの優先度参照となる.
+ *
+ *  ・acre_tsk()は静的と動的を組み合わせた方法である.返却値にTCBのポインタを返却し,
+ *    sta_tsk()などタスクIDを指定するものはすべて返却されたポインタを使用する.
+ *    acre_tsk()の属性(高級言語インターフェースやアセンブリ言語インターフェース)
+ *    はよくわからないので，指定していない.またacre_tsk()はタスク生成を行うだけで,
+ *    起動はしない(そのような属性を用意していない).よって起動するときは必ず,
+ *    sta_tsk()を発行する.
+ *
+ *  ・システムコール処理(ter_tsk():タスクの強制終了)
+ *    自タスク以外のタスクを強制終了する(実行可能状態と待ち状態にあるもの)
+ *    実行可能状態にあるものはレディーキューから抜き取る処理,
+ *    待ち状態にあるものは待ち要件を調べ該当の待ちキューから抜き取る
+ *    強制終了なので，待ち状態に入っているシステムコールの返却値は書き換えない
+ * -タスク付属同期機能
+ *  ・実装しているシステムコールはslp_tsk():起床待ち,
+ *    tslp_tsk():起床待ち(タイムアウトあり)，wup_tsk():タスクの起床，
+ *    rel_wai():待ち状態強制解除，dly_tsk():自タスクの遅延となる.
+ *  ・wup_tsk()について
+ *    起動要求キューイング機能はない.また任意の待ち要因がある時は起床できない
+ *  E_ILUSEの返却値はμITRON4.0にはないものである.act_tsk()との整合性を考えて
+ *    自タスクの起床もできるとあるが，よくわからんのでE_ILUSEとした.  
+ *   また，何らかの待ち要因を持っている時はwup_tsk()はできない
+ *   (ただし，タイムアウトスリープは起床できる.このときのtslp_tsk()の
+ *   返却値はE_OKとなる)
+ *  ・違うシステムコールで前に呼んだ待ちになるシステムコールの返却値を書き換える方法
+ *   (代表的なものにrel_wai)
+ *   待ち状態強制解除を行った場合，μITRON4.0ではE_RLWAIを待ち状態に入った
+ *   システムコールの返却値として返すとある.これはTCBのwait_infoにwait_erというメンバ
+ *   を追加し，待ち強制解除(rel_wai)された時，このメンバのポインタを経由して，
+ *   書き換えることで可能となる.
+ *   この書き換える方法自体はrel_waiだけでなく，tslp_tskなど待ち状態となる
+ *   すべてのシステムコールに適用している.
+ *  ・dly_tsk()
+ *   μITRON仕様にはtslp_tsk()とdly_tsk()の違いは待ちの間にwup_tsk()が発行
+ *   できるかできないかで，dly_tsk()はできない.また0がmsecに指定された場合は
+ *   ポーリングとならずに，最初のタイムスティックで待ち解除を行う.
+ *   これはあんま意味がないので，実装しない.                                          *
+ */
 
 #include "arch/cpu/cpu_cntrl.h"
 #include "kernel.h"
@@ -97,11 +99,11 @@ static void chg_pri_syscall_isr(TCB *tcb, int tskpri);
  */
 ER starup_tsk_init(void)
 {
-	mg_tsk_info.counter = 0;
-	mg_tsk_info.power_count = 0;
-	mg_tsk_info.tskid_num = TASK_ID_NUM;
+  mg_tsk_info.counter = 0;
+  mg_tsk_info.power_count = 0;
+  mg_tsk_info.tskid_num = TASK_ID_NUM;
 
-	return tsk_init(); /* task ID変換テーブルの領域確保と初期化 */
+  return tsk_init(); /* task ID変換テーブルの領域確保と初期化 */
 }
 
 
@@ -115,11 +117,11 @@ ER tsk_init(void)
 {
   int tskids, i;
   TCB *tcb;
-	
+  
   tskids = mg_tsk_info.tskid_num; /* 倍の領域を確保する(start_init_tsk()の時はデフォルト通り) */
-	
+  
   mg_tsk_info.id_table = (TCB **)get_mpf_isr(sizeof(tcb) * tskids); /* 変換テーブルの動的メモリ確保 */
-	if (mg_tsk_info.id_table == NULL) {
+  if (mg_tsk_info.id_table == NULL) {
     return E_NOMEM; /* initタスクの時は，start_init_tsk()関数内でOSをスリープさせる */
   }
   /* taskID変換テーブルの初期化(メモリにNULLを埋めるのにmemset()は使用できない) */
@@ -130,7 +132,7 @@ ER tsk_init(void)
   if (E_NOMEM == dynamic_tsk_init()) {
     return E_NOMEM; /* initタスクの時は，start_init_tsk()関数内でOSをスリープさせる */
   }
-	
+  
   return E_OK;
 }
 
@@ -144,9 +146,9 @@ static ER dynamic_tsk_init(void)
 {
   int tskids, i;
   TCB *tcb;
-	
+  
   mg_tsk_info.freehead = mg_tsk_info.alochead = NULL;
-	
+  
   /* start_init_tsk()の時以外 */
   if (mg_tsk_info.power_count) {
     tskids = TASK_ID_NUM << (mg_tsk_info.power_count - 1); /* 現在と同じ領域を確保する */
@@ -155,12 +157,12 @@ static ER dynamic_tsk_init(void)
   else {
     tskids = mg_tsk_info.tskid_num;
   }
-	
+  
   for (i = 0; i < tskids; i++) {
     tcb = (TCB *)get_mpf_isr(sizeof(*tcb)); /* ノードのメモリ確保 */
     /*メモリが取得できない*/
     if(tcb == NULL) {
-      return E_NOMEM;	 /* initタスクの時は，start_init_tsk()関数内でOSをスリープさせる */
+      return E_NOMEM;  /* initタスクの時は，start_init_tsk()関数内でOSをスリープさせる */
     }
     memset(tcb, -1, sizeof(*tcb)); /* 確保したノードを初期化 */
     /* freeキューの作成 */
@@ -172,7 +174,7 @@ static ER dynamic_tsk_init(void)
     }
     mg_tsk_info.freehead = tcb;
   }
-	
+  
   return E_OK;
 }
 
@@ -191,10 +193,10 @@ static void get_aloclist(TCB *tcb)
   /* それ以外から抜き取る */
   else {
     tcb->free_prev->free_next = tcb->free_next;
-		/* NULLを経由するとgcc4はエラー(データアボートを発行する) */
-		if (tcb->free_prev->free_next != NULL) {
-    	tcb->free_next->free_prev = tcb->free_prev;
-		}
+    /* NULLを経由するとgcc4はエラー(データアボートを発行する) */
+    if (tcb->free_prev->free_next != NULL) {
+      tcb->free_next->free_prev = tcb->free_prev;
+    }
   }
 }
 
@@ -209,14 +211,14 @@ static void get_aloclist(TCB *tcb)
  */
 static void tsk_schdul_infocb_init(TCB *tcb, int rate, int rel_exetim, int deadtim, int floatim)
 {
-	SCHDUL_TYPE schdul_type = mg_schdul_info.type;
-	SCHDUL_DEP_INFOCB *p_schcb = &tcb->schdul_info;
+  SCHDUL_TYPE schdul_type = mg_schdul_info.type;
+  SCHDUL_DEP_INFOCB *p_schcb = &tcb->schdul_info;
 
-	/* タスクごとにスライスタイムを決定するスライスタイム型スケジューラの場合 */
-	if (schdul_type == RR_SCHEDULING || schdul_type == RR_PRI_SCHEDULING) {
-   p_schcb->un.slice_schdul.tm_slice = -1; /* タスクタイムスライスは初期設定は-1 */
- 	}
- 	/* レディーキューを2種類もつ簡易O(1)スケジューラの場合 */
+  /* タスクごとにスライスタイムを決定するスライスタイム型スケジューラの場合 */
+  if (schdul_type == RR_SCHEDULING || schdul_type == RR_PRI_SCHEDULING) {
+    p_schcb->un.slice_schdul.tm_slice = -1; /* タスクタイムスライスは初期設定は-1 */
+  }
+  /* レディーキューを2種類もつ簡易O(1)スケジューラの場合 */
   else if (schdul_type == ODRONE_SCHEDULING) {
     p_schcb->un.odrone_schdul.readyque_flag = 0; /* まだレディーにつながれていないので，0をセット */
   }
@@ -262,12 +264,12 @@ static void tsk_schdul_infocb_init(TCB *tcb, int rate, int rel_exetim, int deadt
  */
 static void tsk_ready_infocb_init(TCB *tcb)
 {
-	READY_TYPE ready_type = mg_ready_info.type;
-	READY_DEP_INFOCB *p_rdycb = &tcb->ready_info;
+  READY_TYPE ready_type = mg_ready_info.type;
+  READY_DEP_INFOCB *p_rdycb = &tcb->ready_info;
 
-	/* レディーが2分木の場合 */
+  /* レディーが2分木の場合 */
   if (ready_type == BINARY_TREE || ready_type == PRIORITY_BINARY_TREE) {
-    p_rdycb->un.btree_ready.parent = p_rdycb->un.btree_ready.left_next = p_rdycb->un.btree_ready.right_next = 														p_rdycb->un.btree_ready.sort_next = p_rdycb->un.btree_ready.sort_prev = NULL;
+    p_rdycb->un.btree_ready.parent = p_rdycb->un.btree_ready.left_next = p_rdycb->un.btree_ready.right_next =                             p_rdycb->un.btree_ready.sort_next = p_rdycb->un.btree_ready.sort_prev = NULL;
     p_rdycb->un.btree_ready.dynamic_prio = -1;
   }
   /* レディーがキューの場合 */
@@ -286,13 +288,13 @@ static void tsk_ready_infocb_init(TCB *tcb)
  */
 static void tsk_priority_init(TCB *tcb, int priority)
 {
-	SCHDUL_TYPE schdul_type = mg_schdul_info.type;
+  SCHDUL_TYPE schdul_type = mg_schdul_info.type;
 
-	/* 
+  /* 
    * 静的優先度を使用しないスケジューリングの場合
    * なお，init.priorityは作成時の優先度を記録(優先度変更のシステムコールと休止状態があるため)
    */
-  if (schdul_type == FCFS_SCHEDULING || schdul_type == RR_SCHEDULING || schdul_type == EDF_SCHEDULING 																	|| schdul_type == LLF_SCHEDULING || schdul_type == FR_SCHEDULING) {
+  if (schdul_type == FCFS_SCHEDULING || schdul_type == RR_SCHEDULING || schdul_type == EDF_SCHEDULING                                   || schdul_type == LLF_SCHEDULING || schdul_type == FR_SCHEDULING) {
     tcb->init.priority = tcb->priority = -1;
   }
   /* 優先度を使用するスケジューリングの場合 */
@@ -313,12 +315,12 @@ static void tsk_priority_init(TCB *tcb, int priority)
  */
 static ER get_tsk_stack(TCB *tcb, int stacksize)
 {
-	extern char _tskstack; /* リンカスクリプトで定義されるスタック領域 */
+  extern char _tskstack; /* リンカスクリプトで定義されるスタック領域 */
   static char *p_stack = &_tskstack;
 
-	tcb->stacksize = stacksize;
+  tcb->stacksize = stacksize;
 
-	/* タスクスタック領域を獲得 */
+  /* タスクスタック領域を獲得 */
   memset(p_stack, 0, stacksize);
   p_stack += stacksize; /* タスクスタック領域を切り出す */
   
@@ -330,7 +332,7 @@ static ER get_tsk_stack(TCB *tcb, int stacksize)
 
   tcb->stack = p_stack; /* タスクスタックの上方アドレスの設定 */
 
-	return E_OK; /* ローカルstatic変数は返却できないので，エラーコードを返却 */
+  return E_OK; /* ローカルstatic変数は返却できないので，エラーコードを返却 */
 }
 
 
@@ -392,7 +394,7 @@ static void tsk_stack_init(TCB *tcb)
   /* 優先度が0の場合 */
   else {
     *(--sp) = (UINT32)(CPSR_SYS_MODE | IRQ_DISABLE | FIQ_DISABLE);
-	}
+  }
 
   tcb->intr_info.sp = (UINT32)sp; /* タスクスタック下方アドレスの設定 */
 }
@@ -415,7 +417,7 @@ static void tsk_stack_init(TCB *tcb)
  * (返却値)tcb : 正常終了(作成したタスクコントロールブロックへのポインタ)
  */
 OBJP acre_tsk_isr(TSK_FUNC func, char *name, int priority,
-    int stacksize, int rate, int rel_exetim, int deadtim, int floatim, int argc, char *argv[])
+                  int stacksize, int rate, int rel_exetim, int deadtim, int floatim, int argc, char *argv[])
 {
   TCB *tcb; /* 新規作成するTCB(タスクコントロールブロック) */
     
@@ -425,11 +427,11 @@ OBJP acre_tsk_isr(TSK_FUNC func, char *name, int priority,
   mg_tsk_info.freehead = tcb->free_next; /* free headを一つ進める */
   /* aloc headが空の場合 */
   if (mg_tsk_info.alochead == NULL) {
-		mg_tsk_info.alochead = tcb;
+    mg_tsk_info.alochead = tcb;
   }
 
   /* TCBの設定 */
-  tcb->state		&= STATE_CLEAR; /* init()で-1が設定されているので，一度0クリア */
+  tcb->state    &= STATE_CLEAR; /* init()で-1が設定されているので，一度0クリア */
   tcb->state    |= TASK_DORMANT; /* タスクを休止状態へ */
   tcb->get_info.flags = tcb->get_info.gobjp = 0; /* 取得情報を初期化 */
   tcb->wait_info.tobjp = tcb->wait_info.wobjp = 0; /* 待ち情報を初期化 */
@@ -441,17 +443,17 @@ OBJP acre_tsk_isr(TSK_FUNC func, char *name, int priority,
   tcb->init.argc = argc;
   tcb->init.argv = argv;
   strcpy(tcb->init.name, name);
-		
+    
   tsk_schdul_infocb_init(tcb, rate, rel_exetim, deadtim, floatim); /* TCBのスケジューリング依存情報ブロックの初期化 */
 
-	tsk_ready_infocb_init(tcb); /* TCBのスケジューリング依存情報ブロックの初期化 */
-	
+  tsk_ready_infocb_init(tcb); /* TCBのスケジューリング依存情報ブロックの初期化 */
+  
   tsk_priority_init(tcb, priority); /* タスクの優先度を初期化 */
 
-	/* タスクのスタック領域を確保 */
- 	if (E_NOMEM == get_tsk_stack(tcb, stacksize)) {
-		return E_NOMEM;
-	}
+  /* タスクのスタック領域を確保 */
+  if (E_NOMEM == get_tsk_stack(tcb, stacksize)) {
+    return E_NOMEM;
+  }
 
   tsk_stack_init(tcb); /* タスクスタックの初期化 */
 
@@ -468,9 +470,9 @@ OBJP acre_tsk_isr(TSK_FUNC func, char *name, int priority,
  */
 ER del_tsk_isr(TCB *tcb)
 {
- 	/* 本来ならスタックも解放して再利用できるようにすべきだが省略．*/
+  /* 本来ならスタックも解放して再利用できるようにすべきだが省略．*/
   
-	/* 休止状態の場合(排除) */
+  /* 休止状態の場合(排除) */
   if (tcb->state == TASK_DORMANT) {
     memset(tcb, -1, sizeof(*tcb)); /* ノードを初期化 */
     /* タスクalocリストから抜き取りfreeリストへ挿入 */
@@ -481,7 +483,7 @@ ER del_tsk_isr(TCB *tcb)
     mg_tsk_info.freehead = tcb->free_next->free_prev = tcb->free_prev->free_next = tcb;
     
     DEBUG_OUTMSG("delete task contorol block for interrput handler\n");
-		
+    
     return E_OK;
   }
   /* その他の状態 */
@@ -541,22 +543,22 @@ ER_ID run_tsk_isr(SYSCALL_PARAMCB *p)
 {
   ER_ID acre_rcd; /* 自動割付IDまたはエラーコードを記録 */
   ER sta_rcd;
-	SYSCALL_PARAMCB acre_ptr, sta_ptr;
+  SYSCALL_PARAMCB acre_ptr, sta_ptr;
 
-	acre_ptr.un.acre_tsk.func = p->un.run_tsk.func;
-	acre_ptr.un.acre_tsk.name = p->un.run_tsk.name;
-	acre_ptr.un.acre_tsk.priority = p->un.run_tsk.priority;
-	acre_ptr.un.acre_tsk.stacksize = p->un.run_tsk.stacksize;
-	acre_ptr.un.acre_tsk.rate = p->un.run_tsk.rate;
-	acre_ptr.un.acre_tsk.rel_exetim = p->un.run_tsk.rel_exetim;
-	acre_ptr.un.acre_tsk.deadtim = p->un.run_tsk.deadtim;
-	acre_ptr.un.acre_tsk.floatim = p->un.run_tsk.floatim;
-	acre_ptr.un.acre_tsk.argc = p->un.run_tsk.argc;
-	acre_ptr.un.acre_tsk.argv = p->un.run_tsk.argv;
+  acre_ptr.un.acre_tsk.func = p->un.run_tsk.func;
+  acre_ptr.un.acre_tsk.name = p->un.run_tsk.name;
+  acre_ptr.un.acre_tsk.priority = p->un.run_tsk.priority;
+  acre_ptr.un.acre_tsk.stacksize = p->un.run_tsk.stacksize;
+  acre_ptr.un.acre_tsk.rate = p->un.run_tsk.rate;
+  acre_ptr.un.acre_tsk.rel_exetim = p->un.run_tsk.rel_exetim;
+  acre_ptr.un.acre_tsk.deadtim = p->un.run_tsk.deadtim;
+  acre_ptr.un.acre_tsk.floatim = p->un.run_tsk.floatim;
+  acre_ptr.un.acre_tsk.argc = p->un.run_tsk.argc;
+  acre_ptr.un.acre_tsk.argv = p->un.run_tsk.argv;
 
   /* タスク生成ルーチン呼び出し */
   kernelrte_acre_tsk(&acre_ptr);
-	sta_ptr.un.sta_tsk.tskid = acre_rcd = acre_ptr.un.acre_tsk.ret;
+  sta_ptr.un.sta_tsk.tskid = acre_rcd = acre_ptr.un.acre_tsk.ret;
   /* 生成できなかった場合はkernelrte_acre_tsk()のエラーコードを返却 */
   if (acre_rcd < E_OK) {
     return acre_rcd;
@@ -564,7 +566,7 @@ ER_ID run_tsk_isr(SYSCALL_PARAMCB *p)
 
   /* タスク起動ルーチン呼び出し(kernelrte_sta_tsk()のputcurrent()はすでにレディーへ存在するので，無視される) */
   kernelrte_sta_tsk(&sta_ptr);
-	sta_rcd = sta_ptr.un.sta_tsk.ret;
+  sta_rcd = sta_ptr.un.sta_tsk.ret;
 
   /* 起動できた場合はIDを返却 */
   if (sta_rcd == E_OK) {
@@ -589,7 +591,7 @@ void ext_tsk_isr(void)
   //TMRCB *tbf;
   //SCHDUL_TYPE schdul_type = mg_schdul_info.type;
   //TMR_OBJP *p_tobjp = &current->schdul_info.un.rt_schdul.tobjp;
-	
+  
   /* 
    * カーネルオブジェクトを取得しているかチェック.
    * release_objectの後のコールスタックでcurrentが書き換えられる場合があるので，
@@ -600,7 +602,7 @@ void ext_tsk_isr(void)
     //release_object(current); /* 実体はkernel.cにある */
     current = tmpcurrent;
   }
-	
+  
   /* システムコール発行時タスクはカレントタスクから抜かれてくるのでstateは0になっている */
   current->state |= TASK_DORMANT; /* タスクを休止状態へ */
   KERNEL_OUTMSG(current->init.name);
@@ -633,7 +635,7 @@ void exd_tsk_isr(void)
   //TMRCB *tbf;
   //SCHDUL_TYPE schdul_type = mg_schdul_info.type;
   //TMR_OBJP *p_tobjp = &current->schdul_info.un.rt_schdul.tobjp;
-	
+  
   /*
    * カーネルオブジェクトを取得しているかチェック.
    * release_objectの後のコールスタックでcurrentが書き換えられる場合があるので，
@@ -644,7 +646,7 @@ void exd_tsk_isr(void)
     //release_object(current); /* 実体はkernel.cにある */
     current = tmpcurrent;
   }
-	
+  
   /* 本来ならスタックも解放して再利用できるようにすべきだが省略． */
   KERNEL_OUTMSG(current->init.name);
   KERNEL_OUTMSG(" EXIT.\n");
@@ -704,15 +706,15 @@ ER ter_tsk_isr(TCB *tcb)
     /* 実行可能状態 */
     if (tcb->state == TASK_READY) {
       get_tsk_readyque(tcb); /* レディーキューから抜き取る(呼び出した後はcurrentに設定されている) */
-      //release_object(tcb); /* 何らかのカーネルオブジェクトを取得したままの場合，自動解放する */	
+      //release_object(tcb); /* 何らかのカーネルオブジェクトを取得したままの場合，自動解放する */ 
     }
     /* 待ち状態(何らかの待ち行列につながれている時は対象タスクを待ち行列からはずす) */
     else {
       //get_tsk_waitque(tcb, (tcb->state & ~TASK_STATE_INFO));
       /* タイマブロックを持っているものは対象タイマブロックを排除する */
       if (tcb->wait_info.tobjp != 0) {
-	//delete_tmrcb_diffque((TMRCB *)tcb->wait_info.tobjp);
-	tcb->wait_info.tobjp = 0; /* クリアにしておく */
+        //delete_tmrcb_diffque((TMRCB *)tcb->wait_info.tobjp);
+        tcb->wait_info.tobjp = 0; /* クリアにしておく */
       }
       /*
        * カーネルオブジェクトを取得しているかチェック.
@@ -720,7 +722,7 @@ ER ter_tsk_isr(TCB *tcb)
        * 一時退避させておく
        */
       if (tcb->get_info.flags != TASK_NOT_GET_OBJECT) {
-	//release_object(tcb); /* 何らかのカーネルオブジェクトを取得したままの場合，自動解放する */
+        //release_object(tcb); /* 何らかのカーネルオブジェクトを取得したままの場合，自動解放する */
       }
     }
     tcb->state |= TASK_DORMANT; /* タスクを休止状態へ */
@@ -741,7 +743,7 @@ ER ter_tsk_isr(TCB *tcb)
   
     tcb->priority = tcb->init.priority; /* タスクの優先度を起動状態へ戻す */
     tsk_stack_init(tcb); /* ユーザスタックを起動時に戻す */
-  	
+    
     return E_OK;
   }
 }
@@ -798,7 +800,7 @@ ER chg_pri_isr(TCB *tcb, int tskpri)
   else {
     /* 実行状態タスクがタスクコンテキスト用システムコールを呼んだ場合 */
     if (current->syscall_info.flag == MZ_SYSCALL) {
-			getcurrent(); /* システムコール発行タスクをレディーから抜き取る */
+      getcurrent(); /* システムコール発行タスクをレディーから抜き取る */
       chg_pri_syscall_isr(tcb, tskpri); /*優先度変更*/
     }
     /* 実行状態タスクが非タスクコンテキスト用システムコールを呼んだ場合 */

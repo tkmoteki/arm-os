@@ -3,9 +3,9 @@
 
 
 /*
-* 標準Cライブラリにはオリジナルの返却値型は使用しないものとする
-* ここはコメントは最低限にしている
-*/
+ * 標準Cライブラリにはオリジナルの返却値型は使用しないものとする
+ * ここはコメントは最低限にしている
+ */
 
 /* ターゲット非依存部 */
 /*! メモリセット */
@@ -42,12 +42,12 @@ int memcmp(const void *b1, const void *b2, long len)
   
   for (; len > 0; len--) {
     if (*p1 != *p2) {
-    	if (*p1 > *p2) {
-    		return 1;
-    	}
-    	else {
-    		return -1;
-    	}
+      if (*p1 > *p2) {
+        return 1;
+      }
+      else {
+        return -1;
+      }
     }
     p1++;
     p2++;
@@ -78,7 +78,7 @@ char *strcpy(char *dst, const char *src)
   for (;; dst++, src++) {
     *dst = *src;
     if (!*src) {
-    	break;
+      break;
     }
   }
   
@@ -91,12 +91,12 @@ int strcmp(const char *s1, const char *s2)
 {
   while (*s1 || *s2) {
     if (*s1 != *s2) {
-    	if (*s1 > *s2) {
-    		return 1;
-    	}
-    	else {
-    		return -1;
-    	}
+      if (*s1 > *s2) {
+        return 1;
+      }
+      else {
+        return -1;
+      }
     }
     s1++;
     s2++;
@@ -111,12 +111,12 @@ int strncmp(const char *s1, const char *s2, int len)
 {
   while ((*s1 || *s2) && (len > 0)) {
     if (*s1 != *s2) {
-    	if (*s1 > *s2) {
-    		return 1;
-    	}
-    	else {
-    		return -1;
-    	}
+      if (*s1 > *s2) {
+        return 1;
+      }
+      else {
+        return -1;
+      }
     }
     s1++;
     s2++;
@@ -129,20 +129,20 @@ int strncmp(const char *s1, const char *s2, int len)
 
 int atoi(char str[])
 {
-	int i, n, sign;
+  int i, n, sign;
 
-	/* 空白読み飛ばし */
-	for(i = 0; str[i] == ' '; i++) {
-		;
-	}
-	sign = (str[i] == '-') ? -1 : 1;
-	if (str[i] == '+' || str[i] == '-') {
-		i++;
-	}
-	for (n = 0; 48 <= str[i] && str[i] <= 57; i++) {
-		n = 10 * n + (str[i] - '0');
-	}
-	return sign * n;
+  /* 空白読み飛ばし */
+  for(i = 0; str[i] == ' '; i++) {
+    ;
+  }
+  sign = (str[i] == '-') ? -1 : 1;
+  if (str[i] == '+' || str[i] == '-') {
+    i++;
+  }
+  for (n = 0; 48 <= str[i] && str[i] <= 57; i++) {
+    n = 10 * n + (str[i] - '0');
+  }
+  return sign * n;
 }
 
 
@@ -150,10 +150,10 @@ int atoi(char str[])
 /*! １文字送信 */
 void putc(unsigned char c)
 {
-	/* 端末変換 */
-	if (c == '\n') {
-  	send_serial_byte('\r');
-	}
+  /* 端末変換 */
+  if (c == '\n') {
+    send_serial_byte('\r');
+  }
   
   send_serial_byte(c); /* 文字の出力 */
 }
@@ -186,7 +186,7 @@ int putxval(unsigned long value, int column)
     *(p--) = "0123456789abcdef"[value & 0xf];
     value >>= 4;
     if (column) {
-    	column--;
+      column--;
     }
   }
 

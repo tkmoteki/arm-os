@@ -5,7 +5,7 @@
 #include "kernel/defines.h"
 
 
-#define CONTEXT_LOG_ONESIZE 92		/* コンテキストログ1つあたりの大きさ */
+#define CONTEXT_LOG_ONESIZE 92    /* コンテキストログ1つあたりの大きさ */
 
 
 /* ログの数 */
