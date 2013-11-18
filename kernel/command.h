@@ -13,6 +13,12 @@ void help_command(char *buf);
 /*! sendlogコマンド */
 void sendlog_command(void);
 
+/*! recvlogコマンド */
+void recvlog_command(void);
+
+/* dumpコマンド */
+int dump_command(void);
+
 #ifdef TSK_LIBRARY
 /*! runコマンド */
 void run_command(char *buf);

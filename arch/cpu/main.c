@@ -9,6 +9,7 @@
 
 void uart_handler(void);
 extern unsigned long _bss_start, _end;
+extern unsigned long _tskbuffer_start, _tskbuffer_end;
 
 /*! 資源ID */
 ER_ID idle_id;
@@ -66,6 +67,14 @@ void uart_handler(void)
       else if (!strncmp(buf, "sendlog", 7)) {
         sendlog_command(); /* sendlogコマンド(xmodem送信モード)呼び出し */
       }
+      /* recvlogの場合 */
+      else if (!strncmp(buf, "recvlog", 7)) {
+        recvlog_command(); /* recvlogコマンド(xmodem送信モード)呼び出し */
+      }
+      /* recvlogの場合 */
+      else if (!strncmp(buf, "dump", 4)) {
+        dump_command(); /* recvlogコマンド(xmodem送信モード)呼び出し */
+      }
       /* 本システムに存在しないコマンド */
       else {
         puts("command unknown.\n");
@@ -89,6 +98,10 @@ int main(void)
 
   /* BSSセクションの初期化(BSSセクションの初期化はここでOK) */
   for (p = &_bss_start; p < &_end; p++) {
+    *p = 0;
+  }
+  /* tskbuffuerセクションの初期化 */
+  for (p = &_tskbuffer_start; p < &_tskbuffer_end; p++) {
     *p = 0;
   }
 

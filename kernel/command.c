@@ -22,6 +22,7 @@ static void tsk_set3_command(void);
 
 /*! リンカのシンボルを参照 */
 extern UINT32 _logbuffer_start;
+extern UINT32 _tskbuffer_start;
 
 
 /*!
@@ -45,7 +46,9 @@ void help_command(char *buf)
   if (*buf == '\0') {
     puts("echo    - out text serial line.\n");
     puts("sendlog - send log file over serial line(xmodem mode)\n");
+    puts("recvlog - receive log file over serial line(xmodem mode\n");
     puts("run     - run task sets.\n");
+    puts("dump    - memory dump.\n");
   }
   /* echo helpメッセージ */
   else if (!strncmp(buf, " echo", 5)) {
@@ -57,6 +60,14 @@ void help_command(char *buf)
   /* sendlog helpメッセージ */
   else if (!strncmp(buf, " sendlog", 8)) {
     puts("sendlog - send log file over serial line(xmodem mode)\n");
+  }
+  /* recvlog helpメッセージ */
+  else if (!strncmp(buf, " recvlog", 8)) {
+    puts("recvlog - recv log file over serial line(xmodem mode)\n");
+  }
+  /* dump helpメッセージ */
+  else if (!strncmp(buf, " dump", 5)) {
+    puts("dump - memory dump\n");
   }
 #ifdef TSK_LIBRARY
   /* run helpメッセージ */
@@ -113,6 +124,51 @@ void sendlog_command(void)
   else {
     puts("log to xmodem error.\n");
   }
+}
+
+
+/*! recvlogコマンド */
+void recvlog_command(void)
+{
+  UINT8 *loadbuf;
+  INT32 size;
+
+  loadbuf = (UINT8 *)(&_tskbuffer_start);
+  size = recv_xmodem(loadbuf);
+  adjust_timing_xmodem(); /* 転送アプリが終了し端末アプリに制御が戻るまで待ち合わせる */
+  if (size < 0) {
+    puts("\nXMODEM receive error!\n");
+  }
+  else {
+    puts("\nXMODEM receive succeed.\n");
+  }
+}
+
+
+/* dumpコマンド */
+int dump_command(void)
+{
+  INT32 i;
+  INT32 size = 1024;
+  unsigned char *buf = (unsigned char *)&_tskbuffer_start;
+
+  if (size < 0) {
+    puts("no data.\n");
+    return -1;
+  }
+  for (i = 0; i < size; i++) {
+    putxval(buf[i], 2);
+    if ((i & 0xf) == 15) {
+      puts("\n");
+    }
+    else {
+      if ((i & 0xf) == 7) puts(" ");
+      puts(" ");
+    }
+  }
+  puts("\n");
+
+  return 0;
 }
 
 

@@ -36,6 +36,7 @@ MEMORY
   tskstack(rw)    : o = 0x90000000, l = 0x00002000
   stack(rw)       : o = 0x90002000, l = 0x00001000
   logbuffer(rwx)  : o = 0x90003000, l = 0x00001000 /* temp(4096B) */
+  tskbuffer(rwx)  : o = 0x90004000, l = 0x00001000 /* temp(4096B) */
   /* high vector */
   dramvector(rwx) : o = 0xFFFF0000, l = 0x00000040
   
@@ -125,6 +126,13 @@ SECTIONS
     . = ALIGN(4); /* アライメント調整 */
     _logbuffer_end = . ;
   } > logbuffer
+
+  .tskbuffer : {
+    _tskbuffer_start = . ;
+    *(.tskbuffer)
+    . = ALIGN(4); /* アライメント調整 */
+    _tskbuffer_end = . ;
+  } > tskbuffer
 
   /* dramvectorセクションの定義(highvector) */
   .dramvector : {

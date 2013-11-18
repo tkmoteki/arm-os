@@ -38,6 +38,7 @@
 typedef unsigned char           UINT8;                  /*! プロセッサに自然な符号なし8ビット整数 */
 typedef unsigned short          UINT16;                 /*! プロセッサに自然な符号なし16ビット整数 */
 typedef unsigned long           UINT32;                 /*! プロセッサに自然な符号なし32ビット整数 */
+typedef int              INT32;                  /*! プロセッサに自然な符号つき32ビット整数 */
 typedef signed short            ER;                     /*! 機能としてのエラーコード */
 typedef signed char             ER_BOOL;                /*! 真偽または機能としてのエラーコードを返却 */
 typedef signed short            ER_ID;                  /*! 機能としてのエラーコードまたはID(0,1,2,・・・)を返却 */
