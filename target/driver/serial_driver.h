@@ -13,6 +13,9 @@ void uart3_init(void);
 /*! １文字送信 */
 void send_serial_byte(unsigned char c);
 
+/*! 受信可能かチェック */
+int is_recv_serial_enable(void);
+
 /*! １文字受信 */
 unsigned char recv_serial_byte(void);
 

@@ -7,14 +7,20 @@
 
 
 /*! NAK待ち(データ送信開始前に呼ぶ) */
-static void wait_xmodem(void);
+static void wait_nak_xmodem(void);
 
 /*! ブロックの送信 */
 static void write_xmodem_block(UINT8 block_number, UINT8 *logbuf, int data_len);
 
+/* 受信開始されるまで送信要求を出す */
+static void xmodem_sending_request(void);
+
+/* ブロック単位での受信 */
+static int read_xmodem_block(unsigned char block_number, UINT8 *buf);
+
 
 /*! NAK待ち(データ送信開始前に呼ぶ) */
-static void wait_xmodem(void)
+static void wait_nak_xmodem(void)
 {
   /* 受信側からNAKを受信するまで */
   while(JIS_X_0211_NAK != recv_serial_byte()) {
@@ -76,7 +82,7 @@ BOOL send_xmodem(UINT8 *bufp, UINT32 size)
   int data_len; /* ブロック内のデータ長 */
   UINT8 recv_crd, block_number = 1; /* ブロック番号は1からスタート */
 
-  wait_xmodem(); /* 受信側のNAK待ち */  
+  wait_nak_xmodem(); /* 受信側のNAK待ち */  
 
   while (1) {
     /* 送信データ量の処理 */
@@ -127,4 +133,115 @@ BOOL send_xmodem(UINT8 *bufp, UINT32 size)
   }
 
   return FALSE;
+}
+
+
+/* 受信開始されるまで送信要求を出す */
+static void xmodem_sending_request(void)
+{
+  INT32 cnt = 0;
+
+  while (0x00 == is_recv_serial_enable()) {
+    if (++cnt >= 2000000) {
+      cnt = 0;
+      send_serial_byte(JIS_X_0211_NAK);
+    }
+  }
+
+  return;
+}
+
+
+/*!
+ * ブロック単位での受信
+ * block_number : ブロック番号
+ * *buf : 受信先のバッファポインタ
+ */
+static int read_xmodem_block(unsigned char block_number, UINT8 *buf)
+{
+  unsigned char c, block_num, check_sum;
+  int i;
+
+  block_num = recv_serial_byte();
+  if (block_num != block_number) {
+    return -1;
+  }
+
+  block_num ^= recv_serial_byte();
+  if (block_num != 0xff) {
+    return -1;
+  }
+
+  check_sum = 0;
+  for (i = 0; i < XMODEM_BLOCK_SIZE; i++) {
+    c = recv_serial_byte();
+    *(buf++) = c;
+    check_sum += c;
+  }
+
+  check_sum ^= recv_serial_byte();
+  if (check_sum) {
+    return -1;
+  }
+
+  return i;
+}
+
+
+/*!
+ * XMODEMでの受信制御
+ * *buf : 受信先のバッファポインタ
+ */
+INT32 recv_xmodem(UINT8 *buf)
+{
+  int r, receiving = 0;
+  INT32 size = 0;
+  unsigned char c = 0, block_number = 1;
+
+  while (1) {
+    if (!receiving) {
+      xmodem_sending_request(); /* 受信開始されるまで送信要求を出す */
+    }
+    c = recv_serial_byte();
+    putxval((unsigned long)c, 0);
+
+    if (c == JIS_X_0211_EOT) { /* 受信終了 */
+      send_serial_byte(JIS_X_0211_ACK);
+      break;
+    }
+    else if (c == JIS_X_0211_CAN) { /* 受信中断 */
+      return -1;
+    }
+    else if (c == JIS_X_0211_SOH) { /* 受信開始 */
+      receiving++;
+      r = read_xmodem_block(block_number, buf); /* ブロック単位での受信 */
+      if (r < 0) { /* 受信エラー */
+        send_serial_byte(JIS_X_0211_NAK);
+      } else { /* 正常受信 */
+        block_number++;
+        size += r;
+        buf  += r;
+        send_serial_byte(JIS_X_0211_ACK);
+      }
+    }
+    else {
+      if (receiving) {
+        return (INT32)-1;
+      }
+    }
+  }
+
+  return size;
+}
+
+
+/*!
+ * XMODEM受信時でのホストとのタイミング調整
+ */
+void adjust_timing_xmodem(void)
+{
+  volatile UINT32 i;
+  for (i = 0; i < 300000; i++) {
+    ;
+  }
 }

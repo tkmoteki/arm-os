@@ -24,9 +24,6 @@
 /*! 送信可能かチェック */
 static int is_send_serial_enable(void);
 
-/*! 受信可能かチェック */
-static int is_recv_serial_enable(void);
-
 
 /*! デバイス初期化 */
 void uart3_init(void)
@@ -79,7 +76,7 @@ void send_serial_byte(unsigned char c)
  * 受信可能かチェック
  * (返却値) :
  */
-static int is_recv_serial_enable(void)
+int is_recv_serial_enable(void)
 {
   return REG8_READ(ULSR) & 0x1f;
 }
@@ -96,7 +93,7 @@ unsigned char recv_serial_byte(void)
   while (1) {
 
     /* 受信完了まで待機(FIFOバッファを使用しない) */
-    while (!(s = is_recv_serial_enable())) {
+    while (0x00 == (s = is_recv_serial_enable())) {
       ;
     }
 

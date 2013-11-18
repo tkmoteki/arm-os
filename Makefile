@@ -134,6 +134,11 @@ objs/%.o : $(TSKLIB_DIR)%.c
 bin : $(TARGET)
 	$(OBJCOPY) -O binary $(TARGET) $(TARGET).bin
 
+exe :
+	cp bin/uImage.bin ~
+	sudo chmod 777 /dev/ttyUSB0
+	minicom -o
+
 
 #make imageを使用する時は，以下にu-bootのmkimageバイナリファイルをおく
 image : $(TARGET).bin
