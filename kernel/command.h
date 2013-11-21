@@ -3,7 +3,6 @@
 
 #include "defines.h"
 
-
 /*! echoコマンド */
 void echo_command(char buf[]);
 
@@ -18,6 +17,12 @@ void recvlog_command(void);
 
 /* dumpコマンド */
 int dump_command(void);
+
+/*! fatloadコマンド */
+void fatload_command(char *buf);
+
+/*! fatload制御 */
+int do_fat_fsload(int argc, char *argv[]);
 
 #ifdef TSK_LIBRARY
 /*! runコマンド */

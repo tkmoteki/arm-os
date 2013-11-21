@@ -4,6 +4,8 @@
 #include "syscall.h"
 #include "net/xmodem.h"
 #include "kernel_svc/log_manage.h"
+#include "target/driver/part.h"
+#include "target/driver/fat_driver.h"
 
 
 #ifdef TSK_LIBRARY
@@ -167,6 +169,107 @@ int dump_command(void)
     }
   }
   puts("\n");
+
+  return 0;
+}
+
+
+/*!
+ * fatloadコマンド
+ * *buf : 起動するタスクセット名が格納されたバッファ
+ */
+void fatload_command(char *buf)
+{
+  unsigned char *argv[16];
+  int rval = 1;
+  int i, j;
+
+  argv[0] = strtok((unsigned char *)buf, ' ');
+  for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
+    ;
+  }
+  putxval(i, 0);
+  puts(" i value.\n");
+
+  for (j = 0; j < i; j++) {
+    puts((char *)argv[j]);
+    puts(" argv value.\n");
+  }
+
+  rval = do_fat_fsload(i, (char **)argv);
+
+  if (0 == rval) {
+    puts("fatload successed.\n");
+  }
+  else {
+    puts("not fatload successed.\n");
+  }
+}
+
+
+/*! fatload制御 */
+int do_fat_fsload(int argc, char *argv[])
+{
+  long size;
+  unsigned long offset;
+  unsigned long count;
+  block_dev_desc_t *dev_desc=NULL;
+  int dev=0;
+  int part=1;
+  char *ep;
+
+  if (argc < 5) {
+    puts ("usage: fatload <interface> <dev[:part]> <addr> <filename> [bytes]\n");
+    return 1;
+  }
+  dev = (int)simple_strtoul(argv[2], &ep, 16);
+  putxval(dev, 0);
+  puts(" dev valude.\n");
+  dev_desc=get_dev(argv[1],dev);
+  if (dev_desc==NULL) {
+    puts ("\n** Invalid boot device **\n");
+    return 1;
+  }
+  if (*ep) {
+    if (*ep != ':') {
+      puts ("\n** Invalid boot device, use `dev[:part]' **\n");
+      return 1;
+    }
+    part = (int)simple_strtoul(++ep, NULL, 16);
+  }
+  putxval(part, 0);
+  puts(" part value.\n");
+  if (fat_register_device(dev_desc,part)!=0) {
+    puts("\n** Unable to use ");
+    puts(argv[1]);
+    puts(" ");
+    putxval(dev, 0);
+    puts(":");
+    putxval(part, 0);
+    puts(" for fatload **\n");
+    return 1;
+  }
+  offset = simple_strtoul (argv[3], NULL, 16);
+  if (argc == 6)
+    count = simple_strtoul (argv[5], NULL, 16);
+  else
+    count = 0;
+  size = file_fat_read (argv[4], (unsigned char *) offset, count);
+  if(size==-1) {
+    puts("\n** Unable to read ");
+    puts(argv[4]);
+    puts(" from ");
+    puts(argv[1]);
+    puts(" ");
+    putxval(dev, 0);
+    puts(":");
+    putxval(part, 0);
+    puts(" **\n");
+    return 1;
+  }
+
+  putxval(size, 0);
+  puts(" bytes read\n");
 
   return 0;
 }

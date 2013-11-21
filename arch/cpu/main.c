@@ -5,6 +5,7 @@
 #include "target/driver/serial_driver.h"
 #include "arch/cpu/intr.h"
 #include "kernel/command.h"
+#include "target/driver/mmc.h"
 
 
 void uart_handler(void);
@@ -69,11 +70,15 @@ void uart_handler(void)
       }
       /* recvlogの場合 */
       else if (!strncmp(buf, "recvlog", 7)) {
-        recvlog_command(); /* recvlogコマンド(xmodem送信モード)呼び出し */
+        recvlog_command(); /* recvlogコマンド(xmodem受信モード)呼び出し */
       }
-      /* recvlogの場合 */
+      /* dumpの場合 */
       else if (!strncmp(buf, "dump", 4)) {
-        dump_command(); /* recvlogコマンド(xmodem送信モード)呼び出し */
+        dump_command(); /* dumpコマンド */
+      }
+      /* fatloadの場合 */
+      else if (!strncmp(buf, "fatload", 7)) {
+        fatload_command(&buf[0]); /* fatloadコマンド */
       }
       /* 本システムに存在しないコマンド */
       else {
@@ -106,6 +111,8 @@ int main(void)
   }
 
   uart3_init(); /* シリアルの初期化 */
+
+  mmc_legacy_init(0);
 
   KERNEL_OUTMSG("kernel boot OK!\n");
 

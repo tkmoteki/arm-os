@@ -1,4 +1,5 @@
 #include "lib.h"
+#include "kernel/defines.h"
 #include "target/driver/serial_driver.h"
 
 
@@ -145,6 +146,71 @@ int atoi(char str[])
   return sign * n;
 }
 
+#if 0
+
+int isdigit(int c)
+{
+  if('0' <= c && c <= '9')
+    return 10;
+  else 
+    return 0;
+}
+
+
+int islower(int c)
+{
+  if('a' <= c && c <= 'z')
+    return 10;
+  else 
+    return 0;
+}
+
+
+int isupper(int c)
+{
+  if('A' <= c && c <= 'Z')
+    return 10;
+  else
+    return 0;
+}
+
+
+int tolower(int c)
+{
+  return isupper(c) ? c - 'A' + 'a' : c;
+}
+
+
+int toupper(int c)
+{
+  return islower(c) ? c - 'a' + 'A' : c;
+}
+
+#endif
+
+unsigned char *strtok(unsigned char *s1, const unsigned char s2)
+{
+  static unsigned char *p = 0;
+  static unsigned char *retP;
+
+  if (s1 != 0) { p = s1; }
+  if (p == 0) { return NULL; }
+   
+  retP = p;
+
+  if (*retP == '\0') { p = 0; return NULL; }
+  while(*retP == s2) { retP++; }
+
+  p = retP + 1;
+  while(*p != s2) {
+    if (*p == '\0') { break; }
+    p++;
+  }
+  if (*p != '\0') { *p++ = '\0'; }
+
+  return(retP);
+}
+
 
 /* ここからはターゲット依存部 */
 /*! １文字送信 */
@@ -223,3 +289,4 @@ int gets(char *buf)
   
   return i - 1;
 }
+
