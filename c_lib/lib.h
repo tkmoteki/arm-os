@@ -1,6 +1,7 @@
 #ifndef _LIB_H_INCLUDED_
 #define _LIB_H_INCLUDED_
 
+#include "ctype.h"
 
 /* ターゲット非依存部 */
 
@@ -27,6 +28,24 @@ int strncmp(const char *s1, const char *s2, int len);
 /* 数値へ変換 */
 int atoi(char str[]);
 
+#if 0
+int isdigit(int c);
+
+int islower(int c);
+
+int isupper(int c);
+
+int tolower(int c);
+
+int toupper(int c);
+#endif
+
+/* lib/vsprintf.c */
+unsigned long simple_strtoul(const char *cp,char **endp,unsigned int base);
+
+/* 文字列の分解 */
+unsigned char *strtok(unsigned char *s1, const unsigned char s2);
+
 
 /* ターゲット依存部 */
 
@@ -44,6 +63,5 @@ unsigned char getc(void);
 
 /*! 文字列受信 */
 int gets(char *buf);
-
 
 #endif
