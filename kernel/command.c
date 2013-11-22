@@ -275,6 +275,146 @@ int do_fat_fsload(int argc, char *argv[])
 }
 
 
+/*!
+ * fatlsコマンド
+ * *buf : 起動するタスクセット名が格納されたバッファ
+ */
+void fatls_command(char *buf)
+{
+  unsigned char *argv[16];
+  int i, j;
+
+  argv[0] = strtok((unsigned char *)buf, ' ');
+  for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
+    ;
+  }
+  putxval(i, 0);
+  puts(" i value.\n");
+
+  for (j = 0; j < i; j++) {
+    puts((char *)argv[j]);
+    puts(" argv value.\n");
+  }
+
+  do_fat_ls(i, (char **)argv);
+
+}
+
+
+/*! fatls制御 */
+int do_fat_ls (int argc, char *argv[])
+{
+	char *filename = "/";
+	int ret;
+	int dev=0;
+	int part=1;
+	char *ep;
+	block_dev_desc_t *dev_desc=NULL;
+
+	if (argc < 3) {
+		puts ("usage: fatls <interface> <dev[:part]> [directory]\n");
+		return (0);
+	}
+	dev = (int)simple_strtoul (argv[2], &ep, 16);
+	dev_desc=get_dev(argv[1],dev);
+	if (dev_desc==NULL) {
+		puts ("\n** Invalid boot device **\n");
+		return 1;
+	}
+	if (*ep) {
+		if (*ep != ':') {
+			puts ("\n** Invalid boot device, use `dev[:part]' **\n");
+			return 1;
+		}
+		part = (int)simple_strtoul(++ep, NULL, 16);
+	}
+	if (fat_register_device(dev_desc,part)!=0) {
+    puts("\n** Unable to use ");
+    puts(argv[1]);
+    puts(" ");
+    putxval(dev, 0);
+    puts(":");
+    putxval(part, 0);
+    puts(" for fatls **\n");
+		return 1;
+	}
+	if (argc == 4)
+		ret = file_fat_ls (argv[3]);
+	else
+		ret = file_fat_ls (filename);
+
+	if(ret!=0)
+    puts("No Fat FS detected\n");
+  
+	return (ret);
+}
+
+
+/*!
+ * fatinfoコマンド
+ * *buf : 起動するタスクセット名が格納されたバッファ
+ */
+void fatinfo_command(char *buf)
+{
+  unsigned char *argv[16];
+  int i, j;
+
+  argv[0] = strtok((unsigned char *)buf, ' ');
+  for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
+    ;
+  }
+  putxval(i, 0);
+  puts(" i value.\n");
+
+  for (j = 0; j < i; j++) {
+    puts((char *)argv[j]);
+    puts(" argv value.\n");
+  }
+
+  do_fat_fsinfo(i, (char **)argv);
+
+}
+
+
+/* fsinfo制御 */
+int do_fat_fsinfo (int argc, char *argv[])
+{
+	int dev=0;
+	int part=1;
+	char *ep;
+	block_dev_desc_t *dev_desc=NULL;
+
+	if (argc < 2) {
+		puts ("usage: fatinfo <interface> <dev[:part]>\n");
+		return (0);
+	}
+	dev = (int)simple_strtoul (argv[2], &ep, 16);
+	dev_desc=get_dev(argv[1],dev);
+	if (dev_desc==NULL) {
+		puts ("\n** Invalid boot device **\n");
+		return 1;
+	}
+	if (*ep) {
+		if (*ep != ':') {
+			puts ("\n** Invalid boot device, use `dev[:part]' **\n");
+			return 1;
+		}
+		part = (int)simple_strtoul(++ep, NULL, 16);
+	}
+	if (fat_register_device(dev_desc,part)!=0) {
+    puts("\n** Unable to use ");
+    puts(argv[1]);
+    puts(" ");
+    putxval(dev, 0);
+    puts(":");
+    putxval(part, 0);
+    puts(" for fatinfo **\n");
+		return 1;
+	}
+	return (file_fat_detectfs ());
+}
+
+
 #ifdef TSK_LIBRARY
 
 /*!

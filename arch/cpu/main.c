@@ -80,6 +80,14 @@ void uart_handler(void)
       else if (!strncmp(buf, "fatload", 7)) {
         fatload_command(&buf[0]); /* fatloadコマンド */
       }
+      /* fatlsの場合 */
+      else if (!strncmp(buf, "fatls", 5)) {
+        fatls_command(&buf[0]); /* fatlsコマンド */
+      }
+      /* fatinfoの場合 */
+      else if (!strncmp(buf, "fatinfo", 7)) {
+        fatinfo_command(&buf[0]); /* fatinfoコマンド */
+      }
       /* 本システムに存在しないコマンド */
       else {
         puts("command unknown.\n");

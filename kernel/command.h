@@ -24,6 +24,19 @@ void fatload_command(char *buf);
 /*! fatload制御 */
 int do_fat_fsload(int argc, char *argv[]);
 
+/*! fatlsコマンド */
+void fatls_command(char *buf);
+
+/*! fatls制御 */
+int do_fat_ls (int argc, char *argv[]);
+
+/*! fatinfoコマンド */
+void fatinfo_command(char *buf);
+
+/*! fsinfo制御 */
+int do_fat_fsinfo (int argc, char *argv[]);
+
+
 #ifdef TSK_LIBRARY
 /*! runコマンド */
 void run_command(char *buf);
