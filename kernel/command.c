@@ -3,6 +3,7 @@
 #include "kernel.h"
 #include "syscall.h"
 #include "net/xmodem.h"
+#include "kernel/scr_symbols.h"
 #include "kernel_svc/log_manage.h"
 #include "target/driver/part.h"
 #include "target/driver/fat_driver.h"
@@ -20,11 +21,6 @@ static void tsk_set2_command(void);
 static void tsk_set3_command(void);
 
 #endif
-
-
-/*! リンカのシンボルを参照 */
-extern UINT32 _logbuffer_start;
-extern UINT32 _tskbuffer_start;
 
 
 /*!

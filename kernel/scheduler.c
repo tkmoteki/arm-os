@@ -2,6 +2,7 @@
 #include "scheduler.h"
 #include "kernel.h"
 #include "memory.h"
+#include "scr_symbols.h"
 #include "task_manage.h"
 //#include "timer_callrte.h"
 //#include "target/driver/timer_driver.h"
@@ -72,8 +73,7 @@ ER sel_schdul_isr(SCHDUL_TYPE type, long param)
  */
 static ER write_schdul(SCHDUL_TYPE type, long param)
 {
-  extern char _schdul_area;
-  char *schdul_info = &_schdul_area;
+  char *schdul_info = (char *)&_schdul_area;
   UINT32 *p = (UINT32 *)schdul_info;
 
   *(--p) = type;  /* スケジューラのタイプを退避 */
@@ -238,8 +238,7 @@ static ER switch_schduler(SCHDUL_TYPE type)
 static void read_schdul(SCHDULCB *schcb)
 {
   SCHDUL_TYPE type;
-  extern char _schdul_area;
-  char *schdul_info = &_schdul_area;
+  char *schdul_info = (char *)&_schdul_area;
   UINT32 *p = (UINT32 *)schdul_info;
   long dummy;
   
