@@ -1,4 +1,5 @@
 /* BSSセクションの初期化より前に変数を使用しない */
+#include "kernel/debug.h"
 #include "kernel/defines.h"
 #include "kernel/kernel.h"
 #include "kernel/scr_symbols.h"
@@ -96,7 +97,7 @@ void uart_handler(void)
     }
   }
   else {
-    DEBUG_OUTMSG("not uart3 handler.\n");
+    DEBUG_L1_ARCH_CPU_MAIN_OUTMSG("not uart3 handler.\n");
   }
 }
 

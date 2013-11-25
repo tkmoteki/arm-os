@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "defines.h"
 #include "command.h"
 #include "kernel.h"
@@ -184,12 +185,12 @@ void fatload_command(char *buf)
   for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
     ;
   }
-  putxval(i, 0);
-  puts(" i value.\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(i, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" i value.\n");
 
   for (j = 0; j < i; j++) {
-    puts((char *)argv[j]);
-    puts(" argv value.\n");
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG((char *)argv[j]);
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG(" argv value.\n");
   }
 
   rval = do_fat_fsload(i, (char **)argv);
@@ -219,8 +220,8 @@ int do_fat_fsload(int argc, char *argv[])
     return 1;
   }
   dev = (int)simple_strtoul(argv[2], &ep, 16);
-  putxval(dev, 0);
-  puts(" dev valude.\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(dev, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" dev valude.\n");
   dev_desc=get_dev(argv[1],dev);
   if (dev_desc==NULL) {
     puts ("\n** Invalid boot device **\n");
@@ -233,8 +234,8 @@ int do_fat_fsload(int argc, char *argv[])
     }
     part = (int)simple_strtoul(++ep, NULL, 16);
   }
-  putxval(part, 0);
-  puts(" part value.\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(part, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" part value.\n");
   if (fat_register_device(dev_desc,part)!=0) {
     puts("\n** Unable to use ");
     puts(argv[1]);
@@ -284,12 +285,12 @@ void fatls_command(char *buf)
   for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
     ;
   }
-  putxval(i, 0);
-  puts(" i value.\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(i, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" i value.\n");
 
   for (j = 0; j < i; j++) {
-    puts((char *)argv[j]);
-    puts(" argv value.\n");
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG((char *)argv[j]);
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG(" argv value.\n");
   }
 
   do_fat_ls(i, (char **)argv);
@@ -359,12 +360,12 @@ void fatinfo_command(char *buf)
   for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
     ;
   }
-  putxval(i, 0);
-  puts(" i value.\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(i, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" i value.\n");
 
   for (j = 0; j < i; j++) {
-    puts((char *)argv[j]);
-    puts(" argv value.\n");
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG((char *)argv[j]);
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG(" argv value.\n");
   }
 
   do_fat_fsinfo(i, (char **)argv);

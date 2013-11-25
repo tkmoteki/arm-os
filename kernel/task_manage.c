@@ -47,6 +47,7 @@
  */
 
 #include "arch/cpu/cpu_cntrl.h"
+#include "debug.h"
 #include "kernel.h"
 #include "c_lib/lib.h"
 #include "memory.h"
@@ -482,13 +483,13 @@ ER del_tsk_isr(TCB *tcb)
     tcb->free_prev = mg_tsk_info.freehead->free_prev;
     mg_tsk_info.freehead = tcb->free_next->free_prev = tcb->free_prev->free_next = tcb;
     
-    DEBUG_OUTMSG("delete task contorol block for interrput handler\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("delete task contorol block for interrput handler\n");
     
     return E_OK;
   }
   /* その他の状態 */
   else {
-    DEBUG_OUTMSG("not delete.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("not delete.\n");
     return E_OBJ;
   }
 }
@@ -693,12 +694,12 @@ ER ter_tsk_isr(TCB *tcb)
 
   /* 実行状態 */
   if (current == tcb) {
-    DEBUG_OUTMSG("not temination activ.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("not temination activ.\n");
     return E_ILUSE;
   }
   /* 休止状態の場合 */
   else if (tcb->state == TASK_DORMANT) {
-    DEBUG_OUTMSG("not termination dormant.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("not termination dormant.\n");
     return E_OBJ;
   }
   /* ここから強制終了処理 */
@@ -760,7 +761,7 @@ ER get_pri_isr(TCB *tcb, int *p_tskpri)
 {
   /* 休止状態の場合 */
   if (tcb->state == TASK_DORMANT) {
-    DEBUG_OUTMSG("not change priority is tsk dormant for interrput hanler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("not change priority is tsk dormant for interrput hanler.\n");
     return E_OBJ;
   }
   /* タスクの優先度を設定 */
@@ -788,12 +789,12 @@ ER chg_pri_isr(TCB *tcb, int tskpri)
 {
   /*優先度は有効化か*/
   if (tskpri < 0 || PRIORITY_NUM < tskpri) {
-    DEBUG_OUTMSG("not change priority is deffer tskpri fot interrput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("not change priority is deffer tskpri fot interrput handler.\n");
     return E_PAR;
   }
   /*休止状態の場合*/
   else if (tcb->state == TASK_DORMANT) {
-    DEBUG_OUTMSG("not change priority is tsk dormant for interrput hanler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("not change priority is tsk dormant for interrput hanler.\n");
     return E_OBJ;
   }
   /*その他の場合優先度を変更する*/
@@ -827,11 +828,11 @@ static void chg_pri_syscall_isr(TCB *tcb, int tskpri)
   if (tcb == current) {
     current->priority = tskpri; /* 実行状態タスクの優先度変更 */
     putcurrent(); /* システムコール発行タスクをレディーへ */
-    DEBUG_OUTMSG("tskid ");
-    DEBUG_OUTVLE(current->init.tskid, 0);
-    DEBUG_OUTMSG(" ");
-    DEBUG_OUTVLE(current->priority, 0);
-    DEBUG_OUTMSG(" change priority activ(context syscall) for interruput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("tskid ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->init.tskid, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->priority, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" change priority activ(context syscall) for interruput handler.\n");
   }
   /*
    * 優先度変更タスクが実行可能状態(レディーに存在する)の場合，実行状態タスクはレディーから抜き取られてくるので，
@@ -843,11 +844,11 @@ static void chg_pri_syscall_isr(TCB *tcb, int tskpri)
     get_tsk_readyque(tcb); /* レディーキューから抜き取る関数(scheduler.cにある) */
     current->priority = tskpri; /* 実行可能状態タスクの優先度を変更 */
     putcurrent(); /* 変更したタスクをレディーへ */
-    DEBUG_OUTMSG("tskid ");
-    DEBUG_OUTVLE(current->init.tskid, 0);
-    DEBUG_OUTMSG(" ");
-    DEBUG_OUTVLE(current->priority, 0);
-    DEBUG_OUTMSG(" change priority ready(context syscall) for interruput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("tskid ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->init.tskid, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->priority, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" change priority ready(context syscall) for interruput handler.\n");
   }
   /*
    * 優先度変更タスクが待ち状態(レディーに存在しない)の場合，実行状態タスクはレディーから抜き取られてくるので，
@@ -856,11 +857,11 @@ static void chg_pri_syscall_isr(TCB *tcb, int tskpri)
   else {
     putcurrent(); /* システムコール発行タスクをレディーへ */
     tcb->priority = tskpri; /* 待ち状態タスクの優先度変更 */
-    DEBUG_OUTMSG("tskid ");
-    DEBUG_OUTVLE(tcb->init.tskid, 0);
-    DEBUG_OUTMSG(" ");
-    DEBUG_OUTVLE(tcb->priority, 0);
-    DEBUG_OUTMSG(" change priority sleep(context syscall) for interruput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("tskid ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(tcb->init.tskid, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(tcb->priority, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" change priority sleep(context syscall) for interruput handler.\n");
   }
 }
 
@@ -892,11 +893,11 @@ static void chg_pri_isyscall_isr(TCB *tcb, int tskpri)
     if (tcb->intr_info.type == SERIAL_INTERRUPT) {
       putcurrent(); /* 非タスクコンテキスト用システムコール発行タスクをレディーへ */
     }
-    DEBUG_OUTMSG("tskid ");
-    DEBUG_OUTVLE(current->init.tskid, 0);
-    DEBUG_OUTMSG(" ");
-    DEBUG_OUTVLE(current->priority, 0);
-    DEBUG_OUTMSG(" change priority activ(not context syscall) for interruput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("tskid ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->init.tskid, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->priority, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" change priority activ(not context syscall) for interruput handler.\n");
   }
   /*
    * 優先度変更タスクが実行可能状態(レディーに存在する)の場合，実行状態タスクはレディーから抜き取られないので，
@@ -906,11 +907,11 @@ static void chg_pri_isyscall_isr(TCB *tcb, int tskpri)
     get_tsk_readyque(tcb); /* レディーキューから抜き取る関数(scheduler.cにある) */
     current->priority = tskpri;
     putcurrent();
-    DEBUG_OUTMSG("tskid ");
-    DEBUG_OUTVLE(current->init.tskid, 0);
-    DEBUG_OUTMSG(" ");
-    DEBUG_OUTVLE(current->priority, 0);
-    DEBUG_OUTMSG(" change priority ready(not context syscall) for interruput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("tskid ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->init.tskid, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(current->priority, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" change priority ready(not context syscall) for interruput handler.\n");
   }
   /*
    * 優先度変更タスクが待ち状態(レディーに存在しない)の場合，実行状態タスクはレディーから抜き取られないので，
@@ -918,10 +919,10 @@ static void chg_pri_isyscall_isr(TCB *tcb, int tskpri)
    */
   else {
     tcb->priority = tskpri;
-    DEBUG_OUTMSG("tskid ");
-    DEBUG_OUTVLE(tcb->init.tskid, 0);
-    DEBUG_OUTMSG(" ");
-    DEBUG_OUTVLE(tcb->priority, 0);
-    DEBUG_OUTMSG(" change priority sleep(not context syscall) for interruput handler.\n");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("tskid ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(tcb->init.tskid, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" ");
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE(tcb->priority, 0);
+    DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" change priority sleep(not context syscall) for interruput handler.\n");
   }
 }

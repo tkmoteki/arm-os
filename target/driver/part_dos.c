@@ -1,6 +1,7 @@
 #include "part.h"
 #include "part_dos.h"
 #include "ide.h"
+#include "kernel/debug.h"
 
 
 #if defined(CONFIG_CMD_IDE) ||                  \
@@ -42,19 +43,19 @@ static int get_partition_info_extended (block_dev_desc_t *dev_desc, int ext_part
   int i;
 
   if (dev_desc->block_read (dev_desc->dev, ext_part_sector, 1, (unsigned long *) buffer) != 1) {
-    puts("** Can't read partition table on ");
-    putxval(dev_desc->dev, 0);
-    puts(":");
-    putxval(dev_desc->dev, 0);
-    puts(" **\n");
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTMSG("** Can't read partition table on ");
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTVLE(dev_desc->dev, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTMSG(":");
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTVLE(dev_desc->dev, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTMSG(" **\n");
     return -1;
   }
   if (buffer[DOS_PART_MAGIC_OFFSET] != 0x55 ||
       buffer[DOS_PART_MAGIC_OFFSET + 1] != 0xaa) {
-    puts("bad MBR sector signature 0x");
-    putxval(buffer[DOS_PART_MAGIC_OFFSET], 0);
-    putxval(buffer[DOS_PART_MAGIC_OFFSET + 1], 0);
-    puts("\n");
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTMSG("bad MBR sector signature 0x");
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTVLE(buffer[DOS_PART_MAGIC_OFFSET], 0);
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTVLE(buffer[DOS_PART_MAGIC_OFFSET + 1], 0);
+    DEBUG_L1_TARGET_DRIVER_PART_DOS_OUTMSG("\n");
     return -1;
   }
 

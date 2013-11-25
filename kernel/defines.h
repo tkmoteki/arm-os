@@ -278,21 +278,6 @@ typedef enum {
 #define LOG_CONTEXT(log_tcb)
 #endif
 
-
-/*! デバックマクロ */
-/* #define DEBUG */
-
-#ifdef DEBUG
-/* debug message */
-#define DEBUG_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn))
-/* debug value */
-#define DEBUG_OUTMSG(testmsg) (puts(testmsg))
-#else
-#define DEBUG_OUTVLE(testvalue, testcolumn)
-#define DEBUG_OUTMSG(testmsg)
-#endif
-
-
 /*! kernel message */
 /* #define KERNEL_MSG */
 

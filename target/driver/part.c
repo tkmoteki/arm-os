@@ -1,5 +1,6 @@
 #include "part.h"
 #include "mmc.h"
+#include "kernel/debug.h"
 #include "kernel/defines.h"
 
 #if (defined(CONFIG_CMD_IDE) ||                 \
@@ -77,7 +78,7 @@ int get_partition_info (block_dev_desc_t *dev_desc, int part
 #if 0
       PRINTF ("## Valid MAC partition found ##\n");
 #endif
-      puts("## Valid MAC partition found ##\n");
+      DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("## Valid MAC partition found ##\n");
       return (0);
     }
     break;
@@ -89,7 +90,7 @@ int get_partition_info (block_dev_desc_t *dev_desc, int part
 #if 0
       PRINTF ("## Valid DOS partition found ##\n"w);
 #endif
-      puts("## Valid DOS partition found ##\n");
+      DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("## Valid DOS partition found ##\n");
       return (0);
     }
     break;
@@ -101,7 +102,7 @@ int get_partition_info (block_dev_desc_t *dev_desc, int part
 #if 0
       PRINTF ("## Valid ISO boot partition found ##\n");
 #endif
-      puts("## Valid ISO boot partition found ##\n");
+      DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("## Valid ISO boot partition found ##\n");
       return (0);
     }
     break;
@@ -114,7 +115,7 @@ int get_partition_info (block_dev_desc_t *dev_desc, int part
 #if 0
         PRINTF ("## Valid Amiga partition found ##\n");
 #endif
-        puts("## Valid Amiga partition found ##\n");
+        DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("## Valid Amiga partition found ##\n");
         return (0);
       }
     break;
@@ -126,7 +127,7 @@ int get_partition_info (block_dev_desc_t *dev_desc, int part
 #if 0
       PRINTF ("## Valid EFI partition found ##\n");
 #endif
-      puts("## Valid EFI partition found ##\n");
+      DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("## Valid EFI partition found ##\n");
       return (0);
     }
     break;
@@ -159,80 +160,80 @@ void dev_print (block_dev_desc_t *dev_desc)
 #endif
 
   if (dev_desc->type == DEV_TYPE_UNKNOWN) {
-    puts ("not available\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("not available\n");
     return;
   }
 
   switch (dev_desc->if_type) {
   case IF_TYPE_SCSI:
-    puts("(");
-    putxval(dev_desc->target, 0);
-    puts(":");
-    putxval(dev_desc->lun, 0);
-    puts(") Vendor: ");
-    puts(dev_desc->vendor);
-    puts(" Prod.: ");
-    puts(dev_desc->product);
-    puts(" Rev: ");
-    puts(dev_desc->revision);
-    puts("\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("(");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(dev_desc->target, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(":");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(dev_desc->lun, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(") Vendor: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->vendor);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" Prod.: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->product);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" Rev: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->revision);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("\n");
     break;
   case IF_TYPE_ATAPI:
   case IF_TYPE_IDE:
   case IF_TYPE_SATA:
-    puts("Model: ");
-    puts(dev_desc->vendor);
-    puts(" Firm: ");
-    puts(dev_desc->revision);
-    puts(" Ser#: ");
-    puts(dev_desc->product);
-    puts("\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("Model: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->vendor);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" Firm: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->revision);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" Ser#: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->product);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("\n");
     break;
   case IF_TYPE_SD:
   case IF_TYPE_MMC:
   case IF_TYPE_USB:
-    puts("Vendor: ");
-    puts(dev_desc->vendor);
-    puts(" Rev: ");
-    puts(dev_desc->revision);
-    puts(" Prod: ");
-    puts(dev_desc->product);
-    puts("\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("Vendor: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->vendor);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" Rev: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->revision);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" Prod: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(dev_desc->product);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("\n");
     break;
   case IF_TYPE_DOC:
-    puts("device type DOC\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("device type DOC\n");
     return;
   case IF_TYPE_UNKNOWN:
-    puts("device type unknown\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("device type unknown\n");
     return;
   default:
-    puts("Unhandled device type: ");
-    putxval(dev_desc->if_type, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("Unhandled device type: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(dev_desc->if_type, 0);
     return;
   }
-  puts ("            Type: ");
+  DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("            Type: ");
   if (dev_desc->removable)
-    puts ("Removable ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("Removable ");
   switch (dev_desc->type & 0x1F) {
   case DEV_TYPE_HARDDISK:
-    puts ("Hard Disk");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("Hard Disk");
     break;
   case DEV_TYPE_CDROM:
-    puts ("CD ROM");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("CD ROM");
     break;
   case DEV_TYPE_OPDISK:
-    puts ("Optical Device");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("Optical Device");
     break;
   case DEV_TYPE_TAPE:
-    puts ("Tape");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("Tape");
     break;
   default:
-    puts("# ");
-    putxval((dev_desc->type & 0x1F), 0);
-    puts(" #");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("# ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE((dev_desc->type & 0x1F), 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" #");
     break;
   }
-  puts ("\n");
+  DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("\n");
   if ((dev_desc->lba * dev_desc->blksz)>0L) {
     unsigned long mb, mb_quot, mb_rem, gb, gb_quot, gb_rem;
     lbaint_t lba;
@@ -250,39 +251,39 @@ void dev_print (block_dev_desc_t *dev_desc)
     gb_rem  = gb - (10 * gb_quot);
 #ifdef CONFIG_LBA48
     if (dev_desc->lba48)
-      puts("            Supports 48-bit addressing\n");
+      DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("            Supports 48-bit addressing\n");
 #endif
 #if defined(CONFIG_SYS_64BIT_LBA)
-    puts("            Capacity: ");
-    putxval(mb_quot, 0);
-    puts(".");
-    putxval(mb_rem, 0);
-    puts(" MB = ");
-    putxval(gb_quot, 0);
-    puts(".");
-    putxval(gb_rem, 0);
-    puts(" GB (");
-    putxval(lba, 0);
-    puts(" x ");
-    putxval(dev_desc->blksz, 0);
-    puts(")\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("            Capacity: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(mb_quot, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(".");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(mb_rem, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" MB = ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(gb_quot, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(".");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(gb_rem, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" GB (");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(lba, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" x ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(dev_desc->blksz, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(")\n");
 #else
-    puts("            Capacity: ");
-    putxval(mb_quot, 0);
-    puts(".");
-    putxval(mb_rem, 0);
-    puts(" MB = ");
-    putxval(gb_quot, 0);
-    puts(".");
-    putxval(gb_rem, 0);
-    puts(" GB (");
-    putxval((unsigned long)lba, 0);
-    puts(" x ");
-    putxval(dev_desc->blksz, 0);
-    puts(")\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG("            Capacity: ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(mb_quot, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(".");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(mb_rem, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" MB = ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(gb_quot, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(".");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(gb_rem, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" GB (");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE((unsigned long)lba, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(" x ");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTVLE(dev_desc->blksz, 0);
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG(")\n");
 #endif
   } else {
-    puts ("            Capacity: not available\n");
+    DEBUG_L1_TARGET_DRIVER_PART_OUTMSG ("            Capacity: not available\n");
   }
 }
 #endif

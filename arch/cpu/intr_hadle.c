@@ -1,3 +1,4 @@
+#include "kernel/debug.h"
 #include "kernel/defines.h"
 #include "cpu_cntrl.h"
 #include "intr_cntrl.h"
@@ -60,8 +61,8 @@ void intr_swi(unsigned long sp)
 
   /* 有効なベクタ番号は，0〜255までとする */
   type &= 0xff;
-  DEBUG_OUTVLE(type, 0);
-  DEBUG_OUTMSG(" swi number.\n");
+  DEBUG_L1_ARCH_CPU_INTR_HADLE_OUTVLE(type, 0);
+  DEBUG_L1_ARCH_CPU_INTR_HADLE_OUTMSG(" swi number.\n");
 
   syscall_intr(type, sp); /* ISR呼び出し */
 
@@ -117,8 +118,8 @@ void intr_irq(unsigned long sp)
   INTR_TYPE type;
 
   type = (INTR_TYPE)REG32_READ(INTCPS_SIR_IRQ) & 0x7F; /* 現在有効化したIRQ番号を取得(INTCPS_SIR_IRQレジスタは7ビット目で管理) */
-  DEBUG_OUTVLE(type, 0);
-  DEBUG_OUTMSG(" interrupt number.\n");
+  DEBUG_L1_ARCH_CPU_INTR_HADLE_OUTVLE(type, 0);
+  DEBUG_L1_ARCH_CPU_INTR_HADLE_OUTMSG(" interrupt number.\n");
   external_intr(type, sp);
   /*
    * 割込みコントローラのアサート取り消し

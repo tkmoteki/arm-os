@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "defines.h"
 #include "kernel.h"
 #include "c_lib/lib.h"
@@ -77,8 +78,8 @@ void* get_mpf_isr(int size)
   mem_block *mp;
   mem_pool *p;
 
-  DEBUG_OUTVLE(size, 0);
-  DEBUG_OUTMSG(" memory size.\n");
+  DEBUG_L1_KERNEL_MEMORY_OUTVLE(size, 0);
+  DEBUG_L1_KERNEL_MEMORY_OUTMSG(" memory size.\n");
   for (i = 0; i < MEMORY_AREA_NUM; i++) {
     p = &pool[i];
     if (size <= p->size - sizeof(mem_block)) {
