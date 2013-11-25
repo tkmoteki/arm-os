@@ -106,20 +106,26 @@ void uart_handler(void)
 int main(void)
 {
   
-  UINT32 *p;
+  UINT32 *s_ptr;
+  unsigned char *d_ptr;
+  int i;
 
-  /* BSSセクションの初期化(BSSセクションの初期化はここでOK) */
-  for (p = (UINT32 *)&_bss_start; p < &_bss_end; p++) {
-    *p = 0;
+  /* BSSセクション(静的セクション)の初期化 */
+  for (s_ptr = (UINT32 *)&_bss_start; s_ptr < &_bss_end; s_ptr++) {
+    *s_ptr = 0;
   }
-  /* tskbuffuerセクションの初期化 */
-  for (p = (UINT32 *)&_tskbuffer_start; p < &_tskbuffer_end; p++) {
-    *p = 0;
+  /* logbuffuerセクション(動的セクション)の初期化 */
+  for (i = 0, d_ptr = (unsigned char *)&_logbuffer_start; i < LOGBUFFER_SIZE; i++, d_ptr++) {
+    *d_ptr = '\0';
+  }
+  /* tskbuffuerセクション(動的セクション)の初期化 */
+  for (i = 0, d_ptr = (unsigned char *)&_tskbuffer_start; i < TSKBUFFER_SIZE; i++, d_ptr++) {
+    *d_ptr = '\0';
   }
 
   uart3_init(); /* シリアルの初期化 */
 
-  mmc_legacy_init(0);
+  mmc_legacy_init(0); /* mmcの初期化(dev:0) */
 
   KERNEL_OUTMSG("kernel boot OK!\n");
 
