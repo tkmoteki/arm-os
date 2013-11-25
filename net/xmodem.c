@@ -1,3 +1,4 @@
+#include "kernel/debug.h"
 #include "target/driver/serial_driver.h"
 #include "jis_ctrl_crd.h"
 #include "xmodem.h"
@@ -122,7 +123,7 @@ BOOL send_xmodem(UINT8 *bufp, UINT32 size)
       /* 受信側が正常ならば,ACKを受信 */
       if (JIS_X_0211_ACK == recv_crd) {
         putxval((--block_number), 0);
-        DEBUG_OUTMSG(" block number value.\n");
+        DEBUG_L1_NET_XMODEM_OUTMSG(" block number value.\n");
         return TRUE;
       }
       /* ACK以外をエラーとする */

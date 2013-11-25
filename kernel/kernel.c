@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "defines.h"
 #include "arch/cpu/intr.h"
 #include "intr_manage.h"
@@ -228,7 +229,7 @@ static ER_ID serch_tskid_table(int tskids)
   /* tskid変換テーブルを先頭から検索する */
   for (srh_cuntr = 0; srh_cuntr < tskids; srh_cuntr++) {
     if (mg_tsk_info.id_table[srh_cuntr] == NULL) {
-      DEBUG_OUTVLE(srh_cuntr, 0);
+      DEBUG_L1_KERNEL_KERNLE_OUTVLE(srh_cuntr, 0);
       return srh_cuntr;
     }
   }
@@ -241,8 +242,8 @@ static ER_ID serch_tskid_table(int tskids)
   else {
     srh_cuntr = tskids; /* 割付可能IDは累乗前(累乗前の要素数のインデックス)の位置にある */
   }
-  DEBUG_OUTVLE(srh_cuntr, 0);
-  DEBUG_OUTMSG(" tsk next counter\n");
+  DEBUG_L1_KERNEL_KERNLE_OUTVLE(srh_cuntr, 0);
+  DEBUG_L1_KERNEL_KERNLE_OUTMSG(" tsk next counter\n");
   
   return srh_cuntr;
 }
@@ -1015,7 +1016,7 @@ void kernel_init(TSK_FUNC func, char *name, int priority, int stacksize,
 //check_mtx_uncondy_protocol((MTXCB *)checktcb->get_info.gobjp); /* mutexの無条件解放(プロトコルも調べる) */
 //return E_OK;
 //default:
-//DEBUG_OUTMSG("not get kernel object for task dormant or non exsitent.\n");
+//DEBUG_L1_KERNEL_KERNLE_OUTMSG("not get kernel object for task dormant or non exsitent.\n");
 //return E_OK;
 //}
 //}
@@ -1033,9 +1034,9 @@ void kernel_init(TSK_FUNC func, char *name, int priority, int stacksize,
 //ER get_tsk_waitque(TCB *worktcb, UINT16 flags)
 //{
 
-//DEBUG_OUTMSG("task check waitqueue.\n");
-//DEBUG_OUTVLE(worktcb->state, 0);
-//DEBUG_OUTMSG("\n");
+//DEBUG_L1_KERNEL_KERNLE_OUTMSG("task check waitqueue.\n");
+//DEBUG_L1_KERNEL_KERNLE_OUTVLE(worktcb->state, 0);
+//DEBUG_L1_KERNEL_KERNLE_OUTMSG("\n");
 
 /*
  * 待ち要因を確認し，処理を分岐する.
@@ -1073,7 +1074,7 @@ void kernel_init(TSK_FUNC func, char *name, int priority, int stacksize,
 //case TASK_WAIT_MAILBOX:
 //return E_NOSPT;
 //default:
-//DEBUG_OUTMSG("task not wait queue(for ter_tsk() rel_wai() calls).\n");
+//DEBUG_L1_KERNEL_KERNLE_OUTMSG("task not wait queue(for ter_tsk() rel_wai() calls).\n");
 //return E_NG;
 //}
 //}

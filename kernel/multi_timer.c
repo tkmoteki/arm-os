@@ -1,3 +1,4 @@
+#include "debug.h"
 #include "kernel.h"
 #include "memory.h"
 #include "c_lib/lib.h"
@@ -29,7 +30,7 @@ void cyclic_timer_handler1(void)
 {
   /* ハードタイマ */
   //if (is_check_timer_expired(HARD_TIMER_DEFAULT_DEVICE)) { /* タイマは満了したか */
-  DEBUG_OUTMSG("timer_handler1!\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG("timer_handler1!\n");
   expire_cycle_timer(0); /* タイマ満了処理 */
   //}
 }
@@ -42,7 +43,7 @@ void oneshot_timer_handler1(void)
   //TMRCB *tbf;
   
   /* 差分のキューによるソフトタイマ */
-  DEBUG_OUTMSG("softtimer is expire 1.\n\n");
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG("softtimer is expire 1.\n\n");
   expire_oneshot_timer(1);
   cancel_timer(mg_timerque.index); /* タイマキャンセル処理 */
   next_tmrcb_diffque(); /* 差分のキューからタイマコントロールブロックの排除 */
@@ -146,19 +147,19 @@ static void insert_tmrcb_diffque(TMRCB* newtbf)
     newtbf->next = worktbf;
     /* 先頭に挿入 */
     if (i == 0) {
-      DEBUG_OUTMSG("many1.\n");
+      DEBUG_L1_KERNEL_COMMAND_OUTMSG("many1.\n");
       worktbf->prev = newtbf;
       mg_timerque.tmrhead = newtbf;
     }
     /* 最後に代入 */
     else if (worktbf == NULL) {
-      DEBUG_OUTMSG("many2.\n");
+      DEBUG_L1_KERNEL_COMMAND_OUTMSG("many2.\n");
       newtbf->prev = tmptbf;
       tmptbf->next = newtbf;
     }
     /* 上記以外に挿入 */
     else {
-      DEBUG_OUTMSG("many3.\n");
+      DEBUG_L1_KERNEL_COMMAND_OUTMSG("many3.\n");
       newtbf->prev = worktbf->prev;
       worktbf->prev = worktbf->prev->next = newtbf;
     }
@@ -185,7 +186,7 @@ static void next_tmrcb_diffque(void)
   /* 差分のキューに次ノードがない場合 */
   else {
     mg_timerque.tmrhead = NULL;
-    DEBUG_OUTMSG("all release timercb2.\n");
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG("all release timercb2.\n");
   }
   /* タイマコントロールブロックの動的メモリ解放(カーネルが発行できるシステムコールはないため，内部関数を呼ぶ) */
   rel_mpf_isr(worktbf);

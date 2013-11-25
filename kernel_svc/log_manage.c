@@ -1,3 +1,4 @@
+#include "kernel/debug.h"
 #include "kernel/kernel.h"
 #include "kernel/scr_symbols.h"
 #include "log_manage.h"
@@ -54,7 +55,7 @@ void get_log(OBJP log_tcb)
    *  システムコールを発行したタスクの次(ISR適用後(currentが切り替わるものは，適用前のログとなる))の状態
    */
   if (log_counter == tmp) {
-    DEBUG_OUTMSG("ddddd.\n");
+    DEBUG_L1_KERNEL_SVC_LOG_MANAGE_OUTMSG("ddddd.\n");
     memset((char *)logbuf, 0, TASK_NAME_SIZE * 4);
     strcpy((char *)logbuf, work->init.name);
     logbuf += TASK_NAME_SIZE;
@@ -77,7 +78,7 @@ void get_log(OBJP log_tcb)
    *  次にディスパッチされるタスクの状態
    */
   else {
-    DEBUG_OUTMSG("eeeee.\n");
+    DEBUG_L1_KERNEL_SVC_LOG_MANAGE_OUTMSG("eeeee.\n");
     *logbuf = tskid;
     logbuf++;
     *logbuf = priority;

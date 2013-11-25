@@ -1,4 +1,5 @@
 #include "arch/cpu/intr.h"
+#include "debug.h"
 #include "scheduler.h"
 #include "kernel.h"
 #include "memory.h"
@@ -182,7 +183,7 @@ static ER write_schdul(SCHDUL_TYPE type, long param)
 
 static ER switch_schduler(SCHDUL_TYPE type)
 {
-  DEBUG_OUTMSG("coming soon.\n");
+  DEBUG_L1_KERNEL_SCHDUL_OUTMSG("coming soon.\n");
 
   /*SCHDULCB *next_schcb;
 
@@ -682,7 +683,7 @@ void set_unrolled_schedule_val(int len, int exetim)
     work_exetim = mg_schdul_info.entry->un.dms_schdul.unroll_exetim;
   }
   if (!len) {
-    DEBUG_OUTMSG("not division.\n");
+    DEBUG_L1_KERNEL_SCHDUL_OUTMSG("not division.\n");
     return;
   }
   
