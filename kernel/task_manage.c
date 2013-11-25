@@ -52,6 +52,7 @@
 #include "memory.h"
 #include "task_manage.h"
 #include "scheduler.h"
+#include "scr_symbols.h"
 #include "ready.h"
 //#include "target/driver/timer_driver.h"
 //#include "timer_callrte.h"
@@ -315,8 +316,7 @@ static void tsk_priority_init(TCB *tcb, int priority)
  */
 static ER get_tsk_stack(TCB *tcb, int stacksize)
 {
-  extern char _tskstack; /* リンカスクリプトで定義されるスタック領域 */
-  static char *p_stack = &_tskstack;
+  static char *p_stack = (char *)&_tskstack;
 
   tcb->stacksize = stacksize;
 
