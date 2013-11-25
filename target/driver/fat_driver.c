@@ -1143,14 +1143,14 @@ file_fat_detectfs(void)
   defined(CONFIG_MMC)
   puts("Interface:  ");
   switch(cur_dev->if_type) {
-    case IF_TYPE_IDE :  puts("IDE"); break;
-    case IF_TYPE_SATA : puts("SATA"); break;
-    case IF_TYPE_SCSI : puts("SCSI"); break;
-    case IF_TYPE_ATAPI :  puts("ATAPI"); break;
-    case IF_TYPE_USB :  puts("USB"); break;
-    case IF_TYPE_DOC :  puts("DOC"); break;
-    case IF_TYPE_MMC :  puts("MMC"); break;
-    default :   puts("Unknown");
+  case IF_TYPE_IDE :  puts("IDE"); break;
+  case IF_TYPE_SATA : puts("SATA"); break;
+  case IF_TYPE_SCSI : puts("SCSI"); break;
+  case IF_TYPE_ATAPI :  puts("ATAPI"); break;
+  case IF_TYPE_USB :  puts("USB"); break;
+  case IF_TYPE_DOC :  puts("DOC"); break;
+  case IF_TYPE_MMC :  puts("MMC"); break;
+  default :   puts("Unknown");
   }
   puts("\n  Device ");
   putxval(cur_dev->dev, 0);
