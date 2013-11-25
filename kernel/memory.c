@@ -2,6 +2,7 @@
 #include "kernel.h"
 #include "c_lib/lib.h"
 #include "memory.h"
+#include "scr_symbols.h"
 
 
 /*!
@@ -40,8 +41,7 @@ static void mem_init_pool(mem_pool *p)
   int i;
   mem_block *mp;
   mem_block **mpp;
-  extern char _heap; /* リンカスクリプトで定義される空き領域 */
-  static char *area = &_heap;
+  static char *area = (char *)&_heap;
 
   mp = (mem_block *)area;
 

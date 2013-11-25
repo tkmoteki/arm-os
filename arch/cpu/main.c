@@ -1,6 +1,7 @@
 /* BSSセクションの初期化より前に変数を使用しない */
 #include "kernel/defines.h"
 #include "kernel/kernel.h"
+#include "kernel/scr_symbols.h"
 #include "c_lib/lib.h"
 #include "target/driver/serial_driver.h"
 #include "arch/cpu/intr.h"
@@ -9,8 +10,6 @@
 
 
 void uart_handler(void);
-extern unsigned long _bss_start, _end;
-extern unsigned long _tskbuffer_start, _tskbuffer_end;
 
 /*! 資源ID */
 ER_ID idle_id;
@@ -107,14 +106,14 @@ void uart_handler(void)
 int main(void)
 {
   
-  unsigned long *p;
+  UINT32 *p;
 
   /* BSSセクションの初期化(BSSセクションの初期化はここでOK) */
-  for (p = &_bss_start; p < &_end; p++) {
+  for (p = (UINT32 *)&_bss_start; p < &_bss_end; p++) {
     *p = 0;
   }
   /* tskbuffuerセクションの初期化 */
-  for (p = &_tskbuffer_start; p < &_tskbuffer_end; p++) {
+  for (p = (UINT32 *)&_tskbuffer_start; p < &_tskbuffer_end; p++) {
     *p = 0;
   }
 

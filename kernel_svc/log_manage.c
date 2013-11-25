@@ -1,4 +1,5 @@
 #include "kernel/kernel.h"
+#include "kernel/scr_symbols.h"
 #include "log_manage.h"
 #include "c_lib/lib.h"
 
@@ -7,7 +8,6 @@
 #define CONTEXT_LOG_ONESIZE 92    /* コンテキストログ1つあたりの大きさ */
 
 
-extern volatile unsigned long _logbuffer_start; /* ログ格納専用メモリセグメント */
 volatile unsigned long *logbuf;
 
 
