@@ -1,24 +1,33 @@
+/* private interface */
+#include "intr_manage.h"
+#include "memory.h"
+#include "multi_timer.h"
+#include "ready.h"
+#include "scheduler.h"
+#include "task_manage.h"
+#include "task_sync.h"
+
+/* public interface */
+/* include/kernel */
 #include "debug.h"
 #include "defines.h"
-#include "arch/cpu/intr.h"
-#include "intr_manage.h"
 #include "kernel.h"
-#include "c_lib/lib.h"
-#include "kernel_svc/log_manage.h"
+#include "syscall.h"
+/* include/cpu */
+#include "intr.h"
+/* include/lib/c */
+#include "lib.h"
+/* include/kernel_svc */
+#include "log_manage.h"
+/* include/driver */
+#include "gp_timer.h"
+
 //#include "mailbox.h"
-#include "memory.h"
 //#include "mutex.h"
 //#include "nmi.h"
 //#include "prinvermutex.h"
-#include "ready.h"
-#include "scheduler.h"
 //#include "semaphore.h"
-#include "syscall.h"
 //#include "system_manage.h"
-#include "task_manage.h"
-#include "task_sync.h"
-#include "multi_timer.h"
-#include "target/driver/timer_driver.h"
 //#include "time_manage.h"
 
 

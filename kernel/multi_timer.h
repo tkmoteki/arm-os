@@ -2,6 +2,7 @@
 #define _MULTI_TIMER_H_INCLUDED_
 
 
+/* include/kernel */
 #include "defines.h"
 
 

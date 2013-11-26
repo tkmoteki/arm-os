@@ -96,10 +96,12 @@
 #ifndef _SCHEDULER_H_INCLUDED_
 #define _SCHEDULER_H_INCLUDED_
 
+/* kernel */
+#include "ready.h"
 
+/* include/kernel */
 #include "defines.h"
 #include "kernel.h"
-#include "ready.h"
 
 
 /*! スケジューラコントロールブロック */

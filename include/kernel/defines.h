@@ -24,8 +24,8 @@
 #define _DEFINES_H_INCLUDED_
 
 
-#include "arch/cpu/intr.h"
-#include "c_lib/lib.h"
+#include "include/cpu/intr.h"
+#include "include/c/lib.h"
 
 
 /*! 型の定義 */

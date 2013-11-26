@@ -1,7 +1,7 @@
 #ifndef _COMMAND_H_INCLUDED_
 #define _COMMAND_H_INCLUDED_
 
-#include "defines.h"
+#include "include/kernel/defines.h"
 
 /*! echoコマンド */
 void echo_command(char buf[]);

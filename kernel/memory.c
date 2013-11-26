@@ -1,9 +1,14 @@
+/* private interface */
+#include "memory.h"
+
+/* public interface */
+/* include/kernel */
 #include "debug.h"
 #include "defines.h"
 #include "kernel.h"
-#include "c_lib/lib.h"
-#include "memory.h"
 #include "scr_symbols.h"
+/* include/lib/c */
+#include "lib.h"
 
 
 /*!

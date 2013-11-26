@@ -1,7 +1,7 @@
 #ifndef _TASK_SYNC_H_
 #define _TASK_SYNC_H_
 
-
+/* include/kernel */
 #include "defines.h"
 
 

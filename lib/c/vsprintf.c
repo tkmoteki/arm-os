@@ -1,5 +1,10 @@
+/* private interface */
 #include "ctype.h"
+
+/*public interface */
+/* include/lib/c */
 #include "lib.h"
+
 
 unsigned long simple_strtoul(const char *cp,char **endp,unsigned int base)
 {

@@ -10,13 +10,18 @@
  */
 
 
+/* private interface */
 
+/* public interface */
+/* include/kernel */
 #include "defines.h"
 #include "kernel.h"
-//#include "interrupt.h"
 #include "syscall.h"
+/* include/lib/c */
+#include "lib.h"
+
+//#include "interrupt.h"
 //#include "mailbox.h"
-#include "c_lib/lib.h"
 
 
 /* システムコール */

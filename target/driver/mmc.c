@@ -1,6 +1,10 @@
-#include "mmc.h"
+/* private interface */
 #include "io.h"
-#include "fat_driver.h"
+/* public interface */
+/* include/driver */
+#include "mmc.h"
+/* include/fs */
+#include "fat.h"
 
 
 const unsigned short mmc_transspeed_val[15][4] = {

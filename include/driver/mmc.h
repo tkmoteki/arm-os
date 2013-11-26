@@ -2,7 +2,7 @@
 #define _MMC_H_INCLUDED_
 
 #include "part.h"
-#include "io.h"
+#include "target/driver/io.h"
 
 /*
  * uboot

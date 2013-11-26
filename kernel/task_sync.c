@@ -1,9 +1,15 @@
-#include "kernel.h"
-#include "c_lib/lib.h"
+/* private interface */
 #include "scheduler.h"
 #include "task_sync.h"
+
+/* public interface */
+/* include/kernel */
+#include "kernel.h"
+/* include/lib/c */
+#include "lib.h"
+
 //#include "timer_callrte.h"
-//#include "target/driver/timer_driver.h"
+//#include "target/driver/gp_timer.h"
 
 
 /*!

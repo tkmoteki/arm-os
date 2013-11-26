@@ -1,7 +1,7 @@
 #ifndef _DEBUG_H_INCLUDED_
 #define _DEBUG_H_INCLUDED_
 
-#include "c_lib/lib.h"
+#include "include/c/lib.h"
 
 /*! デバックマクロ */
 /*
@@ -68,12 +68,12 @@
 #define DEBUG_L1_ARCH_GCC_DIV0_OUTMSG(testmsg)
 #endif
 
-#if defined(DEBUG_LEVEL1) && defined(FS_FAT)
-#define DEBUG_L1_FS_FAT_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
-#define DEBUG_L1_FS_FAT_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
+#if defined(DEBUG_LEVEL1) && defined(FS_FAT_FAT)
+#define DEBUG_L1_FS_FAT_FAT_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
+#define DEBUG_L1_FS_FAT_FAT_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
 #else
-#define DEBUG_L1_FS_FAT_OUTVLE(testvalue, testcolumn)
-#define DEBUG_L1_FS_FAT_OUTMSG(testmsg)
+#define DEBUG_L1_FS_FAT_FAT_OUTVLE(testvalue, testcolumn)
+#define DEBUG_L1_FS_FAT_FAT_OUTMSG(testmsg)
 #endif
 
 #if defined(DEBUG_LEVEL1) && defined(KERNEL_KERNLE)
@@ -204,20 +204,20 @@
 #define DEBUG_L1_NET_XMODEM_OUTMSG(testmsg)
 #endif
 
-#if defined(DEBUG_LEVEL1) && defined(TARGET_DRIVER_SERIAL_DRIVER)
-#define DEBUG_L1_TARGET_DRIVER_SERIAL_DRIVER_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
-#define DEBUG_L1_TARGET_DRIVER_SERIAL_DRIVER_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
+#if defined(DEBUG_LEVEL1) && defined(TARGET_DRIVER_UART)
+#define DEBUG_L1_TARGET_DRIVER_UART_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
+#define DEBUG_L1_TARGET_DRIVER_UART_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
 #else
-#define DEBUG_L1_TARGET_DRIVER_SERIAL_DRIVER_OUTVLE(testvalue, testcolumn)
-#define DEBUG_L1_TARGET_DRIVER_SERIAL_DRIVER_OUTMSG(testmsg)
+#define DEBUG_L1_TARGET_DRIVER_UART_OUTVLE(testvalue, testcolumn)
+#define DEBUG_L1_TARGET_DRIVER_UART_OUTMSG(testmsg)
 #endif
 
-#if defined(DEBUG_LEVEL1) && defined(TARGET_DRIVER_TIMER_DRIVER)
-#define DEBUG_L1_TARGET_DRIVER_TIMER_DRIVER_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
-#define DEBUG_L1_TARGET_DRIVER_TIMER_DRIVER_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
+#if defined(DEBUG_LEVEL1) && defined(TARGET_DRIVER_GP_TIMER)
+#define DEBUG_L1_TARGET_DRIVER_GP_TIMER_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
+#define DEBUG_L1_TARGET_DRIVER_GP_TIMER_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
 #else
-#define DEBUG_L1_TARGET_DRIVER_TIMER_DRIVER_OUTVLE(testvalue, testcolumn)
-#define DEBUG_L1_TARGET_DRIVER_TIMER_DRIVER_OUTMSG(testmsg)
+#define DEBUG_L1_TARGET_DRIVER_GP_TIMER_OUTVLE(testvalue, testcolumn)
+#define DEBUG_L1_TARGET_DRIVER_GP_TIMER_OUTMSG(testmsg)
 #endif
 
 #if defined(DEBUG_LEVEL1) && defined(TARGET_DRIVER_MMC)

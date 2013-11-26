@@ -1,7 +1,13 @@
-#include "kernel.h"
-#include "c_lib/lib.h"
-#include "arch/cpu/intr.h"
+/* private interface */
 #include "intr_manage.h"
+
+/* public interface */
+/* include/kernel */
+#include "kernel.h"
+/* include/lib/c */
+#include "lib.h"
+/* include/cpu */
+#include "intr.h"
 
 
 /*!

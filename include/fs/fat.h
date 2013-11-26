@@ -2,8 +2,8 @@
 #define _FAT_DRIVER_H_INCLUDED_
 
 
-#include "byteorder.h"
-#include "part.h"
+#include "target/driver/byteorder.h"
+#include "include/driver/part.h"
 
 #define CONFIG_SUPPORT_VFAT
 

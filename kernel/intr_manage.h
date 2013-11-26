@@ -1,7 +1,7 @@
 #ifndef _INTR_MANAGE_H_
 #define _INTR_MANAGE_H_
 
-
+/* include/kernel */
 #include "defines.h"
 
 

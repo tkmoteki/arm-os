@@ -1,7 +1,7 @@
 #ifndef _XMODEM_H_INCLUDED_
 #define _XMODEM_H_INCLUDED_
 
-#include "kernel/defines.h"
+#include "include/kernel/defines.h"
 
 
 /*! XMODEMでの送信制御 */

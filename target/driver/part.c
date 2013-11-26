@@ -1,7 +1,13 @@
-#include "part.h"
+/* private interface */
+
+/* public interface */
+/* include/driver */
 #include "mmc.h"
-#include "kernel/debug.h"
-#include "kernel/defines.h"
+#include "part.h"
+/* include/kernel */
+#include "debug.h"
+#include "defines.h"
+
 
 #if (defined(CONFIG_CMD_IDE) ||                 \
      defined(CONFIG_CMD_MG_DISK) ||             \

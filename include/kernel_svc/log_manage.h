@@ -2,7 +2,7 @@
 #define _LOG_MANAGE_H_INCLUDED_
 
 
-#include "kernel/defines.h"
+#include "include/kernel/defines.h"
 
 
 #define CONTEXT_LOG_ONESIZE 92    /* コンテキストログ1つあたりの大きさ */

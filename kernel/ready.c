@@ -1,8 +1,13 @@
-#include "kernel.h"
+/* private interface */
 #include "memory.h"
 #include "ready.h"
 #include "scheduler.h"
-#include "c_lib/lib.h"
+
+/* public interface */
+/* include/kernel */
+#include "kernel.h"
+/* include/lib/c */
+#include "lib.h"
 
 
 /*! キュー構造のレディーブロックの初期化 */

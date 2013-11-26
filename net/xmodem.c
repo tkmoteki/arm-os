@@ -1,7 +1,13 @@
-#include "kernel/debug.h"
-#include "target/driver/serial_driver.h"
+/* private interface */
 #include "jis_ctrl_crd.h"
+
+/* public interface */
+/* include/net */
 #include "xmodem.h"
+/* include/kernel */
+#include "debug.h"
+/* include/driver */
+#include "uart.h"
 
 
 #define XMODEM_BLOCK_SIZE 128 /* XMODEMのブロックサイズ */

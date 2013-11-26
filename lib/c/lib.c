@@ -1,6 +1,12 @@
+/* private interface */
+
+/* public interface */
+/* include/lib/c */
 #include "lib.h"
-#include "kernel/defines.h"
-#include "target/driver/serial_driver.h"
+/* include/kernel */
+#include "defines.h"
+/* include/driver */
+#include "uart.h"
 
 
 /*

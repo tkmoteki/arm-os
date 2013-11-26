@@ -1,3 +1,7 @@
+/* private interface */
+
+/* public interface */
+/* include/cpu */
 #include "cpu_cntrl.h"
 
 #define VECTOR_TABLE 0x4020FFC4   /*! lowvectorの先頭アドレス */

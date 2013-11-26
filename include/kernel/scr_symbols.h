@@ -1,7 +1,7 @@
 #ifndef _SCR_SYMBOLS_H_INCLUDED_
 #define _SCR_SYMBOLS_H_INCLUDED_
 
-#include "defines.h"
+#include "include/kernel/defines.h"
 
 /*! リンカのシンボルを参照 */
 

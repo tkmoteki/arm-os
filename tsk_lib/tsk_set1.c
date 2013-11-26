@@ -12,10 +12,12 @@
 
 #ifdef TSK_LIBRARY
 
-
-#include "kernel/defines.h" /* このosの型の定義 */
-#include "kernel/kernel.h"    /* システムコール及びユーザタスクのシステムコールの定義 */
-#include "c_lib/lib.h"      /* 標準ライブラリの定義 */
+/* public interface */
+/* include/kernel */
+#include "defines.h" /* このosの型の定義 */
+#include "kernel.h"    /* システムコール及びユーザタスクのシステムコールの定義 */
+/* include/lib/c */
+#include "lib.h"      /* 標準ライブラリの定義 */
 
 
 /* 低優先度タスク(優先度5で起動される) */

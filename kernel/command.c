@@ -1,13 +1,21 @@
+/* private interface */
+
+/* public interface */
+/* include/kernel */
 #include "debug.h"
 #include "defines.h"
 #include "command.h"
 #include "kernel.h"
+#include "scr_symbols.h"
 #include "syscall.h"
-#include "net/xmodem.h"
-#include "kernel/scr_symbols.h"
-#include "kernel_svc/log_manage.h"
-#include "target/driver/part.h"
-#include "target/driver/fat_driver.h"
+/* include/kernel_svc */
+#include "log_manage.h"
+/* include/net */
+#include "xmodem.h"
+/* include/driver */
+#include "part.h"
+/* include/fs */
+#include "fat.h"
 
 
 #ifdef TSK_LIBRARY

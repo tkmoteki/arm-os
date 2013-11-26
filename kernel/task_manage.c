@@ -46,16 +46,23 @@
  *   これはあんま意味がないので，実装しない.                                          *
  */
 
-#include "arch/cpu/cpu_cntrl.h"
+/* private interface */
+#include "memory.h"
+#include "ready.h"
+#include "scheduler.h"
+#include "task_manage.h"
+
+/* public interface */
+/* include/kernel */
 #include "debug.h"
 #include "kernel.h"
-#include "c_lib/lib.h"
-#include "memory.h"
-#include "task_manage.h"
-#include "scheduler.h"
 #include "scr_symbols.h"
-#include "ready.h"
-//#include "target/driver/timer_driver.h"
+/* include/cpu */
+#include "cpu_cntrl.h"
+/* include/lib/c */
+#include "lib.h"
+
+//#include "target/driver/gp_timer.h"
 //#include "timer_callrte.h"
 
 

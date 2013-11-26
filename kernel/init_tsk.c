@@ -1,9 +1,16 @@
-#include "defines.h"
-#include "arch/cpu/intr_cntrl.h"
-#include "kernel.h"
-#include "c_lib/lib.h"
-#include "target/driver/serial_driver.h"
+/* private interface */
 #include "multi_timer.h"
+
+/* public interface */
+/* include/kernel */
+#include "defines.h"
+#include "kernel.h"
+/* include/cpu */
+#include "intr_cntrl.h"
+/* include/lib/c */
+#include "lib.h"
+/* include/driver */
+#include "uart.h"
 
 
 extern void uart_handler(void);
