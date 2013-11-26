@@ -1,9 +1,15 @@
+/* private interface */
+#include "memory.h"
+#include "multi_timer.h"
+
+/* public interface */
+/* include/kernel */
 #include "debug.h"
 #include "kernel.h"
-#include "memory.h"
-#include "c_lib/lib.h"
-#include "target/driver/timer_driver.h"
-#include "multi_timer.h"
+/* include/lib/c */
+#include "lib.h"
+/* include/driver */
+#include "gp_timer.h"
 
 
 /*

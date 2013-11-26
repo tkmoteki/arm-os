@@ -1,7 +1,7 @@
 #ifndef _PART_H_INCLUDED_
 #define _PART_H_INCLUDED_
 
-#include "ide.h"
+#include "target/driver/ide.h"
 
 typedef struct block_dev_desc {
   int   if_type;  /* type of the interface */

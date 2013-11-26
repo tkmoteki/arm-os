@@ -1,8 +1,15 @@
-#include "fat_driver.h"
+/* private interface */
+
+/* public interface */
+/* include/fs */
+#include "fat.h"
+/* include/kernel */
+#include "debug.h"
+#include "defines.h"
+/* include/driver */
 #include "part.h"
-#include "kernel/debug.h"
-#include "kernel/defines.h"
-#include "c_lib/lib.h"
+/* include/lib/c */
+#include "lib.h"
 
 
 /*
@@ -193,7 +200,7 @@ get_fatent(fsdata *mydata, __u32 entry)
 #if 0
       FAT_DPRINT("Error reading FAT blocks\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error reading FAT blocks\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error reading FAT blocks\n");
       return ret;
     }
     mydata->fatbufnum = bufnum;
@@ -243,11 +250,11 @@ get_fatent(fsdata *mydata, __u32 entry)
 #if 0
   FAT_DPRINT("ret: %d, offset: %d\n", ret, offset);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("ret: ");
-  DEBUG_L1_FS_FAT_OUTVLE(ret, 0);
-  DEBUG_L1_FS_FAT_OUTMSG(", offset: ");
-  DEBUG_L1_FS_FAT_OUTVLE(offset, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("ret: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(ret, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(", offset: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(offset, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 
   return ret;
 }
@@ -272,16 +279,16 @@ get_cluster(fsdata *mydata, __u32 clustnum, __u8 *buffer, unsigned long size)
 #if 0
   FAT_DPRINT("gc - clustnum: %d, startsect: %d\n", clustnum, startsect);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("gc - clustnum: ");
-  DEBUG_L1_FS_FAT_OUTVLE(clustnum, 0);
-  DEBUG_L1_FS_FAT_OUTMSG(", startsect: ");
-  DEBUG_L1_FS_FAT_OUTVLE(startsect, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("gc - clustnum: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(clustnum, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(", startsect: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(startsect, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
   if (disk_read(startsect, size/FS_BLOCK_SIZE , buffer) < 0) {
 #if 0
     FAT_DPRINT("Error reading data\n");
 #endif
-    DEBUG_L1_FS_FAT_OUTMSG("Error reading data\n");
+    DEBUG_L1_FS_FAT_FAT_OUTMSG("Error reading data\n");
     return -1;
   }
   if(size % FS_BLOCK_SIZE) {
@@ -291,7 +298,7 @@ get_cluster(fsdata *mydata, __u32 clustnum, __u8 *buffer, unsigned long size)
 #if 0
       FAT_DPRINT("Error reading data\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error reading data\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error reading data\n");
       return -1;
     }
     buffer += idx*FS_BLOCK_SIZE;
@@ -322,18 +329,18 @@ get_contents(fsdata *mydata, dir_entry *dentptr, __u8 *buffer,
 #if 0
   FAT_DPRINT("Filesize: %ld bytes\n", filesize);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("Filesize: ");
-  DEBUG_L1_FS_FAT_OUTVLE(filesize, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("bytes\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Filesize: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(filesize, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("bytes\n");
 
   if (maxsize > 0 && filesize > maxsize) filesize = maxsize;
 
 #if 0
   FAT_DPRINT("Reading: %ld bytes\n", filesize);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("Reading: ");
-  DEBUG_L1_FS_FAT_OUTVLE(filesize, 0);
-  DEBUG_L1_FS_FAT_OUTMSG(" bytes\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Reading: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(filesize, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(" bytes\n");
 
   actsize=bytesperclust;
   endclust=curclust;
@@ -348,10 +355,10 @@ get_contents(fsdata *mydata, dir_entry *dentptr, __u8 *buffer,
         FAT_DPRINT("curclust: 0x%x\n", newclust);
         FAT_DPRINT("Invalid FAT entry\n");
 #endif
-        DEBUG_L1_FS_FAT_OUTMSG("curclust: 0x");
-        DEBUG_L1_FS_FAT_OUTVLE(newclust, 0);
-        DEBUG_L1_FS_FAT_OUTMSG("\n");
-        DEBUG_L1_FS_FAT_OUTMSG("Invalid FAT entry\n");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("curclust: 0x");
+        DEBUG_L1_FS_FAT_FAT_OUTVLE(newclust, 0);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("Invalid FAT entry\n");
         return gotsize;
       }
       endclust=newclust;
@@ -364,7 +371,7 @@ get_contents(fsdata *mydata, dir_entry *dentptr, __u8 *buffer,
 #if 0
       FAT_ERROR("Error reading cluster\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error reading cluster\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error reading cluster\n");
       return -1;
     }
     /* get remaining bytes */
@@ -376,7 +383,7 @@ get_contents(fsdata *mydata, dir_entry *dentptr, __u8 *buffer,
 #if 0
       FAT_ERROR("Error reading cluster\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error reading cluster\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error reading cluster\n");
       return -1;
     }
     gotsize+=actsize;
@@ -386,7 +393,7 @@ get_contents(fsdata *mydata, dir_entry *dentptr, __u8 *buffer,
 #if 0
       FAT_ERROR("Error reading cluster\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error reading cluster\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error reading cluster\n");
       return -1;
     }
     gotsize += (int)actsize;
@@ -398,10 +405,10 @@ get_contents(fsdata *mydata, dir_entry *dentptr, __u8 *buffer,
       FAT_DPRINT("curclust: 0x%x\n", curclust);
       FAT_ERROR("Invalid FAT entry\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("curclust: 0x");
-      DEBUG_L1_FS_FAT_OUTVLE(curclust, 0);
-      DEBUG_L1_FS_FAT_OUTMSG("\n");
-      DEBUG_L1_FS_FAT_OUTMSG("Invalid FAT entry\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("curclust: 0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(curclust, 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Invalid FAT entry\n");
       return gotsize;
     }
     actsize=bytesperclust;
@@ -477,10 +484,10 @@ get_vfatname(fsdata *mydata, int curclust, __u8 *cluster,
       FAT_DPRINT("curclust: 0x%x\n", curclust);
       FAT_ERROR("Invalid FAT entry\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("curclust: 0x");
-      DEBUG_L1_FS_FAT_OUTVLE(curclust, 0);
-      DEBUG_L1_FS_FAT_OUTMSG("\n");
-      DEBUG_L1_FS_FAT_OUTMSG("Invalid FAT entry\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("curclust: 0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(curclust, 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Invalid FAT entry\n");
       return -1;
     }
     if (get_cluster(mydata, curclust, get_vfatname_block,
@@ -488,7 +495,7 @@ get_vfatname(fsdata *mydata, int curclust, __u8 *cluster,
 #if 0
       FAT_DPRINT("Error: reading directory block\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error: reading directory block\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error: reading directory block\n");
       return -1;
     }
     slotptr2 = (dir_slot*) get_vfatname_block;
@@ -556,9 +563,9 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
 #if 0
   FAT_DPRINT ("get_dentfromdir: %s\n", filename);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("get_dentfromdir: ");
-  DEBUG_L1_FS_FAT_OUTMSG(filename);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("get_dentfromdir: ");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(filename);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
   while (1) {
     dir_entry *dentptr;
     int i;
@@ -568,7 +575,7 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
 #if 0
       FAT_DPRINT ("Error: reading directory block\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error: reading directory block\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error: reading directory block\n");
       return NULL;
     }
     dentptr = (dir_entry *) get_dentfromdir_block;
@@ -625,9 +632,9 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
 #if 0
           FAT_DPRINT ("vfatname: |%s|\n", l_name);
 #endif
-          DEBUG_L1_FS_FAT_OUTMSG("vfatname: |");
-          DEBUG_L1_FS_FAT_OUTMSG(l_name);
-          DEBUG_L1_FS_FAT_OUTMSG("\n");
+          DEBUG_L1_FS_FAT_FAT_OUTMSG("vfatname: |");
+          DEBUG_L1_FS_FAT_FAT_OUTMSG(l_name);
+          DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
         } else
 #endif
           {
@@ -647,9 +654,9 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
 #if 0
         FAT_DPRINT ("Dentname == NULL - %d\n", i);
 #endif
-        DEBUG_L1_FS_FAT_OUTMSG("Dentname == NULL - ");
-        DEBUG_L1_FS_FAT_OUTVLE(i, 0);
-        DEBUG_L1_FS_FAT_OUTMSG("\n");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("Dentname == NULL - ");
+        DEBUG_L1_FS_FAT_FAT_OUTVLE(i, 0);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
         return NULL;
       }
 #ifdef CONFIG_SUPPORT_VFAT
@@ -697,10 +704,10 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
 #if 0
         FAT_DPRINT ("Mismatch: |%s|%s|\n", s_name, l_name);
 #endif
-        DEBUG_L1_FS_FAT_OUTMSG("Mismatch: |");
-        DEBUG_L1_FS_FAT_OUTMSG(s_name);
-        DEBUG_L1_FS_FAT_OUTMSG(l_name);
-        DEBUG_L1_FS_FAT_OUTMSG("\n");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("Mismatch: |");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG(s_name);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG(l_name);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
         dentptr++;
         continue;
       }
@@ -712,15 +719,15 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
                   FAT2CPU32 (dentptr->size),
                   (dentptr->attr & ATTR_DIR) ? "(DIR)" : "");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("DentName: ");
-      DEBUG_L1_FS_FAT_OUTMSG(s_name);
-      DEBUG_L1_FS_FAT_OUTMSG(", start: 0x");
-      DEBUG_L1_FS_FAT_OUTVLE(START (dentptr), 0);
-      DEBUG_L1_FS_FAT_OUTMSG(", size:  0x");
-      DEBUG_L1_FS_FAT_OUTVLE(FAT2CPU32 (dentptr->size), 0);
-      DEBUG_L1_FS_FAT_OUTMSG(" ");
-      DEBUG_L1_FS_FAT_OUTMSG(((dentptr->attr & ATTR_DIR) ? "(DIR)" : ""));
-      DEBUG_L1_FS_FAT_OUTMSG("\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("DentName: ");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(s_name);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(", start: 0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(START (dentptr), 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(", size:  0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(FAT2CPU32 (dentptr->size), 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(" ");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(((dentptr->attr & ATTR_DIR) ? "(DIR)" : ""));
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 
       return retdent;
     }
@@ -730,9 +737,9 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
       FAT_DPRINT ("curclust: 0x%x\n", curclust);
       FAT_ERROR ("Invalid FAT entry\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("curclust: 0x");
-      DEBUG_L1_FS_FAT_OUTVLE(curclust, 0);
-      DEBUG_L1_FS_FAT_OUTMSG("Invalid FAT entry\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("curclust: 0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(curclust, 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Invalid FAT entry\n");
       return NULL;
     }
   }
@@ -754,7 +761,7 @@ read_bootsectandvi(boot_sector *bs, volume_info *volinfo, int *fatsize)
 #if 0
     FAT_DPRINT("Error: reading block\n");
 #endif
-    DEBUG_L1_FS_FAT_OUTMSG("Error: reading block\n");
+    DEBUG_L1_FS_FAT_FAT_OUTMSG("Error: reading block\n");
     return -1;
   }
 
@@ -802,7 +809,7 @@ read_bootsectandvi(boot_sector *bs, volume_info *volinfo, int *fatsize)
 #if 0
   FAT_DPRINT("Error: broken fs_type sign\n");
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("Error: broken fs_type sign\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Error: broken fs_type sign\n");
   return -1;
 }
 
@@ -830,7 +837,7 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
 #if 0
     FAT_DPRINT ("Error: reading boot sector\n");
 #endif
-    DEBUG_L1_FS_FAT_OUTMSG("Error: reading boot sector\n");
+    DEBUG_L1_FS_FAT_FAT_OUTMSG("Error: reading boot sector\n");
     return -1;
   }
   if (mydata->fatsize == 32) {
@@ -857,33 +864,33 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
   FAT_DPRINT ("FAT%d, fatlength: %d\n", mydata->fatsize,
               mydata->fatlength);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("FAT");
-  DEBUG_L1_FS_FAT_OUTVLE(mydata->fatsize, 0);
-  DEBUG_L1_FS_FAT_OUTMSG(", fatlength: ");
-  DEBUG_L1_FS_FAT_OUTVLE(mydata->fatlength, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("FAT");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(mydata->fatsize, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(", fatlength: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(mydata->fatlength, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 #if 0
   FAT_DPRINT ("Rootdir begins at sector: %d, offset: %x, size: %d\n"
               "Data begins at: %d\n",
               mydata->rootdir_sect, mydata->rootdir_sect * SECTOR_SIZE,
               rootdir_size, mydata->data_begin);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("Rootdir begins at sector: ");
-  DEBUG_L1_FS_FAT_OUTVLE(mydata->rootdir_sect, 0);
-  DEBUG_L1_FS_FAT_OUTMSG(", offset: ");
-  DEBUG_L1_FS_FAT_OUTVLE((mydata->rootdir_sect * SECTOR_SIZE), 0);
-  DEBUG_L1_FS_FAT_OUTMSG(", size: ");
-  DEBUG_L1_FS_FAT_OUTVLE(rootdir_size, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
-  DEBUG_L1_FS_FAT_OUTMSG("Data begins at: ");
-  DEBUG_L1_FS_FAT_OUTVLE(mydata->data_begin, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Rootdir begins at sector: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(mydata->rootdir_sect, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(", offset: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE((mydata->rootdir_sect * SECTOR_SIZE), 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(", size: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(rootdir_size, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Data begins at: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(mydata->data_begin, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 #if 0
   FAT_DPRINT ("Cluster size: %d\n", mydata->clust_size);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("Cluster size: ");
-  DEBUG_L1_FS_FAT_OUTVLE(mydata->clust_size, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Cluster size: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(mydata->clust_size, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 
   /* "cwd" is always the root... */
   while (ISDIRDELIM (*filename))
@@ -913,7 +920,7 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
 #if 0
       FAT_DPRINT ("Error: reading rootdir block\n");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("Error: reading rootdir block\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("Error: reading rootdir block\n");
       return -1;
     }
     dentptr = (dir_entry *) do_fat_read_block;
@@ -964,9 +971,9 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
 #if 0
           FAT_DPRINT ("Rootvfatname: |%s|\n", l_name);
 #endif
-          DEBUG_L1_FS_FAT_OUTMSG("Rootvfatname: |");
-          DEBUG_L1_FS_FAT_OUTMSG(l_name);
-          DEBUG_L1_FS_FAT_OUTMSG("|\n");
+          DEBUG_L1_FS_FAT_FAT_OUTMSG("Rootvfatname: |");
+          DEBUG_L1_FS_FAT_FAT_OUTMSG(l_name);
+          DEBUG_L1_FS_FAT_FAT_OUTMSG("|\n");
         } else
 #endif
           {
@@ -978,9 +985,9 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
 #if 0
         FAT_DPRINT ("RootDentname == NULL - %d\n", i);
 #endif
-        DEBUG_L1_FS_FAT_OUTMSG("RootDentname == NULL - ");
-        DEBUG_L1_FS_FAT_OUTVLE(i, 0);
-        DEBUG_L1_FS_FAT_OUTMSG("\n");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("RootDentname == NULL - ");
+        DEBUG_L1_FS_FAT_FAT_OUTVLE(i, 0);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
         if (dols == LS_ROOT) {
           puts("\n");
           putxval(files, 0);
@@ -1039,10 +1046,10 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
 #if 0
         FAT_DPRINT ("RootMismatch: |%s|%s|\n", s_name, l_name);
 #endif
-        DEBUG_L1_FS_FAT_OUTMSG("RootMismatch: |");
-        DEBUG_L1_FS_FAT_OUTMSG(s_name);
-        DEBUG_L1_FS_FAT_OUTMSG(l_name);
-        DEBUG_L1_FS_FAT_OUTMSG("\n");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("RootMismatch: |");
+        DEBUG_L1_FS_FAT_FAT_OUTMSG(s_name);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG(l_name);
+        DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
         dentptr++;
         continue;
       }
@@ -1054,15 +1061,15 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
       FAT_DPRINT (", size:  0x%x %s\n",
                   FAT2CPU32 (dentptr->size), isdir ? "(DIR)" : "");
 #endif
-      DEBUG_L1_FS_FAT_OUTMSG("RootName: ");
-      DEBUG_L1_FS_FAT_OUTMSG(s_name);
-      DEBUG_L1_FS_FAT_OUTMSG(", start: 0x");
-      DEBUG_L1_FS_FAT_OUTVLE(START (dentptr), 0);
-      DEBUG_L1_FS_FAT_OUTMSG(", size:  0x");
-      DEBUG_L1_FS_FAT_OUTVLE(FAT2CPU32 (dentptr->size), 0);
-      DEBUG_L1_FS_FAT_OUTMSG(" ");
-      DEBUG_L1_FS_FAT_OUTMSG((isdir ? "(DIR)" : ""));
-      DEBUG_L1_FS_FAT_OUTMSG("\n");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("RootName: ");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(s_name);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(", start: 0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(START (dentptr), 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(", size:  0x");
+      DEBUG_L1_FS_FAT_FAT_OUTVLE(FAT2CPU32 (dentptr->size), 0);
+      DEBUG_L1_FS_FAT_FAT_OUTMSG(" ");
+      DEBUG_L1_FS_FAT_FAT_OUTMSG((isdir ? "(DIR)" : ""));
+      DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 
       goto rootdir_done;  /* We got a match */
     }
@@ -1114,11 +1121,11 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
 #if 0
   FAT_DPRINT ("Size: %d, got: %ld\n", FAT2CPU32 (dentptr->size), ret);
 #endif
-  DEBUG_L1_FS_FAT_OUTMSG("Size: ");
-  DEBUG_L1_FS_FAT_OUTVLE(FAT2CPU32 (dentptr->size), 0);
-  DEBUG_L1_FS_FAT_OUTMSG(", got: ");
-  DEBUG_L1_FS_FAT_OUTVLE(ret, 0);
-  DEBUG_L1_FS_FAT_OUTMSG("\n");
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("Size: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(FAT2CPU32 (dentptr->size), 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG(", got: ");
+  DEBUG_L1_FS_FAT_FAT_OUTVLE(ret, 0);
+  DEBUG_L1_FS_FAT_FAT_OUTMSG("\n");
 
   return ret;
 }

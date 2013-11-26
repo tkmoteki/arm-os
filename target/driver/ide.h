@@ -1,7 +1,8 @@
 #ifndef _IDE_H_INCLUDED_
 #define _IDE_H_INCLUDED_
 
-#include "kernel/defines.h"
+/* include/kernel */
+#include "defines.h"
 
 #if 0
 #ifdef CONFIG_SYS_64BIT_LBA

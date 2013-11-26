@@ -1,8 +1,14 @@
-#include "kernel/debug.h"
-#include "kernel/kernel.h"
-#include "kernel/scr_symbols.h"
+/* private interface */
+
+/* public interface */
+/* include/kernel_svc */
 #include "log_manage.h"
-#include "c_lib/lib.h"
+/* include/kernel */
+#include "debug.h"
+#include "kernel.h"
+#include "scr_symbols.h"
+/* include/lib/c */
+#include "lib.h"
 
 
 #define LOG_BUFFER_MAX      4096  /* ログバッファの最大 */

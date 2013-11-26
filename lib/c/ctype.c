@@ -1,4 +1,8 @@
+/* private interface */
 #include "ctype.h"
+
+/* public interface */
+
 
 unsigned char _ctype[] = {
   _C,_C,_C,_C,_C,_C,_C,_C,      /* 0-7 */

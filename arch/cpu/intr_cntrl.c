@@ -1,5 +1,10 @@
-#include "kernel/defines.h"
+/* private interface */
+
+/* public interface */
+/* include/cpu */
 #include "intr_cntrl.h"
+/* include/kernel */
+#include "defines.h"
 
 
 /*! 割込みコントローラ(MIR有効化) */

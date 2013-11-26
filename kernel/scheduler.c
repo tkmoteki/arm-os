@@ -1,13 +1,19 @@
-#include "arch/cpu/intr.h"
-#include "debug.h"
-#include "scheduler.h"
-#include "kernel.h"
+/* private interface */
 #include "memory.h"
-#include "scr_symbols.h"
-#include "task_manage.h"
-//#include "timer_callrte.h"
-//#include "target/driver/timer_driver.h"
+#include "scheduler.h"
 #include "ready.h"
+#include "task_manage.h"
+
+/* public interface */
+/* include/kernel */
+#include "debug.h"
+#include "kernel.h"
+#include "scr_symbols.h"
+/* include/cpu */
+#include "intr.h"
+
+//#include "timer_callrte.h"
+//#include "target/driver/gp_timer.h"
 
 
 /*! スケジューラ情報メモリセグメントへ書き込み */

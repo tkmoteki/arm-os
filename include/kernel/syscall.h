@@ -16,7 +16,7 @@
 #ifndef _SYSCALL_H_INCLUDED_
 #define _SYSCALL_H_INCLUDED_
 
-#include "defines.h"
+#include "include/kernel/defines.h"
 //#include "interrupt.h"
 
 

@@ -33,8 +33,8 @@
 #define _KERNEL_H_INCLUDED_
 
 
-#include "defines.h"
-#include "syscall.h"
+#include "include/kernel/defines.h"
+#include "include/kernel/syscall.h"
 //#include "interrupt.h"
 
 

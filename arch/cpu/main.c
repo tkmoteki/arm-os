@@ -1,13 +1,20 @@
 /* BSSセクションの初期化より前に変数を使用しない */
-#include "kernel/debug.h"
-#include "kernel/defines.h"
-#include "kernel/kernel.h"
-#include "kernel/scr_symbols.h"
-#include "c_lib/lib.h"
-#include "target/driver/serial_driver.h"
-#include "arch/cpu/intr.h"
-#include "kernel/command.h"
-#include "target/driver/mmc.h"
+/* private interface */
+
+/* public interface */
+/* include/cpu */
+#include "intr.h"
+/* include/kernel */
+#include "debug.h"
+#include "defines.h"
+#include "command.h"
+#include "kernel.h"
+#include "scr_symbols.h"
+/* include/c */
+#include "lib.h"
+/* include/driver */
+#include "mmc.h"
+#include "uart.h"
 
 
 void uart_handler(void);

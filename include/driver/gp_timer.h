@@ -1,5 +1,9 @@
+/* General-Purpose Timers */
+
 #ifndef _TIMER_DRIVER_H_INCLUDED_
 #define _TIMER_DRIVER_H_INCLUDED_
+
+#include "include/kernel/defines.h"
 
 
 /*! 周期タイマスタート */

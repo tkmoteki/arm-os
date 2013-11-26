@@ -7,3 +7,6 @@ C_SOURCES += kernel.c syscall.c scheduler.c ready.c memory.c task_manage.c intr_
 
 # task
 C_SOURCES += init_tsk.c
+
+KERNEL_DIR_INCLUDE += -Iinclude/kernel -Iinclude/c -Iinclude/kernel_svc -Iinclude/fs -Iinclude/net -Iinclude/driver -Iinclude/cpu
+

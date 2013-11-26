@@ -1,5 +1,12 @@
-#include "kernel/defines.h"
-#include "timer_driver.h"
+/* General-Purpose Timers */
+
+/* private interface */
+
+/* public interface */
+/* include/driver */
+#include "gp_timer.h"
+/* include/kernel */
+#include "defines.h"
 
 
 /* Timer Instance Summary(汎用タイマ1〜11のマップアドレス) */

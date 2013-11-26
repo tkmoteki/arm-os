@@ -1,6 +1,7 @@
 #ifndef _READY_H_INCLUDED_
 #define _READY_H_INCLUDED_
 
+/* include/kernel */
 #include "defines.h"
 #include "kernel.h"
 

@@ -1,7 +1,12 @@
-#include "part.h"
-#include "part_dos.h"
+/* private interface */
 #include "ide.h"
-#include "kernel/debug.h"
+#include "part_dos.h"
+
+/* public interface */
+/* include/driver */
+#include "part.h"
+/* include/kernel */
+#include "debug.h"
 
 
 #if defined(CONFIG_CMD_IDE) ||                  \

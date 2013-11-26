@@ -1,5 +1,11 @@
-#include "kernel/defines.h"
-#include "serial_driver.h"                                                /*! arm cortex-A8 UARTシリアル定義 */
+/* UART */
+/* private interface */
+
+/* public interface */
+/* include/driver */
+#include "uart.h"                                                /*! arm cortex-A8 UARTシリアル定義 */
+/* include/kernel */
+#include "defines.h"
 
 
 #define UARTClock   (48000000 / 1)                                        /*! クロック(Hz) */

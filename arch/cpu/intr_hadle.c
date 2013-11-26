@@ -1,13 +1,18 @@
-#include "kernel/debug.h"
-#include "kernel/defines.h"
+/* private interface */
+#include "intr_hadle.h"
+/* public interface */
+/* include/cpu */
 #include "cpu_cntrl.h"
 #include "intr_cntrl.h"
-#include "intr_hadle.h"
-#include "kernel/kernel.h"
-#include "c_lib/lib.h"
-#include "target/driver/serial_driver.h"
-#include "kernel/syscall.h"
-
+/* include/kernel */
+#include "debug.h"
+#include "defines.h"
+#include "kernel.h"
+#include "syscall.h"
+/* include/c */
+#include "lib.h"
+/* include/driver */
+#include "uart.h"
 
 
 /*!
