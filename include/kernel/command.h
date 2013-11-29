@@ -36,11 +36,8 @@ void fatinfo_command(char *buf);
 /*! fsinfo制御 */
 int do_fat_fsinfo (int argc, char *argv[]);
 
-
-#ifdef TSK_LIBRARY
 /*! runコマンド */
 void run_command(char *buf);
-#endif
 
 
 #endif

@@ -15,22 +15,11 @@
 /* include/driver */
 #include "mmc.h"
 #include "uart.h"
+#include "resources/kernel_obj_id.h" /* リソース情報 */
 
 
 void uart_handler(void);
 
-/*! 資源ID */
-ER_ID idle_id;
-#ifdef TSK_LIBRARY
-ER_ID sample_tsk1_id;
-ER_ID sample_tsk2_id;
-ER_ID sample_tsk3_id;
-ER_ID sample_tsk4_id;
-ER_ID sample_tsk5_id;
-ER_ID sample_tsk6_id;
-ER_ID sample_tsk7_id;
-ER_ID sample_tsk8_id;
-#endif
 
 /* irqハンドラ */
 void uart_handler(void)
@@ -65,12 +54,10 @@ void uart_handler(void)
       else if (!strncmp(buf, "help", 4)) {
         help_command(&buf[4]); /* helpコマンド呼び出し */
       }
-#ifdef TSK_LIBRARY
       /* runコマンドの場合 */
       else if (!strncmp(buf, "run", 3)) {
         run_command(&buf[3]); /* runコマンド(タスクセットの起動)呼び出し */
       }
-#endif
       /* sendlogの場合 */
       else if (!strncmp(buf, "sendlog", 7)) {
         sendlog_command(); /* sendlogコマンド(xmodem送信モード)呼び出し */
