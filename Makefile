@@ -14,7 +14,7 @@
 # -mtune            : -mcpuの別名(gcc3.4以降)
 
 
-PREFIX  = $(HOME)/bin/CodeSourcery/Sourcery_G++_Lite
+PREFIX  = tools/CodeSourcery/Sourcery_G++_Lite
 BINDIR  = $(PREFIX)/bin
 
 
@@ -174,7 +174,7 @@ exe :
 
 #make imageを使用する時は，以下にu-bootのmkimageバイナリファイルをおく
 image : $(TARGET).bin
-	../u-boot/tools/mkimage \
+	tools/u-boot/mkimage \
 	-A arm -O linux -T kernel -C none \
 	-n "Angstrom/2.6.32/beagleboard" -a 0x80008000 -e 0x80008000 \
 	-d $(TARGET).bin $(TARGET)

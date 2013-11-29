@@ -14,7 +14,7 @@
 # -mtune            : -mcpuの別名(gcc3.4以降)
 
 
-PREFIX  = $(HOME)/bin/CodeSourcery/Sourcery_G++_Lite
+PREFIX  = tools/CodeSourcery/Sourcery_G++_Lite
 BINDIR  = $(PREFIX)/bin
 
 
