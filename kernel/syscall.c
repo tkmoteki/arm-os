@@ -23,6 +23,9 @@
 //#include "interrupt.h"
 //#include "mailbox.h"
 
+/* カレントタスクへシステムコール情報を保存 */
+static void set_current_tsk_syscall_info(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret);
+
 
 /* システムコール */
 /*!
@@ -53,7 +56,7 @@ ER_ID mz_acre_tsk(SYSCALL_PARAMCB *par)
   param.un.acre_tsk.argc = par->un.acre_tsk.argc;
   param.un.acre_tsk.argv = par->un.acre_tsk.argv;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_ACRE_TSK, &param, (OBJP)(&(param.un.acre_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_ACRE_TSK, &param, (OBJP)(&(param.un.acre_tsk.ret)));
   asm volatile ("swi #0");
   
   /* 割込み復帰後はここへもどってくる */
@@ -77,7 +80,7 @@ ER mz_del_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.del_tsk.tskid = tskid;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_DEL_TSK, &param, (OBJP)(&(param.un.del_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_DEL_TSK, &param, (OBJP)(&(param.un.del_tsk.ret)));
   asm volatile ("swi #1");
 
   /* 割込み復帰後はここへもどってくる */
@@ -101,7 +104,7 @@ ER mz_sta_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.sta_tsk.tskid = tskid;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_STA_TSK, &param, (OBJP)(&(param.un.sta_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_STA_TSK, &param, (OBJP)(&(param.un.sta_tsk.ret)));
   asm volatile ("swi #2");
 
   /* 割込み復帰後はここへもどってくる */
@@ -140,7 +143,7 @@ ER_ID mz_run_tsk(SYSCALL_PARAMCB *par)
   param.un.run_tsk.argc = par->un.run_tsk.argc;
   param.un.run_tsk.argv = par->un.run_tsk.argv;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_RUN_TSK, &param, (OBJP)(&(param.un.run_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_RUN_TSK, &param, (OBJP)(&(param.un.run_tsk.ret)));
   asm volatile ("swi #3");
   
   /* 割込み復帰後はここへもどってくる */
@@ -156,7 +159,7 @@ ER_ID mz_run_tsk(SYSCALL_PARAMCB *par)
 void mz_ext_tsk(void)
 {
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_EXT_TSK, NULL, WAIT_ERCD_NOCHANGE);
+  set_current_tsk_syscall_info(ISR_TYPE_EXT_TSK, NULL, WAIT_ERCD_NOCHANGE);
   asm volatile ("swi #4");
 
   /* 割込み復帰後はここへもどってこない */
@@ -171,7 +174,7 @@ void mz_ext_tsk(void)
 void mz_exd_tsk(void)
 {
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_EXD_TSK, NULL, WAIT_ERCD_NOCHANGE);
+  set_current_tsk_syscall_info(ISR_TYPE_EXD_TSK, NULL, WAIT_ERCD_NOCHANGE);
   asm volatile ("swi #5");
 
   /* 割込み復帰後はここへもどってこない */
@@ -195,7 +198,7 @@ ER mz_ter_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.ter_tsk.tskid = tskid;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_TER_TSK, &param, (OBJP)(&(param.un.ter_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_TER_TSK, &param, (OBJP)(&(param.un.ter_tsk.ret)));
   asm volatile ("swi #6");
 
   /* 割込み復帰後はここへもどってくる */
@@ -222,7 +225,7 @@ ER mz_get_pri(ER_ID tskid, int *p_tskpri)
   param.un.get_pri.tskid = tskid;
   param.un.get_pri.p_tskpri = p_tskpri;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_GET_PRI, &param, (OBJP)(&(param.un.get_pri.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_GET_PRI, &param, (OBJP)(&(param.un.get_pri.ret)));
   asm volatile ("swi #7");
 
   /* 割込み復帰後はここへもどってくる */
@@ -250,7 +253,7 @@ ER mz_chg_pri(ER_ID tskid, int tskpri)
   param.un.chg_pri.tskid = tskid;
   param.un.chg_pri.tskpri = tskpri;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_CHG_PRI, &param, (OBJP)(&(param.un.chg_pri.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_CHG_PRI, &param, (OBJP)(&(param.un.chg_pri.ret)));
   asm volatile ("swi #8");
 
   /* 割込み復帰後はここへもどってくる */
@@ -268,7 +271,7 @@ ER mz_slp_tsk(void)
 {
   SYSCALL_PARAMCB param;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_SLP_TSK, &param, (OBJP)(&(param.un.slp_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_SLP_TSK, &param, (OBJP)(&(param.un.slp_tsk.ret)));
   asm volatile ("swi #9");
 
   /* 割込み復帰後はここへもどってくる */
@@ -293,7 +296,7 @@ ER mz_wup_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.wup_tsk.tskid = tskid;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_WUP_TSK, &param, (OBJP)(&(param.un.wup_tsk.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_WUP_TSK, &param, (OBJP)(&(param.un.wup_tsk.ret)));
   asm volatile ("swi #10");
 
   /* 割込み復帰後はここへもどってくる */
@@ -317,7 +320,7 @@ ER mz_rel_wai(ER_ID tskid)
   /* パラメータ退避 */
   param.un.rel_wai.tskid = tskid;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_REL_WAI, &param, (OBJP)(&(param.un.rel_wai.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_REL_WAI, &param, (OBJP)(&(param.un.rel_wai.ret)));
   asm volatile ("swi #11");
 
   /* 割込み復帰後はここへもどってくる */
@@ -332,7 +335,7 @@ void* mz_get_mpf(int size)
   SYSCALL_PARAMCB param;
 
   param.un.get_mpf.size = size;
-  issue_trap_syscall(ISR_TYPE_GET_MPF, &param, (OBJP)(&(param.un.get_mpf.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_GET_MPF, &param, (OBJP)(&(param.un.get_mpf.ret)));
   asm volatile ("swi #12");
 
   return param.un.get_mpf.ret;
@@ -345,7 +348,7 @@ int mz_rel_mpf(void *p)
   SYSCALL_PARAMCB param;
 
   param.un.rel_mpf.p = p;
-  issue_trap_syscall(ISR_TYPE_REL_MPF, &param, (OBJP)(&(param.un.rel_mpf.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_REL_MPF, &param, (OBJP)(&(param.un.rel_mpf.ret)));
   asm volatile ("swi #13");
 
   return param.un.rel_mpf.ret;
@@ -368,7 +371,7 @@ ER mz_def_inh(INTRPT_TYPE type, IR_HANDL handler)
   param.un.def_inh.type = type;
   param.un.def_inh.handler = handler;
   /* トラップ発行 */
-  issue_trap_syscall(ISR_TYPE_DEF_INH, &param, (OBJP)(&(param.un.def_inh.ret)));
+  set_current_tsk_syscall_info(ISR_TYPE_DEF_INH, &param, (OBJP)(&(param.un.def_inh.ret)));
   asm volatile ("swi #14");
 
   /* 割込み復帰後はここへもどってくる */
@@ -391,147 +394,16 @@ ER mz_sel_schdul(SCHDUL_TYPE type, long param)
 }
 
 
-/*
- * interrput syscall
- * 非タスクコンテキストから呼び出すシステムコール(タスクの切り替えは行わない)
- */
-/*
- * パラメータ類の退避割込みは使用しない(mz_acre_tsk():タスクコントロールブロックの生成(ID自動割付))
- * acre_tsk()システムコールはパラメータ数が多いので,とりあえず構造体×共用体でやった(他のもやったほうがいいのかな～).
- * *par : ユーザ側で定義されたシステムコールバッファポインタ
- * (返却値)E_PAR : システムコールの引数不正
- * (返却値)E_NOID : 動的メモリが取得できない(割付可能なIDがない)
- * (返却値)E_NOMEM : ユーザスタックが確保できない
- * (返却値)tskid : 正常終了
- */
-ER mz_iacre_tsk(SYSCALL_PARAMCB *par)
-{
-  SYSCALL_PARAMCB param;
-  /* iacre_tskの延長でget_tsk_readyque()が呼ばれるとcurrentが書き換えられるので一時退避 */
-  TCB *tmptcb = current;
-  /*
-   * システムコール割込みハンドラの延長で非タスクコンテキスト用システムコールが呼ばれた時は，
-   * syscall_info.flagが書き換えられるため退避
-   */
-  SYSCALL_TYPE tmp_flag = current->syscall_info.flag;
-  
-  /* パラメータ退避 */
-  param.un.acre_tsk.func = par->un.acre_tsk.func;
-  param.un.acre_tsk.name = par->un.acre_tsk.name;
-  param.un.acre_tsk.priority = par->un.acre_tsk.priority;
-  param.un.acre_tsk.stacksize = par->un.acre_tsk.stacksize;
-  param.un.acre_tsk.rate = par->un.acre_tsk.rate;
-  param.un.acre_tsk.rel_exetim = par->un.acre_tsk.rel_exetim;
-  param.un.acre_tsk.deadtim = par->un.acre_tsk.deadtim;
-  param.un.acre_tsk.floatim = par->un.acre_tsk.floatim;
-  param.un.acre_tsk.argc = par->un.acre_tsk.argc;
-  param.un.acre_tsk.argv = par->un.acre_tsk.argv;
-  /* トラップは発行しない(単なる関数呼び出し) */
-  isyscall_intr(ISR_TYPE_IACRE_TSK, &param);
-
-  /* 実行状態タスクを前の状態へ戻す */
-  current = tmptcb;
-  current->syscall_info.flag = tmp_flag;
-
-  return param.un.acre_tsk.ret;
-}
-
-
 /*!
- * 割込み出入り口前のパラメータ類の退避(mz_sta_tsk():スレッドの起動)
- * tskid : 起動するタスクID
- * (返却値)E_ID : エラー終了(タスクIDが不正)
- * (返却値)E_NOEXS エラー終了(対象タスクが未登録)
- * (返却値)E_OK : 正常終了
- * (返却値)E_OBJ : エラー終了(タスクが休止状態ではない)
+ * カレントタスクへシステムコール情報を保存
+ * type : システムコールのタイプ
+ * *param : システムコールパケットへのポインタ
+ * ret : システムコール返却値格納ポインタ
  */
-ER mz_ista_tsk(ER_ID tskid)
+static void set_current_tsk_syscall_info(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret)
 {
-  SYSCALL_PARAMCB param;
-  /* ichg_priの延長でget_tsk_readyque()が呼ばれるとcurrentが書き換えられるので一時退避 */
-  TCB *tmptcb = current;
-  /*
-   * システムコール割込みハンドラの延長で非タスクコンテキスト用システムコールが呼ばれた時は，
-   * syscall_info.flagが書き換えられるため退避
-   */
-  SYSCALL_TYPE tmp_flag = current->syscall_info.flag;
-  
-  /* パラメータ退避 */
-  param.un.sta_tsk.tskid = tskid;
-  /* トラップは発行しない(単なる関数呼び出し) */
-  isyscall_intr(ISR_TYPE_ISTA_TSK, &param);
+  current->syscall_info.type  = type;
+  current->syscall_info.param = param;
+  current->syscall_info.ret = ret;
 
-  /* 実行状態タスクを前の状態へ戻す */
-  current = tmptcb;
-  current->syscall_info.flag = tmp_flag;
-
-  return param.un.sta_tsk.ret;
-}
-
-
-/*!
- * パラメータ類の退避割込みは使用しない(mz_ichg_pri():スレッドの優先度変更)
- * tskid : 優先度を変更するタスクID
- * tskpri : 変更する優先度
- * (返却値)E_ID : エラー終了(タスクIDが不正)
- * (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
- * (返却値)E_PAR : エラー終了(tskpriが不正)
- * (返却値)E_OBJ : エラー終了(タスクが休止状態)
- * (返却値)E_OK : 正常終了
- */
-ER mz_ichg_pri(ER_ID tskid, int tskpri)
-{
-  SYSCALL_PARAMCB param;
-  /* ichg_priの延長でget_tsk_readyque()が呼ばれるとcurrentが書き換えられるので一時退避 */
-  TCB *tmptcb = current;
-  /*
-   * システムコール割込みハンドラの延長で非タスクコンテキスト用システムコールが呼ばれた時は，
-   * syscall_info.flagが書き換えられるため退避
-   */
-  SYSCALL_TYPE tmp_flag = current->syscall_info.flag;
- 
-  /* パラメータ退避 */
-  param.un.chg_pri.tskid = tskid;
-  param.un.chg_pri.tskpri = tskpri;
-  /* トラップは発行しない(単なる関数呼び出し) */
-  isyscall_intr(ISR_TYPE_CHG_PRI, &param);
-
-  /* 実行状態タスクを前の状態へ戻す */
-  current = tmptcb;
-  current->syscall_info.flag = tmp_flag;
-  
-  return param.un.chg_pri.ret;
-}
-
-
-/*!
- * 割込み出入り口前のパラメータ類の退避(mz_iwup_tsk():タスクの起床)
- * tskid : タスクの起床するタスクID
- * (返却値)E_ID : エラー終了(タスクIDが不正)
- * (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
- * (返却値)E_OBJ : 対象タスクが休止状態
- * (返却値)E_ILUSE : システムコール不正使用(要求タスクが実行状態または，何らかの待ち行列につながれている)
- * (返却値)E_OK : 正常終了
- */
-ER mz_iwup_tsk(ER_ID tskid)
-{
-  SYSCALL_PARAMCB param;
-  /* iwup_tskの延長でget_tsk_readyque()が呼ばれるとcurrentが書き換えられるので一時退避 */
-  TCB *tmptcb = current;
-  /*
-   * システムコール割込みハンドラの延長で非タスクコンテキスト用システムコールが呼ばれた時は，
-   * syscall_info.flagが書き換えられるため退避
-   */
-  SYSCALL_TYPE tmp_flag = current->syscall_info.flag;
-
-  /* パラメータ退避 */
-  param.un.wup_tsk.tskid = tskid;
-  /* トラップは発行しない(単なる関数呼び出し) */
-  isyscall_intr(ISR_TYPE_WUP_TSK, &param);
-
-  /* 実行状態タスクを前の状態へ戻す */
-  current = tmptcb;
-  current->syscall_info.flag = tmp_flag;
-
-  return param.un.wup_tsk.ret;
 }

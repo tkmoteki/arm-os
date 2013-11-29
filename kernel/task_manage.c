@@ -361,9 +361,17 @@ static void tsk_endup(void)
  */
 static void tsk_startup(TCB *tcb)
 {
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("D:task_manage:tsk_startup ");
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTVLE((unsigned long)tcb->init.func, 0);
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" tcb->init.func value(addr).\n");
+
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("D:task_manage:tsk_startup ");
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(tcb->init.name);
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" out task name.\n");
  
   /* タスク(スレッド)のメイン関数を呼び出す.タスクはすべて最初はここから呼ばれる */
   tcb->init.func(tcb->init.argc, tcb->init.argv);
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG("D:task_manage:tsk_startup init.func clear.\n");
   tsk_endup(); /* タスクの終了 */
 }
 
@@ -511,6 +519,8 @@ ER del_tsk_isr(TCB *tcb)
  */
 ER sta_tsk_isr(TCB *tcb)
 {
+  DEBUG_L1_KERNEL_TASK_MANAGE_OUTMSG(" sta_tsk_isr start.\n");
+ 
   current = tcb;
   current->syscall_info.flag = MZ_VOID;
   /* sta_tsk()のシステムコールは休止状態の時の使用可能 */

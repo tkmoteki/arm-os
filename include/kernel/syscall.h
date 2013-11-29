@@ -160,4 +160,57 @@ typedef struct {
 } SYSCALL_PARAMCB;
 
 
+/* システムコール */
+/*! mz_acre_tsk():タスクコントロールブロックの生成(ID自動割付) */
+ER_ID mz_acre_tsk(SYSCALL_PARAMCB *par);
+
+/*! mz_del_tsk():スレッドの排除 */
+ER mz_del_tsk(ER_ID tskid);
+
+/*! mz_sta_tsk():スレッドの起動 */
+ER mz_sta_tsk(ER_ID tskid);
+
+/*! mz_run_tsk():スレッドの生成(ID自動割付)と起動 */
+ER_ID mz_run_tsk(SYSCALL_PARAMCB *par);
+
+/*! mz_ext_tsk():自タスクの終了 */
+void mz_ext_tsk(void);
+
+/*! mz_exd_tsk():自スレッドの終了と排除 */
+void mz_exd_tsk(void);
+
+/*! mz_ter_tsk():スレッドの強制終了 */
+ER mz_ter_tsk(ER_ID tskid);
+
+/*! mz_get_pri():スレッドの優先度取得 */
+ER mz_get_pri(ER_ID tskid, int *p_tskpri);
+
+/*! mz_chg_pri():スレッドの優先度変更 */
+ER mz_chg_pri(ER_ID tskid, int tskpri);
+
+/*! chg_slt():タスクタイムスライスの変更 */
+ER mz_chg_slt(SCHDUL_TYPE type, ER_ID tskid, int slice);
+
+/*! get_slt():タスクタイムスライスの取得 */
+ER mz_get_slt(SCHDUL_TYPE type, ER_ID tskid, int *p_slice);
+
+/*! mz_slp_tsk():自タスクの起床待ち */
+ER mz_slp_tsk(void);
+
+/*! mz_wup_tsk():タスクの起床 */
+ER mz_wup_tsk(ER_ID tskid);
+
+/*! mz_rel_wai():待ち状態強制解除 */
+ER mz_rel_wai(ER_ID tskid);
+
+/*! mz_get_mpf():動的メモリ獲得 */
+void* mz_get_mpf(int size);
+
+/*! mz_rel_mpf():動的メモリ解放 */
+int mz_rel_mpf(void *p);
+
+/*! mz_def_inh():割込みハンドラの定義 */
+ER mz_def_inh(INTRPT_TYPE type, IR_HANDL handler);
+
+
 #endif

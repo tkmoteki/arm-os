@@ -1,0 +1,88 @@
+#
+# CFLAGS
+# -nostdinc         : ヘッダファイルのための標準システムディレクトリを検索しない
+# -nostdlib         : 標準ライブラリ等を使用しない
+# -fno-builtin      : ビルドイン関数の無効
+# -fsigned-char     : char型を自動的にunsinged charとしない
+# ABIオプション
+# -mabi=apcs-gnu    : GNU ABIインターフェース
+# imabi=aapcs-linux : Version ? EABIインターフェース
+# なし              : Version ? EABIインターフェース
+# アーキテクチャ
+# -march            : 指定したCPUだけで動作するコードを生成 -mcpuより速いコード生成
+# -mcpu             : 同系列のCPUでも動作するコード生成
+# -mtune            : -mcpuの別名(gcc3.4以降)
+
+
+PREFIX  = $(HOME)/bin/CodeSourcery/Sourcery_G++_Lite
+BINDIR  = $(PREFIX)/bin
+
+
+ARCH      = arm-none-eabi
+ADDNAME   = $(ARCH)-
+
+
+AR      = $(BINDIR)/$(ADDNAME)ar
+AS      = $(BINDIR)/$(ADDNAME)as
+CC      = $(BINDIR)/$(ADDNAME)gcc
+LD      = $(BINDIR)/$(ADDNAME)ld
+NM      = $(BINDIR)/$(ADDNAME)nm
+
+OBJCOPY = $(BINDIR)/$(ADDNAME)objcopy
+OBJDUMP = $(BINDIR)/$(ADDNAME)objdump
+RANLIB  = $(BINDIR)/$(ADDNAME)ranlib
+STRIP   = $(BINDIR)/$(ADDNAME)strip
+
+
+TARGET = tsk_set
+
+
+#依存関係より，-oを加えない
+CFLAGS = -Wall -nostdlib -fno-builtin -fsigned-char
+CFLAGS += -march=armv7-a
+CFLAGS += -I.
+#CFLAGS += -g# デバッガ対応(Jtag+openOCD+remoteGDB)
+#CFLAGS += -Os
+CFLAGS += -DTSK_LIBRARY
+
+#CFLAGS += -DKERNEL
+#CFLAGS += -DLOG
+#CFLAGS += -DDEBUG_LEVEL1 -DARCH_CPU_LIB_MAIN
+#CFLAGS += -DKERNEL_MSG
+#CFLAGS += -DCONFIG_MMC -DCONFIG_RELOC_FIXUP_WORKS -DCONFIG_DOS_PARTITION -D__LITTLE_ENDIAN
+#CFLAGS += クロック入力?
+
+
+LFLAGS += -static -T
+
+TMP_OBJS += samples/set_tmp/startup.o samples/set_tmp/tsk_set3.o
+LINK_OBJS += objs/syscall.o objs/lib.o objs/uart.o objs/tsk_obj_id.o
+TMP_LINK_OBJS += objs/lib.o objs/uart.o objs/tsk_obj_id.o
+INCLUDE += -Iinclude/kernel -Iinclude/c -Iresources
+
+.SUFFIXES: .c .o
+.SUFFIXES: .S .o
+
+
+tmp: $(TMP_OBJS)
+	$(CC) $(TMP_OBJS) $(TMP_LINK_OBJS) -o samples/set_tmp/$(TARGET).elf $(CFLAGS) $(LFLAGS) samples/set_tmp/tsk_set3.scr
+	$(OBJCOPY) -O binary samples/set_tmp/$(TARGET).elf samples/set_tmp/$(TARGET)
+
+samples/set_tmp/startup.o : samples/set_tmp/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+samples/set_tmp/tsk_set3.o : samples/set_tmp/tsk_set3.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+all : tmp
+
+clean:
+	rm -rf $(TMP_OBJS)
+	rm -rf samples/set_tmp/*.*~
+	rm -rf samples/set_tmp/*.elf
+	rm -rf samples/set_tmp/tsk_set
+	rm -f *.*~
+	rm -f *~
+	rm -f */*.*~
+	rm -f */*~

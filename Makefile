@@ -46,9 +46,9 @@ CFLAGS += -Os
 
 
 CFLAGS += -DKERNEL
-CFLAGS += -DTSK_LIBRARY
+#CFLAGS += -DTSK_LIBRARY
 CFLAGS += -DLOG
-#CFLAGS += -DDEBUG_LEVEL1 -DARCH_CPU_LIB_MAIN
+CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_COMMAND -DKERNEL_TASK_MANAGE
 CFLAGS += -DKERNEL_MSG
 CFLAGS += -DCONFIG_MMC -DCONFIG_RELOC_FIXUP_WORKS -DCONFIG_DOS_PARTITION -D__LITTLE_ENDIAN
 #CFLAGS += クロック入力?
@@ -99,9 +99,13 @@ LIB_C++_DIR := lib/c++/
 C++_DIR_INCLUDE :=
 include $(LIB_C++_DIR)build.mk
 
-TSKLIB_DIR := tsk_lib/
-TSK_LIB_DIR_INCLUDE :=
-include $(TSKLIB_DIR)build.mk
+RESOURCES_DIR := resources/
+RESOURCES_DIR_INCLUDE :=
+include $(RESOURCES_DIR)build.mk
+
+#TSKLIB_DIR := tsk_lib/
+#TSK_LIB_DIR_INCLUDE :=
+#include $(TSKLIB_DIR)build.mk
 
 
 ASM_OBJ := $(ASM_SOURCES:.S=.o)
@@ -112,7 +116,7 @@ OBJS := $(addprefix objs/,$(OBJS))
 
 OS_INCLUDE += $(CPU_DIR_INCLUDE) $(DRIVER_DIR_INCLUDE) $(GCC_DIR_INCLUDE) $(FAT_DIR_INCLUDE) \
 							$(KERNEL_DIR_INCLUDE) $(KERNEL_SVC_DIR_INCLUDE) $(NET_DIR_INCLUDE) $(C_DIR_INCLUDE) \
-							$(C++_DIR_INCLUDE) $(TSK_LIB_DIR_INCLUDE)
+							$(C++_DIR_INCLUDE) $(RESOURCES_DIR_INCLUDE) $(TSK_LIB_DIR_INCLUDE)
 
 all : $(TARGET)
 
@@ -155,8 +159,8 @@ objs/%.o : $(LIB_C_DIR)%.c
 objs/%.o : $(LIB_C++_DIR)%.c
 	$(CC) -c $(CFLAGS) $(C++_DIR_INCLUDE) $< -o $@
 
-objs/%.o : $(TSKLIB_DIR)%.c
-	$(CC) -c $(CFLAGS) $(TSK_LIB_DIR_INCLUDE) $< -o $@
+objs/%.o : $(RESOURCES_DIR)%.c
+	$(CC) -c $(CFLAGS) $(RESOURCES_DIR_INCLUDE) $< -o $@
 
 
 bin : $(TARGET)
@@ -180,5 +184,5 @@ clean :
 	rm -f $(OBJS) $(TARGET) $(TARGET).bin $(TARGET)~ $(TARGET).bin~
 	rm -f *~ $(ARCH_CPU_DIR)*.*~ $(TARGET_DRIVER_DIR)*.*~ $(ARCH_GCC_DIR)*.*~ $(FS_FAT_DIR)*.*~ \
 	$(KERNEL_DIR)*.*~ $(KERNEL_SVC_DIR)*.*~ $(NET_DIR)*.*~ $(LIB_C_DIR)*.*~ $(LIB_C++_DIR)*.*~ \
-	$(TSKLIB)*.*~ include/c/*.*~ include/c++/*.*~ include/cpu/*.*~ include/driver/*.*~ include/fs/*.*~ \
-	include/gcc/*.*~ include/kernel/*.*~ include/kernel_svc/*.*~ include/net/*.*~
+	$(RESOURCES_DIR)*.*~ $(TSKLIB_DIR)*.*~ include/c/*.*~ include/c++/*.*~ include/cpu/*.*~ include/driver/*.*~ \
+	include/fs/*.*~ include/gcc/*.*~ include/kernel/*.*~ include/kernel_svc/*.*~ include/net/*.*~

@@ -860,21 +860,6 @@ void syscall_intr(ISR_TYPE type, UINT32 sp)
 }
 
 
-/*!
- * トラップ発行(システムコール)
- * type : システムコールのタイプ
- * *param : システムコールパケットへのポインタ
- * ret : システムコール返却値格納ポインタ
- */
-void issue_trap_syscall(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret)
-{
-  current->syscall_info.type  = type;
-  current->syscall_info.param = param;
-  current->syscall_info.ret = ret;
-
-}
-
-
 /*! ディスパッチャの初期化 */
 static void dispatch_init(void)
 {

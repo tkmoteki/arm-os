@@ -7,7 +7,7 @@
 #include "command.h"
 #include "kernel.h"
 #include "scr_symbols.h"
-#include "syscall.h"
+#include "isyscall.h"
 /* include/kernel_svc */
 #include "log_manage.h"
 /* include/net */
@@ -16,9 +16,21 @@
 #include "part.h"
 /* include/fs */
 #include "fat.h"
+#include "resources/tsk_obj_id.h" /* リソース情報 */
 
 
 #ifdef TSK_LIBRARY
+
+/*! tsk_set1の起動 */
+static void tsklib_in_tsk_set1_command(void);
+
+/*! tsk_set2の起動 */
+static void tsklib_in_tsk_set2_command(void);
+
+/*! tsk_set3の起動 */
+static void tsklib_in_tsk_set3_command(void);
+
+#else
 
 /*! tsk_set1の起動 */
 static void tsk_set1_command(void);
@@ -76,7 +88,6 @@ void help_command(char *buf)
   else if (!strncmp(buf, " dump", 5)) {
     puts("dump - memory dump\n");
   }
-#ifdef TSK_LIBRARY
   /* run helpメッセージ */
   else if (!strncmp(buf, " run", 4)) {
     /* run help */
@@ -85,6 +96,7 @@ void help_command(char *buf)
     puts("run <tsk_set>\n");
     puts("  start the <tsk_set> that is specified in the argument\n");
   }
+#ifdef TSK_LIBRARY
   /* tsk_set3 helpメッセージ */
   else if (!strncmp(buf, " tsk_set3", 9)) {
     puts("tsk_set3 - This sample task sets the \"TASK SYNCHRONIZATION SYSTEMCALLS\"\n\n");
@@ -420,8 +432,6 @@ int do_fat_fsinfo (int argc, char *argv[])
 }
 
 
-#ifdef TSK_LIBRARY
-
 /*!
  * runコマンド
  * *buf : 起動するタスクセット名が格納されたバッファ
@@ -429,13 +439,25 @@ int do_fat_fsinfo (int argc, char *argv[])
 void run_command(char *buf)
 {
   if (!strncmp(buf, " tsk_set3", 10)) {
+#ifdef TSK_LIBRARY
+    tsklib_in_tsk_set3_command();
+#else
     tsk_set3_command();
+#endif
   }
   else if (!strncmp(buf, " tsk_set2", 10)) {
+#ifdef TSK_LIBRARY
+    tsklib_in_tsk_set2_command();
+#else
     tsk_set2_command();
+#endif
   }
   else if (!strncmp(buf, " tsk_set1", 10)) {
+#ifdef TSK_LIBRARY
+    tsklib_in_tsk_set1_command();
+#else
     tsk_set1_command();
+#endif
   }
   else {
     puts("tsk_set unknown.\n");
@@ -443,8 +465,10 @@ void run_command(char *buf)
 }
 
 
+#ifdef TSK_LIBRARY
+
 /*! tsk_set1の起動 */
-static void tsk_set1_command(void)
+static void tsklib_in_tsk_set1_command(void)
 {
   SYSCALL_PARAMCB tsk1_param;
 
@@ -461,7 +485,7 @@ static void tsk_set1_command(void)
 
 
 /*! tsk_set2の起動 */
-static void tsk_set2_command(void)
+static void tsklib_in_tsk_set2_command(void)
 {
   SYSCALL_PARAMCB tsk1_param;
 
@@ -478,7 +502,7 @@ static void tsk_set2_command(void)
 
 
 /*! tsk_set3の起動 */
-static void tsk_set3_command(void)
+static void tsklib_in_tsk_set3_command(void)
 {
   SYSCALL_PARAMCB tsk1_param;
 
@@ -491,6 +515,82 @@ static void tsk_set3_command(void)
 
   sample_tsk6_id = mz_iacre_tsk(&tsk1_param);
   mz_ista_tsk(sample_tsk6_id);
+}
+
+#else
+
+/*! tsk_set1の起動 */
+static void tsk_set1_command(void)
+{
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" tsk_set1_command function start.\n");
+
+  SYSCALL_PARAMCB tsk1_param;
+  ER rcd;
+
+  tsk1_param.un.acre_tsk.func = SAMPLE_TSK3_ENTRY_ADDR;
+  tsk1_param.un.acre_tsk.name = "sample_tsk1";
+  tsk1_param.un.acre_tsk.priority = 5;
+  tsk1_param.un.acre_tsk.stacksize = 0x100;
+  tsk1_param.un.acre_tsk.argc = 0;
+  tsk1_param.un.acre_tsk.argv = NULL;
+
+  sample_tsk3_id = mz_iacre_tsk(&tsk1_param);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(sample_tsk3_id, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out sample_tsk3_id value.\n");
+
+  rcd = mz_ista_tsk(sample_tsk3_id);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(rcd, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out rcd value.\n");
+}
+
+
+/*! tsk_set2の起動 */
+static void tsk_set2_command(void)
+{
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" tsk_set2_command function start.\n");
+
+  SYSCALL_PARAMCB tsk1_param;
+  ER rcd;
+
+  tsk1_param.un.acre_tsk.func = SAMPLE_TSK4_ENTRY_ADDR;
+  tsk1_param.un.acre_tsk.name = "sample_tsk4";
+  tsk1_param.un.acre_tsk.priority = 3;
+  tsk1_param.un.acre_tsk.stacksize = 0x100;
+  tsk1_param.un.acre_tsk.argc = 0;
+  tsk1_param.un.acre_tsk.argv = NULL;
+
+  sample_tsk4_id = mz_iacre_tsk(&tsk1_param);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(sample_tsk4_id, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out sample_tsk4_id value.\n");
+
+  rcd = mz_ista_tsk(sample_tsk4_id);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(rcd, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out rcd value.\n");
+}
+
+
+/*! tsk_set3の起動 */
+static void tsk_set3_command(void)
+{
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" tsk_set3_command function start.\n");
+
+  SYSCALL_PARAMCB tsk1_param;
+  ER rcd;
+
+  tsk1_param.un.acre_tsk.func = SAMPLE_TSK6_ENTRY_ADDR;
+  tsk1_param.un.acre_tsk.name = "sample_tsk6";
+  tsk1_param.un.acre_tsk.priority = 5;
+  tsk1_param.un.acre_tsk.stacksize = 0x100;
+  tsk1_param.un.acre_tsk.argc = 0;
+  tsk1_param.un.acre_tsk.argv = NULL;
+
+  sample_tsk6_id = mz_iacre_tsk(&tsk1_param);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(sample_tsk6_id, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out sample_tsk6_id value.\n");
+
+  rcd = mz_ista_tsk(sample_tsk6_id);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(rcd, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out rcd value.\n");
 }
 
 #endif
