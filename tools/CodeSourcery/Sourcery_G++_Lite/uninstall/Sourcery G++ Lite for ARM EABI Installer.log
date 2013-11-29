@@ -1,0 +1,105 @@
+__________________________________________________________________________
+
+Sat Aug 11 00:45:59 JST 2012
+
+Free Memory: 63151 kB
+Total Memory: 111488 kB
+
+java.class.path:
+    /tmp/install.dir.7408/InstallerData
+    /tmp/install.dir.7408/InstallerData/installer.zip
+
+ZGUtil.CLASS_PATH:
+    /tmp/install.dir.7408/InstallerData
+    /tmp/install.dir.7408/InstallerData/installer.zip
+
+sun.boot.class.path:
+    /tmp/install.dir.7408/Linux/resource/jre/lib/rt.jar
+    /tmp/install.dir.7408/Linux/resource/jre/lib/i18n.jar
+    /tmp/install.dir.7408/Linux/resource/jre/lib/sunrsasign.jar
+    /tmp/install.dir.7408/Linux/resource/jre/lib/jsse.jar
+    /tmp/install.dir.7408/Linux/resource/jre/lib/jce.jar
+    /tmp/install.dir.7408/Linux/resource/jre/lib/charsets.jar
+    /tmp/install.dir.7408/Linux/resource/jre/classes
+
+java.ext.dirs:
+    /tmp/install.dir.7408/Linux/resource/jre/lib/ext
+
+java.version                  == 1.5.0_09 (Java 2+)
+java.vm.name                  == Java HotSpot(TM) Server VM
+java.vm.vendor                == Sun Microsystems Inc.
+java.vm.version               == 1.5.0_09-b03
+java.vm.specification.name    == Java Virtual Machine Specification
+java.vm.specification.vendor  == Sun Microsystems Inc.
+java.vm.specification.version == 1.0
+java.specification.name       == Java Platform API Specification
+java.specification.vendor     == Sun Microsystems Inc.
+java.specification.version    == 1.5
+java.vendor                   == Sun Microsystems Inc.
+java.vendor.url               == http://java.sun.com/
+java.class.version            == 49.0
+java.compiler                 == null
+java.home                     == /tmp/install.dir.7408/Linux/resource/jre
+java.io.tmpdir                == /tmp
+os.name                       == Linux
+os.arch                       == i386
+os.version                    == 2.6.31-14-generic
+path.separator                == :
+file.separator                == /
+file.encoding                 == UTF-8
+user.name                     == root
+user.home                     == /root
+user.dir                      == /tmp/install.dir.7408
+user.language                 == ja
+user.region                   == null
+__________________________________________________________________________
+
+Install Begin: Sat Aug 11 00:36:48 JST 2012
+Install End: Sat Aug 11 00:36:48 JST 2012
+
+Installed by InstallAnywhere 11.0 Enterprise Build 3890
+
+INSTALLATION WAS CANCELLED BY USER DURING PRE-INSTALLATION
+
+User Interactions
+-----------------
+
+
+#Choose Install Set
+#------------------
+CHOSEN_FEATURE_LIST=Sourcery G++ Toolchain,Sourcery G++ Documentation
+CHOSEN_INSTALL_FEATURE_LIST=Sourcery G++ Toolchain,Sourcery G++ Documentation
+CHOSEN_INSTALL_SET=Typical
+
+Summary
+-------
+
+Installation:  Cancelled during pre-install.
+
+5 Successes
+0 Warnings
+0 NonFatalErrors
+0 FatalErrors
+
+Action Notes:
+
+None
+
+Install Log Detail:
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+Install Action:           InstallAnywhere Variable
+                          Status: SUCCESSFUL
+
+INSTALLATION WAS CANCELLED BY USER DURING PRE-INSTALLATION
