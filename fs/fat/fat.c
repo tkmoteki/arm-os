@@ -8,8 +8,6 @@
 #include "defines.h"
 /* include/driver */
 #include "part.h"
-/* include/lib/c */
-#include "lib.h"
 
 
 /*
@@ -614,15 +612,15 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
             if (doit) {
               if (dirc == ' ') {
                 puts(" ");
-                putxval((unsigned long)FAT2CPU32(dentptr->size), 0);
+                putxval((unsigned long)FAT2CPU32(dentptr->size), 8);
                 puts("  ");
                 puts(l_name);
-                putxval(dirc, 0);
+                putc(dirc);
                 puts("\n");
               } else {
-                puts("           ");
+                puts("            ");
                 puts(l_name);
-                putxval(dirc, 0);
+                putc(dirc);
                 puts("\n");
               }
             }
@@ -685,15 +683,15 @@ static dir_entry *get_dentfromdir (fsdata * mydata, int startsect,
         if (doit) {
           if (dirc == ' ') {
             puts(" ");
-            putxval((long)FAT2CPU32(dentptr->size), 0);
+            putxval((long)FAT2CPU32(dentptr->size), 8);
             puts("   ");
             puts(s_name);
-            putxval(dirc, 0);
+            putc(dirc);
             puts("\n");
           } else {
-            puts("          ");
+            puts("            ");
             puts(s_name);
-            putxval(dirc, 0);
+            putc(dirc);
             puts("\n");
           }
         }
@@ -953,15 +951,15 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
             if (doit) {
               if (dirc == ' ') {
                 puts(" ");
-                putxval((long)FAT2CPU32(dentptr->size), 0);
+                putxval((long)FAT2CPU32(dentptr->size), 8);
                 puts("   ");
                 puts(l_name);
-                putxval(dirc, 0);
+                putc(dirc);
                 puts("\n");
               } else {
                 puts("            ");
                 puts(l_name);
-                putxval(dirc, 0);
+                putc(dirc);
                 puts("\n");
               }
             }
@@ -1027,15 +1025,15 @@ do_fat_read (const char *filename, void *buffer, unsigned long maxsize,
         if (doit) {
           if (dirc == ' ') {
             puts(" ");
-            putxval((long) FAT2CPU32 (dentptr->size), 0);
+            putxval((long) FAT2CPU32 (dentptr->size), 8);
             puts("   ");
             puts(s_name);
-            putxval(dirc, 0);
+            putc(dirc);
             puts("\n");
           } else {
-            puts("             ");
+            puts("            ");
             puts(s_name);
-            putxval(dirc, 0);
+            putc(dirc);
             puts("\n");
           }
         }
