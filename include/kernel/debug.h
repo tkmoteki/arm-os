@@ -10,7 +10,6 @@
  * -DEBUG_LEVEL2(高級なデバッグ)
  *   -ログ出力
  */
-//#ifdef DEBUG_LEVEL1
 
 #if defined(DEBUG_LEVEL1) && defined(ARCH_CPU_STARTUP)
 #define DEBUG_L1_ARCH_CPU_STARTUP_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
@@ -76,12 +75,12 @@
 #define DEBUG_L1_FS_FAT_FAT_OUTMSG(testmsg)
 #endif
 
-#if defined(DEBUG_LEVEL1) && defined(KERNEL_KERNLE)
-#define DEBUG_L1_KERNEL_KERNLE_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
-#define DEBUG_L1_KERNEL_KERNLE_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
+#if defined(DEBUG_LEVEL1) && defined(KERNEL_KERNEL)
+#define DEBUG_L1_KERNEL_KERNEL_OUTVLE(testvalue, testcolumn) (putxval(testvalue, testcolumn)) /* debug message */
+#define DEBUG_L1_KERNEL_KERNEL_OUTMSG(testmsg) (puts(testmsg)) /* debug value */
 #else
-#define DEBUG_L1_KERNEL_KERNLE_OUTVLE(testvalue, testcolumn)
-#define DEBUG_L1_KERNEL_KERNLE_OUTMSG(testmsg)
+#define DEBUG_L1_KERNEL_KERNEL_OUTVLE(testvalue, testcolumn)
+#define DEBUG_L1_KERNEL_KERNEL_OUTMSG(testmsg)
 #endif
 
 #if defined(DEBUG_LEVEL1) && defined(KERNEL_SYSCALL)

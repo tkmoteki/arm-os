@@ -37,6 +37,8 @@ MEMORY
   stack(rw)       : o = 0x90002000, l = 0x00001000
   logbuffer(rwx)  : o = 0x90003000, l = 0x00001000 /* temp(4096B) */
   tskbuffer(rwx)  : o = 0x90004000, l = 0x00001000 /* temp(4096B) */
+  sharebuffer(rwx)  : o = 0x90005000, l = 0x00001000 /* temp(4096B) */
+  /* 0x90010000 ~ task executable section */
   /* high vector */
   dramvector(rwx) : o = 0xFFFF0000, l = 0x00000040
   
@@ -133,6 +135,13 @@ SECTIONS
     . = ALIGN(4); /* アライメント調整 */
     _tskbuffer_end = . ;
   } > tskbuffer
+
+  .sharebuffer : {
+    _sharebuffer_start = . ;
+    *(.sharebuffer)
+    . = ALIGN(4); /* アライメント調整 */
+    _sharebuffer_end = . ;
+  } > sharebuffer
 
   /* dramvectorセクションの定義(highvector) */
   .dramvector : {
