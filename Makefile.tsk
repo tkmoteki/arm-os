@@ -34,7 +34,7 @@ RANLIB  = $(BINDIR)/$(ADDNAME)ranlib
 STRIP   = $(BINDIR)/$(ADDNAME)strip
 
 
-TARGET = tsk_set
+TARGET = task
 
 
 #依存関係より，-oを加えない
@@ -47,7 +47,7 @@ CFLAGS += -DTSK_LIBRARY
 
 #CFLAGS += -DKERNEL
 #CFLAGS += -DLOG
-#CFLAGS += -DDEBUG_LEVEL1 -DARCH_CPU_LIB_MAIN
+CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_SYSCALL
 #CFLAGS += -DKERNEL_MSG
 #CFLAGS += -DCONFIG_MMC -DCONFIG_RELOC_FIXUP_WORKS -DCONFIG_DOS_PARTITION -D__LITTLE_ENDIAN
 #CFLAGS += クロック入力?
@@ -55,7 +55,7 @@ CFLAGS += -DTSK_LIBRARY
 
 LFLAGS += -static -T
 
-TMP_OBJS += samples/set_tmp/startup.o samples/set_tmp/tsk_set3.o
+TMP_OBJS += samples/task6/startup.o samples/task6/task6.o
 LINK_OBJS += objs/syscall.o objs/lib.o objs/uart.o objs/tsk_obj_id.o
 TMP_LINK_OBJS += objs/lib.o objs/uart.o objs/tsk_obj_id.o
 INCLUDE += -Iinclude/kernel -Iinclude/c -Iresources
@@ -65,13 +65,13 @@ INCLUDE += -Iinclude/kernel -Iinclude/c -Iresources
 
 
 tmp: $(TMP_OBJS)
-	$(CC) $(TMP_OBJS) $(TMP_LINK_OBJS) -o samples/set_tmp/$(TARGET).elf $(CFLAGS) $(LFLAGS) samples/set_tmp/tsk_set3.scr
-	$(OBJCOPY) -O binary samples/set_tmp/$(TARGET).elf samples/set_tmp/$(TARGET)
+	$(CC) $(TMP_OBJS) $(LINK_OBJS) -o samples/task6/$(TARGET).elf $(CFLAGS) $(LFLAGS) samples/task6/task6.scr
+	$(OBJCOPY) -O binary samples/task6/$(TARGET).elf samples/task6/$(TARGET)
 
-samples/set_tmp/startup.o : samples/set_tmp/startup.S
+samples/task6/startup.o : samples/task6/startup.S
 	$(CC) -c $(CFLAGS) $< -o $@
 
-samples/set_tmp/tsk_set3.o : samples/set_tmp/tsk_set3.c
+samples/task6/task6.o : samples/task6/task6.c
 	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 
@@ -79,9 +79,9 @@ all : tmp
 
 clean:
 	rm -rf $(TMP_OBJS)
-	rm -rf samples/set_tmp/*.*~
-	rm -rf samples/set_tmp/*.elf
-	rm -rf samples/set_tmp/tsk_set
+	rm -rf samples/task6/*.*~
+	rm -rf samples/task6/*.elf
+	rm -rf samples/task6/task
 	rm -f *.*~
 	rm -f *~
 	rm -f */*.*~

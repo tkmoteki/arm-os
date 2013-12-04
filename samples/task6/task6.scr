@@ -18,7 +18,8 @@ OUTPUT_ARCH(arm)                                                    /* 出力ア
 /* MEMORYディレクティブ(区画と大きさ) */
 MEMORY
 {
-  dram(rwx)       : o = 0x90025000, l = 0x00010000 /* 64KB */
+  sharebuffer(rwx)  : o = 0x90005000, l = 0x00001000 /* temp(4096B) */
+  dram(rwx)       : o = 0x90060000, l = 0x00010000 /* 64KB */
 }
 
 /*
@@ -27,7 +28,13 @@ MEMORY
 */
 SECTIONS
 {
-  
+  .sharebuffer : {
+    _sharebuffer_start = . ;
+    *(.sharebuffer)
+    . = ALIGN(4); /* アライメント調整 */
+    _sharebuffer_end = . ;
+  } > sharebuffer
+
   /* textセクション定義 */
   .text : {
     _text_start = . ;

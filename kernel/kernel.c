@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "defines.h"
 #include "kernel.h"
+#include "scr_symbols.h"
 #include "syscall.h"
 /* include/cpu */
 #include "intr.h"
@@ -75,6 +76,9 @@ static void kernelrte_get_mpf(SYSCALL_PARAMCB *p);
 
 /*! システムコール処理(rel_mpf():動的メモリ解放) */
 static void kernelrte_rel_mpf(SYSCALL_PARAMCB *p);
+
+/* share bufferからシステムコール情報を復旧 */
+static void get_share_buffer(void);
 
 /*! ディスパッチャの初期化 */
 static void dispatch_init(void);
@@ -238,7 +242,7 @@ static ER_ID serch_tskid_table(int tskids)
   /* tskid変換テーブルを先頭から検索する */
   for (srh_cuntr = 0; srh_cuntr < tskids; srh_cuntr++) {
     if (mg_tsk_info.id_table[srh_cuntr] == NULL) {
-      DEBUG_L1_KERNEL_KERNLE_OUTVLE(srh_cuntr, 0);
+      DEBUG_L1_KERNEL_KERNEL_OUTVLE(srh_cuntr, 0);
       return srh_cuntr;
     }
   }
@@ -251,8 +255,8 @@ static ER_ID serch_tskid_table(int tskids)
   else {
     srh_cuntr = tskids; /* 割付可能IDは累乗前(累乗前の要素数のインデックス)の位置にある */
   }
-  DEBUG_L1_KERNEL_KERNLE_OUTVLE(srh_cuntr, 0);
-  DEBUG_L1_KERNEL_KERNLE_OUTMSG(" tsk next counter\n");
+  DEBUG_L1_KERNEL_KERNEL_OUTVLE(srh_cuntr, 0);
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG(" tsk next counter\n");
   
   return srh_cuntr;
 }
@@ -826,6 +830,35 @@ ER external_intr(INTR_TYPE type, UINT32 sp)
 }
 
 
+/* share bufferからシステムコール情報を復旧 */
+static void get_share_buffer(void)
+{
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG("D:kernel.o:get_share_buffer func started.\n");
+
+  UINT32 *share_buffer = (UINT32 *)&_sharebuffer_start;
+
+  /*
+   * kernelとタスク間でシステムコール情報のやりとりのため、
+   * share_bufferに退避する
+   */
+  current->syscall_info.type = (ISR_TYPE)(*(++share_buffer));
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG("D:kernel.o:get_share_buffer func started.");
+  DEBUG_L1_KERNEL_KERNEL_OUTVLE((unsigned long)share_buffer, 0);
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG(" sharebuffer first addr.\n");
+
+  current->syscall_info.param = (SYSCALL_PARAMCB *)(*(++share_buffer));
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG("D:kernel.o:get_share_buffer func started.");
+  DEBUG_L1_KERNEL_KERNEL_OUTVLE((unsigned long)share_buffer, 0);
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG(" sharebuffer share addr.\n");
+
+  current->syscall_info.ret = (OBJP)(*(++share_buffer));
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG("D:kernel.o:get_share_buffer func started.");
+  DEBUG_L1_KERNEL_KERNEL_OUTVLE((unsigned long)share_buffer, 0);
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG(" sharebuffer third addr.\n");
+
+  DEBUG_L1_KERNEL_KERNEL_OUTMSG("D:kernel.o:get_share_buffer func exited.\n");
+}
+
 /*!
  * システムコール割込みハンドラ(ISR)を呼び出す準備
  * ・カレントタスクのスタックへコンテキストを保存し，スケジューラ→ディスパッチャという順となる
@@ -838,6 +871,8 @@ void syscall_intr(ISR_TYPE type, UINT32 sp)
 
   current->intr_info.sp = sp; /* カレントタスクのコンテキストを保存 */
   current->intr_info.type = SYSCALL_INTERRUPT; /* システムコール割込み実行を記録 */
+
+  get_share_buffer();
 
   /* タイムスライス型スケジューリング環境下で割込みが発生しタイマブロックを排除するか検査する関数 */
   //check_tmslice_schedul(type);

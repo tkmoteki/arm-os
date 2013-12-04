@@ -48,6 +48,10 @@ extern volatile UINT32 _logbuffer_end;
 extern volatile UINT32 _tskbuffer_start;
 extern volatile UINT32 _tskbuffer_end;
 
+/* sharebuffer section addr */
+extern volatile UINT32 _sharebuffer_start;
+extern volatile UINT32 _sharebuffer_end;
+
 /* dramvector section addr(highvector) */
 extern volatile UINT32 _dramvector_start;
 extern volatile UINT32 _dramvector_end;
@@ -73,6 +77,8 @@ extern volatile UINT32 _dramvector_end;
 #define STACK_SIZE      0x00001000
 #define LOGBUFFER_SIZE  0x00001000 /* temp(4096B) */
 #define TSKBUFFER_SIZE  0x00001000 /* temp(4096B) */
+#define SHAREBUFFER_SIZE  0x00001000 /* temp(4096B) */
+
 /* high vector */
 #define DRAMVECTOR_SIZE 0x00000040
 

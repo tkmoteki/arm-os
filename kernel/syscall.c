@@ -14,8 +14,9 @@
 
 /* public interface */
 /* include/kernel */
+#include "debug.h"
 #include "defines.h"
-#include "kernel.h"
+#include "scr_symbols.h"
 #include "syscall.h"
 /* include/lib/c */
 #include "lib.h"
@@ -23,9 +24,9 @@
 //#include "interrupt.h"
 //#include "mailbox.h"
 
-/* カレントタスクへシステムコール情報を保存 */
-static void set_current_tsk_syscall_info(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret);
 
+/* share bufferへシステムコール情報を保存 */
+static void set_share_buffer(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret);
 
 /* システムコール */
 /*!
@@ -56,8 +57,10 @@ ER_ID mz_acre_tsk(SYSCALL_PARAMCB *par)
   param.un.acre_tsk.argc = par->un.acre_tsk.argc;
   param.un.acre_tsk.argv = par->un.acre_tsk.argv;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_ACRE_TSK, &param, (OBJP)(&(param.un.acre_tsk.ret)));
+  set_share_buffer(ISR_TYPE_ACRE_TSK, &param, (OBJP)(&(param.un.acre_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_acre_tsk before trap.\n");
   asm volatile ("swi #0");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_acre_tsk after trap.\n");
   
   /* 割込み復帰後はここへもどってくる */
 
@@ -80,8 +83,10 @@ ER mz_del_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.del_tsk.tskid = tskid;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_DEL_TSK, &param, (OBJP)(&(param.un.del_tsk.ret)));
+  set_share_buffer(ISR_TYPE_DEL_TSK, &param, (OBJP)(&(param.un.del_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_del_tsk before trap.\n");
   asm volatile ("swi #1");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_del_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -104,8 +109,10 @@ ER mz_sta_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.sta_tsk.tskid = tskid;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_STA_TSK, &param, (OBJP)(&(param.un.sta_tsk.ret)));
+  set_share_buffer(ISR_TYPE_STA_TSK, &param, (OBJP)(&(param.un.sta_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_sta_tsk before trap.\n");
   asm volatile ("swi #2");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_sta_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -143,8 +150,10 @@ ER_ID mz_run_tsk(SYSCALL_PARAMCB *par)
   param.un.run_tsk.argc = par->un.run_tsk.argc;
   param.un.run_tsk.argv = par->un.run_tsk.argv;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_RUN_TSK, &param, (OBJP)(&(param.un.run_tsk.ret)));
+  set_share_buffer(ISR_TYPE_RUN_TSK, &param, (OBJP)(&(param.un.run_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_run_tsk before trap.\n");
   asm volatile ("swi #3");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_run_tsk after trap.\n");
   
   /* 割込み復帰後はここへもどってくる */
 
@@ -159,8 +168,10 @@ ER_ID mz_run_tsk(SYSCALL_PARAMCB *par)
 void mz_ext_tsk(void)
 {
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_EXT_TSK, NULL, WAIT_ERCD_NOCHANGE);
+  set_share_buffer(ISR_TYPE_EXT_TSK, NULL, WAIT_ERCD_NOCHANGE);
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_ext_tsk before trap.\n");
   asm volatile ("swi #4");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_ext_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってこない */
 
@@ -174,8 +185,10 @@ void mz_ext_tsk(void)
 void mz_exd_tsk(void)
 {
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_EXD_TSK, NULL, WAIT_ERCD_NOCHANGE);
+  set_share_buffer(ISR_TYPE_EXD_TSK, NULL, WAIT_ERCD_NOCHANGE);
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_exd_tsk before trap.\n");
   asm volatile ("swi #5");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_exd_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってこない */
 
@@ -198,8 +211,10 @@ ER mz_ter_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.ter_tsk.tskid = tskid;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_TER_TSK, &param, (OBJP)(&(param.un.ter_tsk.ret)));
+  set_share_buffer(ISR_TYPE_TER_TSK, &param, (OBJP)(&(param.un.ter_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_ter_tsk before trap.\n");
   asm volatile ("swi #6");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_ter_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -225,8 +240,10 @@ ER mz_get_pri(ER_ID tskid, int *p_tskpri)
   param.un.get_pri.tskid = tskid;
   param.un.get_pri.p_tskpri = p_tskpri;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_GET_PRI, &param, (OBJP)(&(param.un.get_pri.ret)));
+  set_share_buffer(ISR_TYPE_GET_PRI, &param, (OBJP)(&(param.un.get_pri.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_get_pri before trap.\n");
   asm volatile ("swi #7");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_get_pri after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -253,8 +270,10 @@ ER mz_chg_pri(ER_ID tskid, int tskpri)
   param.un.chg_pri.tskid = tskid;
   param.un.chg_pri.tskpri = tskpri;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_CHG_PRI, &param, (OBJP)(&(param.un.chg_pri.ret)));
+  set_share_buffer(ISR_TYPE_CHG_PRI, &param, (OBJP)(&(param.un.chg_pri.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_chg_pri before trap.\n");
   asm volatile ("swi #8");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_chg_pri after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -271,8 +290,10 @@ ER mz_slp_tsk(void)
 {
   SYSCALL_PARAMCB param;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_SLP_TSK, &param, (OBJP)(&(param.un.slp_tsk.ret)));
+  set_share_buffer(ISR_TYPE_SLP_TSK, &param, (OBJP)(&(param.un.slp_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_slp_tsk before trap.\n");
   asm volatile ("swi #9");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_slp_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -296,8 +317,10 @@ ER mz_wup_tsk(ER_ID tskid)
   /* パラメータ退避 */
   param.un.wup_tsk.tskid = tskid;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_WUP_TSK, &param, (OBJP)(&(param.un.wup_tsk.ret)));
+  set_share_buffer(ISR_TYPE_WUP_TSK, &param, (OBJP)(&(param.un.wup_tsk.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_wup_tsk before trap.\n");
   asm volatile ("swi #10");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_wup_tsk after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -320,8 +343,10 @@ ER mz_rel_wai(ER_ID tskid)
   /* パラメータ退避 */
   param.un.rel_wai.tskid = tskid;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_REL_WAI, &param, (OBJP)(&(param.un.rel_wai.ret)));
+  set_share_buffer(ISR_TYPE_REL_WAI, &param, (OBJP)(&(param.un.rel_wai.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_rel_wai before trap.\n");
   asm volatile ("swi #11");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_rel_wai after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -335,8 +360,10 @@ void* mz_get_mpf(int size)
   SYSCALL_PARAMCB param;
 
   param.un.get_mpf.size = size;
-  set_current_tsk_syscall_info(ISR_TYPE_GET_MPF, &param, (OBJP)(&(param.un.get_mpf.ret)));
+  set_share_buffer(ISR_TYPE_GET_MPF, &param, (OBJP)(&(param.un.get_mpf.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_get_mpf before trap.\n");
   asm volatile ("swi #12");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_get_mpf after trap.\n");
 
   return param.un.get_mpf.ret;
 }
@@ -348,8 +375,10 @@ int mz_rel_mpf(void *p)
   SYSCALL_PARAMCB param;
 
   param.un.rel_mpf.p = p;
-  set_current_tsk_syscall_info(ISR_TYPE_REL_MPF, &param, (OBJP)(&(param.un.rel_mpf.ret)));
+  set_share_buffer(ISR_TYPE_REL_MPF, &param, (OBJP)(&(param.un.rel_mpf.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_rel_mpf before trap.\n");
   asm volatile ("swi #13");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_rel_mpf after trap.\n");
 
   return param.un.rel_mpf.ret;
 }
@@ -371,8 +400,10 @@ ER mz_def_inh(INTRPT_TYPE type, IR_HANDL handler)
   param.un.def_inh.type = type;
   param.un.def_inh.handler = handler;
   /* トラップ発行 */
-  set_current_tsk_syscall_info(ISR_TYPE_DEF_INH, &param, (OBJP)(&(param.un.def_inh.ret)));
+  set_share_buffer(ISR_TYPE_DEF_INH, &param, (OBJP)(&(param.un.def_inh.ret)));
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_def_inh before trap.\n");
   asm volatile ("swi #14");
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:mz_def_inh after trap.\n");
 
   /* 割込み復帰後はここへもどってくる */
 
@@ -395,15 +426,35 @@ ER mz_sel_schdul(SCHDUL_TYPE type, long param)
 
 
 /*!
- * カレントタスクへシステムコール情報を保存
+ * share bufferへシステムコール情報を保存
  * type : システムコールのタイプ
  * *param : システムコールパケットへのポインタ
  * ret : システムコール返却値格納ポインタ
  */
-static void set_current_tsk_syscall_info(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret)
+static void set_share_buffer(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret)
 {
-  current->syscall_info.type  = type;
-  current->syscall_info.param = param;
-  current->syscall_info.ret = ret;
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:set_share_buffer func started.\n");
 
+  UINT32 *share_buffer = (UINT32 *)&_sharebuffer_start;
+
+  /*
+   * kernelとタスク間でシステムコール情報のやりとりのため、
+   * share_bufferに退避する
+   */
+  *(++share_buffer) = (UINT32)type;
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:set_share_buffer func ");
+  DEBUG_L1_KERNEL_SYSCALL_OUTVLE((unsigned long)share_buffer, 0);
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG(" sharebuffer first addr.\n");
+
+  *(++share_buffer) = (UINT32)param;
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:set_share_buffer func ");
+  DEBUG_L1_KERNEL_SYSCALL_OUTVLE((unsigned long)share_buffer, 0);
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG(" sharebuffer secound addr.\n");
+
+  *(++share_buffer) = (UINT32)ret;
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:set_share_buffer func ");
+  DEBUG_L1_KERNEL_SYSCALL_OUTVLE((unsigned long)share_buffer, 0);
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG(" sharebuffer third addr.\n");
+
+  DEBUG_L1_KERNEL_SYSCALL_OUTMSG("D:syscall.o:set_share_buffer func exited.\n");
 }
