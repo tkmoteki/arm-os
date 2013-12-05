@@ -5,7 +5,7 @@
 /* include/driver */
 #include "uart.h"                                                /*! arm cortex-A8 UARTシリアル定義 */
 /* include/kernel */
-#include "defines.h"
+#include "io_cntrl_macros.h"
 
 
 #define UARTClock   (48000000 / 1)                                        /*! クロック(Hz) */
