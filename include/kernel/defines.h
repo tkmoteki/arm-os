@@ -25,7 +25,6 @@
 
 
 #include "include/cpu/intr.h"
-#include "include/c/lib.h"
 
 
 /*! 型の定義 */
@@ -255,19 +254,6 @@ typedef enum {
 #define LOG_CONTEXT(log_tcb) (get_log((OBJP)log_tcb))
 #else
 #define LOG_CONTEXT(log_tcb)
-#endif
-
-/*! kernel message */
-/* #define KERNEL_MSG */
-
-#ifdef KERNEL_MSG
-/* kernel message */
-#define KERNEL_OUTVLE(kernelvalue, kernelcolumn) (putxval(kernelvalue, kernelcolumn))
-/* kernel value */
-#define KERNEL_OUTMSG(kernelmsg) (puts(kernelmsg))
-#else
-#define KERNEL_OUTVLE(kernelvalue, kernelcolumn)
-#define KERNEL_OUTMSG(kernelmsg)
 #endif
 
 

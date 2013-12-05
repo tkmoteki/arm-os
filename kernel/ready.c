@@ -6,6 +6,7 @@
 /* public interface */
 /* include/kernel */
 #include "kernel.h"
+#include "message.h"
 /* include/lib/c */
 #include "lib.h"
 

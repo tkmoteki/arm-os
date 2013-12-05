@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "io_cntrl_macros.h"
 #include "kernel.h"
+#include "message.h"
 #include "syscall.h"
 /* include/c */
 #include "lib.h"
