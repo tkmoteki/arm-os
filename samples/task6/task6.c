@@ -8,14 +8,13 @@
  * -mz_rel_wai()  : タスク待ち状態強制解除システムコール
  */
 
-#ifdef TSK_LIBRARY
 
 /* public interface */
 /* include/kernel */
 //#include "defines.h" /* このosの型の定義 */
 #include "syscall.h"
 /* include/lib/c */
-//#include "lib.h"      /* 標準ライブラリの定義 */
+#include "lib.h"      /* 標準ライブラリの定義 */
 #include "tsk_obj_id.h" /* リソース情報 */
 
 
@@ -26,7 +25,7 @@ int sample_tsk6_main(int argc, char *argv[])
   int tskpri;
 
   /* 中優先度タスク生成のパラメータ設定 */
-  tsk2_param.un.acre_tsk.func = sample_tsk7_main;   /* タスク起動番地 */
+  tsk2_param.un.acre_tsk.func = SAMPLE_TSK7_ENTRY_ADDR;   /* タスク起動番地 */
   tsk2_param.un.acre_tsk.name = "sample_tsk7";      /* タスク名 */
   tsk2_param.un.acre_tsk.priority = 3;              /* タスク優先度 */
   tsk2_param.un.acre_tsk.stacksize = 0x100;         /* タスクスタックサイズ */
@@ -50,11 +49,3 @@ int sample_tsk6_main(int argc, char *argv[])
 
   return 0;
 }
-
-/* sample_tsk7 */
-int sample_tsk7_main(int argc, char *argv[])
-{
-  // 処理なし
-}
-
-#endif

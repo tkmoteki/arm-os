@@ -43,7 +43,6 @@ CFLAGS += -march=armv7-a
 CFLAGS += -I.
 #CFLAGS += -g# デバッガ対応(Jtag+openOCD+remoteGDB)
 #CFLAGS += -Os
-CFLAGS += -DTSK_LIBRARY
 
 #CFLAGS += -DKERNEL
 #CFLAGS += -DLOG
