@@ -83,6 +83,10 @@ void uart_handler(void)
       else if (!strncmp(buf, "fatinfo", 7)) {
         fatinfo_command(&buf[0]); /* fatinfoコマンド */
       }
+      /* tsetloadの場合 */
+      else if (!strncmp(buf, "tsetload", 8)) {
+        tsetload_command(&buf[8]); /* tsetloadコマンド */
+      }
       /* 本システムに存在しないコマンド */
       else {
         puts("command unknown.\n");

@@ -416,6 +416,33 @@ int do_fat_fsinfo (int argc, char *argv[])
 
 
 /*!
+ * tsetloadコマンド
+ * *buf : 起動するタスクセット名が格納されたバッファ
+ */
+void tsetload_command(char *buf)
+{
+  if (!strncmp(buf, " tsk_set3", 10)) {
+    /*
+     * エントリーアドレスは、resources/にあるエントリーアドレスを変換したほうがよい
+     * ファイルパスなど(デバイスやポート)は、動的に取得できたほうがよい
+     */
+    fatload_command("fatload mmc 0 90060000 .tasks/.task6");
+    fatload_command("fatload mmc 0 90070000 .tasks/.task7");
+    fatload_command("fatload mmc 0 90080000 .tasks/.task8");
+  }
+  else if (!strncmp(buf, " tsk_set2", 10)) {
+    puts("comming soon\n");
+  }
+  else if (!strncmp(buf, " tsk_set1", 10)) {
+    puts("comming soon\n");
+  }
+  else {
+    puts("tsk_set unknown.\n");
+  }
+}
+
+
+/*!
  * runコマンド
  * *buf : 起動するタスクセット名が格納されたバッファ
  */

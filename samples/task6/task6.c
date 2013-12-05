@@ -22,8 +22,7 @@
 int sample_tsk6_main(int argc, char *argv[])
 {
   SYSCALL_PARAMCB tsk2_param;
-  int tskpri;
-
+ 
   /* 中優先度タスク生成のパラメータ設定 */
   tsk2_param.un.acre_tsk.func = SAMPLE_TSK7_ENTRY_ADDR;   /* タスク起動番地 */
   tsk2_param.un.acre_tsk.name = "sample_tsk7";      /* タスク名 */
@@ -41,11 +40,12 @@ int sample_tsk6_main(int argc, char *argv[])
     puts("sample_tsk6 create tsk(sample_tsk7).\n");
   }
 
-  mz_get_pri(sample_tsk6_id, &tskpri);
-  putxval(tskpri, 0);
-  puts("sample_tsk6 get priority.\n");
+  puts("sample_tsk6 running in (sample_tsk7).\n");
+  /* 中優先度タスク(sample_tsk7)を休止状態から実行可能状態へ(中優先度タスクに処理が移る) */
+  mz_sta_tsk(sample_tsk7_id); /* タスク起動のシステムコール */
+  puts("sample_tsk6 running out (sample_tsk7).\n");
 
-  puts("sample_tsk6 exited.\n");
+  mz_wup_tsk(sample_tsk7_id); /* タスク起床システムコール */
 
   return 0;
 }

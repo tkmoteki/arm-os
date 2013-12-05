@@ -54,33 +54,60 @@ CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_SYSCALL
 
 LFLAGS += -static -T
 
-TMP_OBJS += samples/task6/startup.o samples/task6/task6.o
+TASK6_HOME = samples/task6
+TASK7_HOME = samples/task7
+TASK8_HOME = samples/task8
+
+6_OBJS += $(TASK6_HOME)/startup.o $(TASK6_HOME)/task6.o
+7_OBJS += $(TASK7_HOME)/startup.o $(TASK7_HOME)/task7.o
+8_OBJS += $(TASK8_HOME)/startup.o $(TASK8_HOME)/task8.o
 LINK_OBJS += objs/syscall.o objs/lib.o objs/uart.o objs/tsk_obj_id.o
-TMP_LINK_OBJS += objs/lib.o objs/uart.o objs/tsk_obj_id.o
 INCLUDE += -Iinclude/kernel -Iinclude/c -Iresources
 
 .SUFFIXES: .c .o
 .SUFFIXES: .S .o
 
 
-tmp: $(TMP_OBJS)
-	$(CC) $(TMP_OBJS) $(LINK_OBJS) -o samples/task6/$(TARGET).elf $(CFLAGS) $(LFLAGS) samples/task6/task6.scr
-	$(OBJCOPY) -O binary samples/task6/$(TARGET).elf samples/task6/$(TARGET)
+6: $(6_OBJS)
+	$(CC) $(6_OBJS) $(LINK_OBJS) -o $(TASK6_HOME)/$(TARGET)6.elf $(CFLAGS) $(LFLAGS) $(TASK6_HOME)/task6.scr
+	$(OBJCOPY) -O binary $(TASK6_HOME)/$(TARGET)6.elf $(TASK6_HOME)/$(TARGET)6
 
-samples/task6/startup.o : samples/task6/startup.S
+$(TASK6_HOME)/startup.o : $(TASK6_HOME)/startup.S
 	$(CC) -c $(CFLAGS) $< -o $@
 
-samples/task6/task6.o : samples/task6/task6.c
+$(TASK6_HOME)/task6.o : $(TASK6_HOME)/task6.c
 	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 
-all : tmp
+7: $(7_OBJS)
+	$(CC) $(7_OBJS) $(LINK_OBJS) -o $(TASK7_HOME)/$(TARGET)7.elf $(CFLAGS) $(LFLAGS) $(TASK7_HOME)/task7.scr
+	$(OBJCOPY) -O binary $(TASK7_HOME)/$(TARGET)7.elf $(TASK7_HOME)/$(TARGET)7
+
+$(TASK7_HOME)/startup.o : $(TASK7_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK7_HOME)/task7.o : $(TASK7_HOME)/task7.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+8: $(8_OBJS)
+	$(CC) $(8_OBJS) $(LINK_OBJS) -o $(TASK8_HOME)/$(TARGET)8.elf $(CFLAGS) $(LFLAGS) $(TASK8_HOME)/task8.scr
+	$(OBJCOPY) -O binary $(TASK8_HOME)/$(TARGET)8.elf $(TASK8_HOME)/$(TARGET)8
+
+$(TASK8_HOME)/startup.o : $(TASK8_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK8_HOME)/task8.o : $(TASK8_HOME)/task8.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+all : 6 7 8
 
 clean:
-	rm -rf $(TMP_OBJS)
-	rm -rf samples/task6/*.*~
-	rm -rf samples/task6/*.elf
-	rm -rf samples/task6/task
+	rm -rf $(6_OBJS) $(7_OBJS) $(8_OBJS)
+	rm -rf $(TASK6_HOME)/*.*~ $(TASK7_HOME)/*.*~ $(TASK8_HOME)/*.*~
+	rm -rf $(TASK6_HOME)/*.elf $(TASK7_HOME)/*.elf $(TASK8_HOME)/*.elf
+	rm -rf $(TASK6_HOME)/task6 $(TASK7_HOME)/task7 $(TASK8_HOME)/task8
 	rm -f *.*~
 	rm -f *~
 	rm -f */*.*~
