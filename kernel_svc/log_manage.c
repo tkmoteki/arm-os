@@ -6,6 +6,7 @@
 /* include/kernel */
 #include "debug.h"
 #include "kernel.h"
+#include "message.h"
 #include "scr_symbols.h"
 /* include/lib/c */
 #include "lib.h"

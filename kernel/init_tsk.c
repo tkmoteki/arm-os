@@ -3,8 +3,8 @@
 
 /* public interface */
 /* include/kernel */
-#include "defines.h"
 #include "kernel.h"
+#include "message.h"
 /* include/cpu */
 #include "intr_cntrl.h"
 /* include/lib/c */

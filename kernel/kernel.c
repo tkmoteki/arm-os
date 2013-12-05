@@ -10,8 +10,8 @@
 /* public interface */
 /* include/kernel */
 #include "debug.h"
-#include "defines.h"
 #include "kernel.h"
+#include "message.h"
 #include "scr_symbols.h"
 #include "syscall.h"
 /* include/cpu */
