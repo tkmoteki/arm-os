@@ -6,7 +6,7 @@
 #include "intr_cntrl.h"
 /* include/kernel */
 #include "debug.h"
-#include "defines.h"
+#include "io_cntrl_macros.h"
 #include "kernel.h"
 #include "syscall.h"
 /* include/c */

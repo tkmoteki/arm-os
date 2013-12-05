@@ -9,6 +9,7 @@
 #include "defines.h"
 #include "command.h"
 #include "kernel.h"
+#include "io_cntrl_macros.h"
 #include "scr_symbols.h"
 /* include/c */
 #include "lib.h"

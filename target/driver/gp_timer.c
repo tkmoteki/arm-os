@@ -6,7 +6,7 @@
 /* include/driver */
 #include "gp_timer.h"
 /* include/kernel */
-#include "defines.h"
+#include "io_cntrl_macros.h"
 
 
 /* Timer Instance Summary(汎用タイマ1〜11のマップアドレス) */
