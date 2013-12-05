@@ -21,6 +21,7 @@ int sample_tsk8_main(int argc, char *argv[]);
 #define SAMPLE_TSK5_ENTRY_ADDR ((TSK_FUNC)0x90050000)
 #define SAMPLE_TSK6_ENTRY_ADDR ((TSK_FUNC)0x90060000)
 #define SAMPLE_TSK7_ENTRY_ADDR ((TSK_FUNC)0x90070000)
+#define SAMPLE_TSK8_ENTRY_ADDR ((TSK_FUNC)0x90080000)
 
 extern ER_ID sample_tsk1_id;
 extern ER_ID sample_tsk2_id;
