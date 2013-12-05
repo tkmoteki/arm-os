@@ -46,7 +46,6 @@ CFLAGS += -Os
 
 
 CFLAGS += -DKERNEL
-#CFLAGS += -DTSK_LIBRARY
 CFLAGS += -DLOG
 CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_KERNEL -DKERNEL_COMMAND -DKERNEL_TASK_MANAGE -DKERNEL_SYSCALL
 CFLAGS += -DKERNEL_MSG
@@ -103,10 +102,6 @@ RESOURCES_DIR := resources/
 RESOURCES_DIR_INCLUDE :=
 include $(RESOURCES_DIR)build.mk
 
-#TSKLIB_DIR := tsk_lib/
-#TSK_LIB_DIR_INCLUDE :=
-#include $(TSKLIB_DIR)build.mk
-
 
 ASM_OBJ := $(ASM_SOURCES:.S=.o)
 C_OBJ := $(C_SOURCES:.c=.o)
@@ -116,7 +111,7 @@ OBJS := $(addprefix objs/,$(OBJS))
 
 OS_INCLUDE += $(CPU_DIR_INCLUDE) $(DRIVER_DIR_INCLUDE) $(GCC_DIR_INCLUDE) $(FAT_DIR_INCLUDE) \
 							$(KERNEL_DIR_INCLUDE) $(KERNEL_SVC_DIR_INCLUDE) $(NET_DIR_INCLUDE) $(C_DIR_INCLUDE) \
-							$(C++_DIR_INCLUDE) $(RESOURCES_DIR_INCLUDE) $(TSK_LIB_DIR_INCLUDE)
+							$(C++_DIR_INCLUDE) $(RESOURCES_DIR_INCLUDE)
 
 all : $(TARGET)
 
@@ -184,5 +179,5 @@ clean :
 	rm -f $(OBJS) $(TARGET) $(TARGET).bin $(TARGET)~ $(TARGET).bin~
 	rm -f *~ $(ARCH_CPU_DIR)*.*~ $(TARGET_DRIVER_DIR)*.*~ $(ARCH_GCC_DIR)*.*~ $(FS_FAT_DIR)*.*~ \
 	$(KERNEL_DIR)*.*~ $(KERNEL_SVC_DIR)*.*~ $(NET_DIR)*.*~ $(LIB_C_DIR)*.*~ $(LIB_C++_DIR)*.*~ \
-	$(RESOURCES_DIR)*.*~ $(TSKLIB_DIR)*.*~ include/c/*.*~ include/c++/*.*~ include/cpu/*.*~ include/driver/*.*~ \
+	$(RESOURCES_DIR)*.*~ include/c/*.*~ include/c++/*.*~ include/cpu/*.*~ include/driver/*.*~ \
 	include/fs/*.*~ include/gcc/*.*~ include/kernel/*.*~ include/kernel_svc/*.*~ include/net/*.*~

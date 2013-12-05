@@ -5,7 +5,6 @@
 #include "defines.h"
 
 
-#ifdef TSK_LIBRARY
 /*! ユーザタスク資源 */
 int sample_tsk1_main(int argc, char *argv[]);
 int sample_tsk2_main(int argc, char *argv[]);
@@ -15,7 +14,6 @@ int sample_tsk5_main(int argc, char *argv[]);
 int sample_tsk6_main(int argc, char *argv[]);
 int sample_tsk7_main(int argc, char *argv[]);
 int sample_tsk8_main(int argc, char *argv[]);
-#else
 #define SAMPLE_TSK1_ENTRY_ADDR ((TSK_FUNC)0x90010000)
 #define SAMPLE_TSK2_ENTRY_ADDR ((TSK_FUNC)0x90020000)
 #define SAMPLE_TSK3_ENTRY_ADDR ((TSK_FUNC)0x90030000)
@@ -23,7 +21,6 @@ int sample_tsk8_main(int argc, char *argv[]);
 #define SAMPLE_TSK5_ENTRY_ADDR ((TSK_FUNC)0x90050000)
 #define SAMPLE_TSK6_ENTRY_ADDR ((TSK_FUNC)0x90060000)
 #define SAMPLE_TSK7_ENTRY_ADDR ((TSK_FUNC)0x90070000)
-#endif
 
 extern ER_ID sample_tsk1_id;
 extern ER_ID sample_tsk2_id;

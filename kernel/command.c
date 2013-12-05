@@ -19,19 +19,6 @@
 #include "resources/tsk_obj_id.h" /* リソース情報 */
 
 
-#ifdef TSK_LIBRARY
-
-/*! tsk_set1の起動 */
-static void tsklib_in_tsk_set1_command(void);
-
-/*! tsk_set2の起動 */
-static void tsklib_in_tsk_set2_command(void);
-
-/*! tsk_set3の起動 */
-static void tsklib_in_tsk_set3_command(void);
-
-#else
-
 /*! tsk_set1の起動 */
 static void tsk_set1_command(void);
 
@@ -40,8 +27,6 @@ static void tsk_set2_command(void);
 
 /*! tsk_set3の起動 */
 static void tsk_set3_command(void);
-
-#endif
 
 
 /*!
@@ -96,7 +81,6 @@ void help_command(char *buf)
     puts("run <tsk_set>\n");
     puts("  start the <tsk_set> that is specified in the argument\n");
   }
-#ifdef TSK_LIBRARY
   /* tsk_set3 helpメッセージ */
   else if (!strncmp(buf, " tsk_set3", 9)) {
     puts("tsk_set3 - This sample task sets the \"TASK SYNCHRONIZATION SYSTEMCALLS\"\n\n");
@@ -121,7 +105,6 @@ void help_command(char *buf)
     puts("tsk_set2 - This sample task sets the \"TASK MANAGE SYSTEMCALLS\"\n");
     puts("tsk_set3 - This sample task sets the \"TASK SYNCHRONIZATION SYSTEMCALLS\"\n");
   }
-#endif
   /* helpに存在しないコマンド */
   else {
     puts("help unknown.\n");
@@ -439,85 +422,19 @@ int do_fat_fsinfo (int argc, char *argv[])
 void run_command(char *buf)
 {
   if (!strncmp(buf, " tsk_set3", 10)) {
-#ifdef TSK_LIBRARY
-    tsklib_in_tsk_set3_command();
-#else
     tsk_set3_command();
-#endif
   }
   else if (!strncmp(buf, " tsk_set2", 10)) {
-#ifdef TSK_LIBRARY
-    tsklib_in_tsk_set2_command();
-#else
     tsk_set2_command();
-#endif
   }
   else if (!strncmp(buf, " tsk_set1", 10)) {
-#ifdef TSK_LIBRARY
-    tsklib_in_tsk_set1_command();
-#else
     tsk_set1_command();
-#endif
   }
   else {
     puts("tsk_set unknown.\n");
   }
 }
 
-
-#ifdef TSK_LIBRARY
-
-/*! tsk_set1の起動 */
-static void tsklib_in_tsk_set1_command(void)
-{
-  SYSCALL_PARAMCB tsk1_param;
-
-  tsk1_param.un.acre_tsk.func = sample_tsk1_main;
-  tsk1_param.un.acre_tsk.name = "sample_tsk1";
-  tsk1_param.un.acre_tsk.priority = 5;
-  tsk1_param.un.acre_tsk.stacksize = 0x100;
-  tsk1_param.un.acre_tsk.argc = 0;
-  tsk1_param.un.acre_tsk.argv = NULL;
-
-  sample_tsk3_id = mz_iacre_tsk(&tsk1_param);
-  mz_ista_tsk(sample_tsk3_id);
-}
-
-
-/*! tsk_set2の起動 */
-static void tsklib_in_tsk_set2_command(void)
-{
-  SYSCALL_PARAMCB tsk1_param;
-
-  tsk1_param.un.acre_tsk.func = sample_tsk4_main;
-  tsk1_param.un.acre_tsk.name = "sample_tsk4";
-  tsk1_param.un.acre_tsk.priority = 3;
-  tsk1_param.un.acre_tsk.stacksize = 0x100;
-  tsk1_param.un.acre_tsk.argc = 0;
-  tsk1_param.un.acre_tsk.argv = NULL;
-
-  sample_tsk4_id = mz_iacre_tsk(&tsk1_param);
-  mz_ista_tsk(sample_tsk4_id);
-}
-
-
-/*! tsk_set3の起動 */
-static void tsklib_in_tsk_set3_command(void)
-{
-  SYSCALL_PARAMCB tsk1_param;
-
-  tsk1_param.un.acre_tsk.func = sample_tsk6_main;
-  tsk1_param.un.acre_tsk.name = "sample_tsk6";
-  tsk1_param.un.acre_tsk.priority = 5;
-  tsk1_param.un.acre_tsk.stacksize = 0x100;
-  tsk1_param.un.acre_tsk.argc = 0;
-  tsk1_param.un.acre_tsk.argv = NULL;
-
-  sample_tsk6_id = mz_iacre_tsk(&tsk1_param);
-  mz_ista_tsk(sample_tsk6_id);
-}
-
-#else
 
 /*! tsk_set1の起動 */
 static void tsk_set1_command(void)
@@ -592,5 +509,3 @@ static void tsk_set3_command(void)
   DEBUG_L1_KERNEL_COMMAND_OUTVLE(rcd, 0);
   DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out rcd value.\n");
 }
-
-#endif
