@@ -16,7 +16,7 @@ void sendlog_command(void);
 void recvlog_command(void);
 
 /* dumpコマンド */
-int dump_command(void);
+void dump_command(char *buf);
 
 /*! fatloadコマンド */
 void fatload_command(char *buf);

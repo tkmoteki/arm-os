@@ -69,7 +69,7 @@ void uart_handler(void)
       }
       /* dumpの場合 */
       else if (!strncmp(buf, "dump", 4)) {
-        dump_command(); /* dumpコマンド */
+        dump_command(&buf[0]); /* dumpコマンド */
       }
       /* fatloadの場合 */
       else if (!strncmp(buf, "fatload", 7)) {

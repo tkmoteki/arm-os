@@ -19,6 +19,9 @@
 #include "resources/tsk_obj_id.h" /* リソース情報 */
 
 
+/* dump制御 */
+static int do_buf_dump(int argc, char *argv[]);
+
 /*! tsk_set1の起動 */
 static void tsk_set1_command(void);
 
@@ -147,26 +150,66 @@ void recvlog_command(void)
 
 
 /* dumpコマンド */
-int dump_command(void)
+void dump_command(char *buf)
 {
-  INT32 i;
-  INT32 size = 1024;
-  unsigned char *buf = (unsigned char *)&_tskbuffer_start;
+  unsigned char *argv[16];
+  int rval = 1;
+  int i, j;
 
-  if (size < 0) {
-    puts("no data.\n");
-    return -1;
+  argv[0] = strtok((unsigned char *)buf, ' ');
+  for (i = 1; NULL != (argv[i] = strtok(NULL, ' ')); i++) {
+    ;
   }
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(i, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" i value.\n");
+
+  for (j = 0; j < i; j++) {
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG((char *)argv[j]);
+    DEBUG_L1_KERNEL_COMMAND_OUTMSG(" argv value.\n");
+  }
+
+  rval = do_buf_dump(i, (char **)argv);
+
+  if (0 == rval) {
+    puts("dump successed.\n");
+  }
+  else {
+    puts("dump failed.\n");
+  }
+}
+
+
+/* dump制御 */
+static int do_buf_dump(int argc, char *argv[])
+{
+  unsigned char *buf;
+  int size;
+  int i;
+
+  /* パラメータチェック */
+  if (argc < 3) {
+    return 1;
+  }
+  buf = (unsigned char *)simple_strtoul(argv[1], NULL, 16);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE((unsigned long)buf, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" buf value.\n");
+  size = (int)simple_strtoul(argv[2], NULL, 16);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE((unsigned long)size, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" size value.\n");
+
   for (i = 0; i < size; i++) {
     putxval(buf[i], 2);
     if ((i & 0xf) == 15) {
       puts("\n");
     }
     else {
-      if ((i & 0xf) == 7) puts(" ");
+      if ((i & 0xf) == 7) {
+        puts(" ");
+      }
       puts(" ");
     }
   }
+
   puts("\n");
 
   return 0;
@@ -201,7 +244,7 @@ void fatload_command(char *buf)
     puts("fatload successed.\n");
   }
   else {
-    puts("not fatload successed.\n");
+    puts("fatload failed.\n");
   }
 }
 
