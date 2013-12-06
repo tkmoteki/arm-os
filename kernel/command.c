@@ -421,20 +421,23 @@ int do_fat_fsinfo (int argc, char *argv[])
  */
 void tsetload_command(char *buf)
 {
+  /*
+   * エントリーアドレスは、resources/にあるエントリーアドレスを変換したほうがよい
+   * ファイルパスなど(デバイスやポート)は、動的に取得できたほうがよい
+   */
   if (!strncmp(buf, " tsk_set3", 10)) {
-    /*
-     * エントリーアドレスは、resources/にあるエントリーアドレスを変換したほうがよい
-     * ファイルパスなど(デバイスやポート)は、動的に取得できたほうがよい
-     */
     fatload_command("fatload mmc 0 90060000 .tasks/.task6");
     fatload_command("fatload mmc 0 90070000 .tasks/.task7");
     fatload_command("fatload mmc 0 90080000 .tasks/.task8");
   }
   else if (!strncmp(buf, " tsk_set2", 10)) {
-    puts("comming soon\n");
+    fatload_command("fatload mmc 0 90040000 .tasks/.task4");
+    fatload_command("fatload mmc 0 90050000 .tasks/.task5");
   }
   else if (!strncmp(buf, " tsk_set1", 10)) {
-    puts("comming soon\n");
+    fatload_command("fatload mmc 0 90010000 .tasks/.task1");
+    fatload_command("fatload mmc 0 90020000 .tasks/.task2");
+    fatload_command("fatload mmc 0 90030000 .tasks/.task3");
   }
   else {
     puts("tsk_set unknown.\n");
@@ -471,18 +474,18 @@ static void tsk_set1_command(void)
   SYSCALL_PARAMCB tsk1_param;
   ER rcd;
 
-  tsk1_param.un.acre_tsk.func = SAMPLE_TSK3_ENTRY_ADDR;
+  tsk1_param.un.acre_tsk.func = SAMPLE_TSK1_ENTRY_ADDR;
   tsk1_param.un.acre_tsk.name = "sample_tsk1";
   tsk1_param.un.acre_tsk.priority = 5;
   tsk1_param.un.acre_tsk.stacksize = 0x100;
   tsk1_param.un.acre_tsk.argc = 0;
   tsk1_param.un.acre_tsk.argv = NULL;
 
-  sample_tsk3_id = mz_iacre_tsk(&tsk1_param);
-  DEBUG_L1_KERNEL_COMMAND_OUTVLE(sample_tsk3_id, 0);
-  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out sample_tsk3_id value.\n");
+  sample_tsk1_id = mz_iacre_tsk(&tsk1_param);
+  DEBUG_L1_KERNEL_COMMAND_OUTVLE(sample_tsk1_id, 0);
+  DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out sample_tsk1_id value.\n");
 
-  rcd = mz_ista_tsk(sample_tsk3_id);
+  rcd = mz_ista_tsk(sample_tsk1_id);
   DEBUG_L1_KERNEL_COMMAND_OUTVLE(rcd, 0);
   DEBUG_L1_KERNEL_COMMAND_OUTMSG(" out rcd value.\n");
 }
