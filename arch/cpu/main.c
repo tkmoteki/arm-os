@@ -55,9 +55,9 @@ void uart_handler(void)
       else if (!strncmp(buf, "help", 4)) {
         help_command(&buf[4]); /* helpコマンド呼び出し */
       }
-      /* runコマンドの場合 */
-      else if (!strncmp(buf, "run", 3)) {
-        run_command(&buf[3]); /* runコマンド(タスクセットの起動)呼び出し */
+      /* goコマンドの場合 */
+      else if (!strncmp(buf, "go", 2)) {
+        go_command(&buf[2]); /* goコマンド(タスクセットの起動)呼び出し */
       }
       /* sendlogの場合 */
       else if (!strncmp(buf, "sendlog", 7)) {

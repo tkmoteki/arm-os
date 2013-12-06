@@ -39,8 +39,8 @@ int do_fat_fsinfo (int argc, char *argv[]);
 /*! tsetloadコマンド */
 void tsetload_command(char *buf);
 
-/*! runコマンド */
-void run_command(char *buf);
+/*! goコマンド */
+void go_command(char *buf);
 
 
 #endif

@@ -51,7 +51,7 @@ void help_command(char *buf)
     puts("echo    - out text serial line.\n");
     puts("sendlog - send log file over serial line(xmodem mode)\n");
     puts("recvlog - receive log file over serial line(xmodem mode\n");
-    puts("run     - run task sets.\n");
+    puts("go     - run task sets.\n");
     puts("dump    - memory dump.\n");
   }
   /* echo helpメッセージ */
@@ -73,12 +73,11 @@ void help_command(char *buf)
   else if (!strncmp(buf, " dump", 5)) {
     puts("dump - memory dump\n");
   }
-  /* run helpメッセージ */
-  else if (!strncmp(buf, " run", 4)) {
-    /* run help */
-    puts("run - run task sets.\n\n");
+  /* go helpメッセージ */
+  else if (!strncmp(buf, " go", 3)) {
+    puts("go - run task sets.\n\n");
     puts("Usage:\n");
-    puts("run <tsk_set>\n");
+    puts("go <tsk_set>\n");
     puts("  start the <tsk_set> that is specified in the argument\n");
   }
   /* tsk_set3 helpメッセージ */
@@ -446,10 +445,10 @@ void tsetload_command(char *buf)
 
 
 /*!
- * runコマンド
+ * goコマンド
  * *buf : 起動するタスクセット名が格納されたバッファ
  */
-void run_command(char *buf)
+void go_command(char *buf)
 {
   if (!strncmp(buf, " tsk_set3", 10)) {
     tsk_set3_command();
