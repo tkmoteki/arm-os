@@ -11,7 +11,7 @@
 
 /* public interface */
 /* include/kernel */
-//#include "defines.h" /* このosの型の定義 */
+#include "defines.h" /* このosの型の定義 */
 #include "syscall.h"
 /* include/lib/c */
 #include "lib.h"      /* 標準ライブラリの定義 */

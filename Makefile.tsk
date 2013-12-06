@@ -54,23 +54,99 @@ CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_SYSCALL
 
 LFLAGS += -static -T
 
+
+TASK1_HOME = samples/task1
+TASK2_HOME = samples/task2
+TASK3_HOME = samples/task3
+TASK4_HOME = samples/task4
+TASK5_HOME = samples/task5
 TASK6_HOME = samples/task6
 TASK7_HOME = samples/task7
 TASK8_HOME = samples/task8
 
+
+1_OBJS += $(TASK1_HOME)/startup.o $(TASK1_HOME)/task1.o
+2_OBJS += $(TASK2_HOME)/startup.o $(TASK2_HOME)/task2.o
+3_OBJS += $(TASK3_HOME)/startup.o $(TASK3_HOME)/task3.o
+4_OBJS += $(TASK4_HOME)/startup.o $(TASK4_HOME)/task4.o
+5_OBJS += $(TASK5_HOME)/startup.o $(TASK5_HOME)/task5.o
 6_OBJS += $(TASK6_HOME)/startup.o $(TASK6_HOME)/task6.o
 7_OBJS += $(TASK7_HOME)/startup.o $(TASK7_HOME)/task7.o
 8_OBJS += $(TASK8_HOME)/startup.o $(TASK8_HOME)/task8.o
 LINK_OBJS += objs/syscall.o objs/lib.o objs/uart.o objs/tsk_obj_id.o
 INCLUDE += -Iinclude/kernel -Iinclude/c -Iresources
 
+ALL_OBJS += $(1_OBJS) $(2_OBJS) $(3_OBJS) $(4_OBJS) $(5_OBJS) $(6_OBJS) $(7_OBJS) $(8_OBJS)
+
+
 .SUFFIXES: .c .o
 .SUFFIXES: .S .o
+
+
+1: $(1_OBJS)
+	$(CC) $(1_OBJS) $(LINK_OBJS) -o $(TASK1_HOME)/$(TARGET)1.elf $(CFLAGS) $(LFLAGS) $(TASK1_HOME)/task1.scr
+	$(OBJCOPY) -O binary $(TASK1_HOME)/$(TARGET)1.elf $(TASK1_HOME)/$(TARGET)1
+	@echo "\n#### Task_set1(Task1~Task3) : Finish to build Task1. ####\n"
+
+$(TASK1_HOME)/startup.o : $(TASK1_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK1_HOME)/task1.o : $(TASK1_HOME)/task1.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+2: $(2_OBJS)
+	$(CC) $(2_OBJS) $(LINK_OBJS) -o $(TASK2_HOME)/$(TARGET)2.elf $(CFLAGS) $(LFLAGS) $(TASK2_HOME)/task2.scr
+	$(OBJCOPY) -O binary $(TASK2_HOME)/$(TARGET)2.elf $(TASK2_HOME)/$(TARGET)2
+	@echo "\n#### Task_set1(Task1~Task3) : Finish to build Task2. ####\n"
+
+$(TASK2_HOME)/startup.o : $(TASK2_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK2_HOME)/task2.o : $(TASK2_HOME)/task2.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+3: $(3_OBJS)
+	$(CC) $(3_OBJS) $(LINK_OBJS) -o $(TASK3_HOME)/$(TARGET)3.elf $(CFLAGS) $(LFLAGS) $(TASK3_HOME)/task3.scr
+	$(OBJCOPY) -O binary $(TASK3_HOME)/$(TARGET)3.elf $(TASK3_HOME)/$(TARGET)3
+	@echo "\n#### Task_set1(Task1~Task3) : Finish to build Task3. ####\n"
+
+$(TASK3_HOME)/startup.o : $(TASK3_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK3_HOME)/task3.o : $(TASK3_HOME)/task3.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+4: $(4_OBJS)
+	$(CC) $(4_OBJS) $(LINK_OBJS) -o $(TASK4_HOME)/$(TARGET)4.elf $(CFLAGS) $(LFLAGS) $(TASK4_HOME)/task4.scr
+	$(OBJCOPY) -O binary $(TASK4_HOME)/$(TARGET)4.elf $(TASK4_HOME)/$(TARGET)4
+	@echo "\n#### Task_set2(Task4~Task5) : Finish to build Task4. ####\n"
+
+$(TASK4_HOME)/startup.o : $(TASK4_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK4_HOME)/task4.o : $(TASK4_HOME)/task4.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+5: $(5_OBJS)
+	$(CC) $(5_OBJS) $(LINK_OBJS) -o $(TASK5_HOME)/$(TARGET)5.elf $(CFLAGS) $(LFLAGS) $(TASK5_HOME)/task5.scr
+	$(OBJCOPY) -O binary $(TASK5_HOME)/$(TARGET)5.elf $(TASK5_HOME)/$(TARGET)5
+	@echo "\n#### Task_set2(Task4~Task5) : Finish to build Task5. ####\n"
+
+$(TASK5_HOME)/startup.o : $(TASK5_HOME)/startup.S
+	$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK5_HOME)/task5.o : $(TASK5_HOME)/task5.c
+	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 
 6: $(6_OBJS)
 	$(CC) $(6_OBJS) $(LINK_OBJS) -o $(TASK6_HOME)/$(TARGET)6.elf $(CFLAGS) $(LFLAGS) $(TASK6_HOME)/task6.scr
 	$(OBJCOPY) -O binary $(TASK6_HOME)/$(TARGET)6.elf $(TASK6_HOME)/$(TARGET)6
+	@echo "\n#### Task_set3(Task6~Task8) : Finish to build Task6. ####\n"
 
 $(TASK6_HOME)/startup.o : $(TASK6_HOME)/startup.S
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -82,6 +158,7 @@ $(TASK6_HOME)/task6.o : $(TASK6_HOME)/task6.c
 7: $(7_OBJS)
 	$(CC) $(7_OBJS) $(LINK_OBJS) -o $(TASK7_HOME)/$(TARGET)7.elf $(CFLAGS) $(LFLAGS) $(TASK7_HOME)/task7.scr
 	$(OBJCOPY) -O binary $(TASK7_HOME)/$(TARGET)7.elf $(TASK7_HOME)/$(TARGET)7
+	@echo "\n#### Task_set3(Task6~Task8) : Finish to build Task7. ####\n"
 
 $(TASK7_HOME)/startup.o : $(TASK7_HOME)/startup.S
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -93,6 +170,7 @@ $(TASK7_HOME)/task7.o : $(TASK7_HOME)/task7.c
 8: $(8_OBJS)
 	$(CC) $(8_OBJS) $(LINK_OBJS) -o $(TASK8_HOME)/$(TARGET)8.elf $(CFLAGS) $(LFLAGS) $(TASK8_HOME)/task8.scr
 	$(OBJCOPY) -O binary $(TASK8_HOME)/$(TARGET)8.elf $(TASK8_HOME)/$(TARGET)8
+	@echo "\n#### Task_set3(Task6~Task8) : Finish to build Task8. ####\n"
 
 $(TASK8_HOME)/startup.o : $(TASK8_HOME)/startup.S
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -101,13 +179,26 @@ $(TASK8_HOME)/task8.o : $(TASK8_HOME)/task8.c
 	$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
 
-all : 6 7 8
+set1 : 1 2 3
+
+
+set2 : 4 5
+
+
+set3 : 6 7 8
+
+
+all : set1 set2 set3
+
 
 clean:
-	rm -rf $(6_OBJS) $(7_OBJS) $(8_OBJS)
-	rm -rf $(TASK6_HOME)/*.*~ $(TASK7_HOME)/*.*~ $(TASK8_HOME)/*.*~
-	rm -rf $(TASK6_HOME)/*.elf $(TASK7_HOME)/*.elf $(TASK8_HOME)/*.elf
-	rm -rf $(TASK6_HOME)/task6 $(TASK7_HOME)/task7 $(TASK8_HOME)/task8
+	rm -rf $(ALL_OBJS)
+	rm -rf $(TASK1_HOME)/*.*~ $(TASK2_HOME)/*.*~ $(TASK3_HOME)/*.*~ $(TASK4_HOME)/*.*~ $(TASK5_HOME)/*.*~ \
+					$(TASK6_HOME)/*.*~ $(TASK7_HOME)/*.*~ $(TASK8_HOME)/*.*~
+	rm -rf $(TASK1_HOME)/*.elf $(TASK2_HOME)/*.elf $(TASK3_HOME)/*.elf $(TASK4_HOME)/*.elf $(TASK5_HOME)/*.elf \
+					$(TASK6_HOME)/*.elf $(TASK7_HOME)/*.elf $(TASK8_HOME)/*.elf
+	rm -rf $(TASK1_HOME)/task1 $(TASK2_HOME)/task2 $(TASK3_HOME)/task3 $(TASK4_HOME)/task4 $(TASK5_HOME)/task5 \
+					$(TASK6_HOME)/task6 $(TASK7_HOME)/task7 $(TASK8_HOME)/task8
 	rm -f *.*~
 	rm -f *~
 	rm -f */*.*~
