@@ -1,0 +1,214 @@
+#
+# CFLAGS
+# -nostdinc         : ヘッダファイルのための標準システムディレクトリを検索しない
+# -nostdlib         : 標準ライブラリ等を使用しない
+# -fno-builtin      : ビルドイン関数の無効
+# -fsigned-char     : char型を自動的にunsinged charとしない
+# ABIオプション
+# -mabi=apcs-gnu    : GNU ABIインターフェース
+# imabi=aapcs-linux : Version ? EABIインターフェース
+# なし              : Version ? EABIインターフェース
+# アーキテクチャ
+# -march            : 指定したCPUだけで動作するコードを生成 -mcpuより速いコード生成
+# -mcpu             : 同系列のCPUでも動作するコード生成
+# -mtune            : -mcpuの別名(gcc3.4以降)
+
+
+PREFIX  = tools/CodeSourcery/Sourcery_G++_Lite
+BINDIR  = $(PREFIX)/bin
+
+
+ARCH      = arm-none-eabi
+ADDNAME   = $(ARCH)-
+
+
+AR      = $(BINDIR)/$(ADDNAME)ar
+AS      = $(BINDIR)/$(ADDNAME)as
+CC      = $(BINDIR)/$(ADDNAME)gcc
+LD      = $(BINDIR)/$(ADDNAME)ld
+NM      = $(BINDIR)/$(ADDNAME)nm
+
+OBJCOPY = $(BINDIR)/$(ADDNAME)objcopy
+OBJDUMP = $(BINDIR)/$(ADDNAME)objdump
+RANLIB  = $(BINDIR)/$(ADDNAME)ranlib
+STRIP   = $(BINDIR)/$(ADDNAME)strip
+
+
+TARGET = task
+
+
+#依存関係より，-oを加えない
+CFLAGS = -Wall -nostdlib -fno-builtin -fsigned-char
+CFLAGS += -march=armv7-a
+CFLAGS += -I.
+#CFLAGS += -g# デバッガ対応(Jtag+openOCD+remoteGDB)
+#CFLAGS += -Os
+
+CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_SYSCALL
+
+
+LFLAGS += -static -T
+
+
+TASK1_HOME = samples/task1
+TASK2_HOME = samples/task2
+TASK3_HOME = samples/task3
+TASK4_HOME = samples/task4
+TASK5_HOME = samples/task5
+TASK6_HOME = samples/task6
+TASK7_HOME = samples/task7
+TASK8_HOME = samples/task8
+
+
+1_OBJS += $(TASK1_HOME)/startup.o $(TASK1_HOME)/task1.o
+2_OBJS += $(TASK2_HOME)/startup.o $(TASK2_HOME)/task2.o
+3_OBJS += $(TASK3_HOME)/startup.o $(TASK3_HOME)/task3.o
+4_OBJS += $(TASK4_HOME)/startup.o $(TASK4_HOME)/task4.o
+5_OBJS += $(TASK5_HOME)/startup.o $(TASK5_HOME)/task5.o
+6_OBJS += $(TASK6_HOME)/startup.o $(TASK6_HOME)/task6.o
+7_OBJS += $(TASK7_HOME)/startup.o $(TASK7_HOME)/task7.o
+8_OBJS += $(TASK8_HOME)/startup.o $(TASK8_HOME)/task8.o
+LINK_OBJS += objs/syscall.o objs/lib.o objs/uart.o objs/tsk_obj_id.o
+INCLUDE += -Iinclude/kernel -Iinclude/c -Iresources
+
+ALL_OBJS += $(1_OBJS) $(2_OBJS) $(3_OBJS) $(4_OBJS) $(5_OBJS) $(6_OBJS) $(7_OBJS) $(8_OBJS)
+
+
+1 : $(1_OBJS)
+	@echo Linking $(TASK1_HOME)/$(TARGET)1.elf
+	@$(CC) $(1_OBJS) $(LINK_OBJS) -o $(TASK1_HOME)/$(TARGET)1.elf $(CFLAGS) $(LFLAGS) $(TASK1_HOME)/task1.scr
+	@echo Creating bin-image $(TASK1_HOME)/$(TARGET)1
+	@$(OBJCOPY) -O binary $(TASK1_HOME)/$(TARGET)1.elf $(TASK1_HOME)/$(TARGET)1
+
+$(TASK1_HOME)/startup.o : $(TASK1_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK1_HOME)/task1.o : $(TASK1_HOME)/task1.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+2 : $(2_OBJS)
+	@echo Linking $(TASK2_HOME)/$(TARGET)2.elf
+	@$(CC) $(2_OBJS) $(LINK_OBJS) -o $(TASK2_HOME)/$(TARGET)2.elf $(CFLAGS) $(LFLAGS) $(TASK2_HOME)/task2.scr
+	@echo Creating bin-image $(TASK2_HOME)/$(TARGET)2
+	@$(OBJCOPY) -O binary $(TASK2_HOME)/$(TARGET)2.elf $(TASK2_HOME)/$(TARGET)2
+
+$(TASK2_HOME)/startup.o : $(TASK2_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK2_HOME)/task2.o : $(TASK2_HOME)/task2.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+3 : $(3_OBJS)
+	@echo Linking $(TASK3_HOME)/$(TARGET)3.elf
+	@$(CC) $(3_OBJS) $(LINK_OBJS) -o $(TASK3_HOME)/$(TARGET)3.elf $(CFLAGS) $(LFLAGS) $(TASK3_HOME)/task3.scr
+	@echo Creating bin-image $(TASK3_HOME)/$(TARGET)3
+	@$(OBJCOPY) -O binary $(TASK3_HOME)/$(TARGET)3.elf $(TASK3_HOME)/$(TARGET)3
+
+$(TASK3_HOME)/startup.o : $(TASK3_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK3_HOME)/task3.o : $(TASK3_HOME)/task3.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+4 : $(4_OBJS)
+	@echo Linking $(TASK4_HOME)/$(TARGET)4.elf
+	@$(CC) $(4_OBJS) $(LINK_OBJS) -o $(TASK4_HOME)/$(TARGET)4.elf $(CFLAGS) $(LFLAGS) $(TASK4_HOME)/task4.scr
+	@echo Creating bin-image $(TASK4_HOME)/$(TARGET)4
+	@$(OBJCOPY) -O binary $(TASK4_HOME)/$(TARGET)4.elf $(TASK4_HOME)/$(TARGET)4
+
+$(TASK4_HOME)/startup.o : $(TASK4_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK4_HOME)/task4.o : $(TASK4_HOME)/task4.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+5 : $(5_OBJS)
+	@echo Linking $(TASK5_HOME)/$(TARGET)5.elf
+	@$(CC) $(5_OBJS) $(LINK_OBJS) -o $(TASK5_HOME)/$(TARGET)5.elf $(CFLAGS) $(LFLAGS) $(TASK5_HOME)/task5.scr
+	@echo Creating bin-image $(TASK5_HOME)/$(TARGET)5
+	@$(OBJCOPY) -O binary $(TASK5_HOME)/$(TARGET)5.elf $(TASK5_HOME)/$(TARGET)5
+
+$(TASK5_HOME)/startup.o : $(TASK5_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK5_HOME)/task5.o : $(TASK5_HOME)/task5.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+6 : $(6_OBJS)
+	@echo Linking $(TASK6_HOME)/$(TARGET)6.elf
+	@$(CC) $(6_OBJS) $(LINK_OBJS) -o $(TASK6_HOME)/$(TARGET)6.elf $(CFLAGS) $(LFLAGS) $(TASK6_HOME)/task6.scr
+	@echo Creating bin-image $(TASK6_HOME)/$(TARGET)6
+	@$(OBJCOPY) -O binary $(TASK6_HOME)/$(TARGET)6.elf $(TASK6_HOME)/$(TARGET)6
+
+$(TASK6_HOME)/startup.o : $(TASK6_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK6_HOME)/task6.o : $(TASK6_HOME)/task6.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+7 : $(7_OBJS)
+	@echo Linking $(TASK7_HOME)/$(TARGET)7.elf
+	@$(CC) $(7_OBJS) $(LINK_OBJS) -o $(TASK7_HOME)/$(TARGET)7.elf $(CFLAGS) $(LFLAGS) $(TASK7_HOME)/task7.scr
+	@echo Creating bin-image $(TASK7_HOME)/$(TARGET)7
+	@$(OBJCOPY) -O binary $(TASK7_HOME)/$(TARGET)7.elf $(TASK7_HOME)/$(TARGET)7
+
+$(TASK7_HOME)/startup.o : $(TASK7_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK7_HOME)/task7.o : $(TASK7_HOME)/task7.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+8 : $(8_OBJS)
+	@echo Linking $(TASK8_HOME)/$(TARGET)8.elf
+	@$(CC) $(8_OBJS) $(LINK_OBJS) -o $(TASK8_HOME)/$(TARGET)8.elf $(CFLAGS) $(LFLAGS) $(TASK8_HOME)/task8.scr
+	@echo Creating bin-image $(TASK8_HOME)/$(TARGET)8
+	@$(OBJCOPY) -O binary $(TASK8_HOME)/$(TARGET)8.elf $(TASK8_HOME)/$(TARGET)8
+
+$(TASK8_HOME)/startup.o : $(TASK8_HOME)/startup.S
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $< -o $@
+
+$(TASK8_HOME)/task8.o : $(TASK8_HOME)/task8.c
+	@echo Compiling $< 
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+
+
+set1 : 1 2 3
+
+
+set2 : 4 5
+
+
+set3 : 6 7 8
+
+
+all : set1 set2 set3
+
+
+clean :
+	@echo Creaning...
+	rm -f $(ALL_OBJS)
+	rm -f *~ *.*~ */*~ */*.*~
+	rm -f */task?/task?
+	rm -f */task?/task?.elf
