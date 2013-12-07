@@ -1,0 +1,5 @@
+all :
+	@echo Coming soon.
+
+clean :
+	@echo Coming soon.
