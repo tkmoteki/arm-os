@@ -51,37 +51,76 @@ void help_command(char *buf)
 {
   /* helpメッセージ */
   if (*buf == '\0') {
-    puts("echo    - out text serial line.\n");
-    puts("sendlog - send log file over serial line(xmodem mode)\n");
-    puts("recvlog - receive log file over serial line(xmodem mode\n");
-    puts("go     - run task sets.\n");
-    puts("dump    - memory dump.\n");
+    puts("dump     - memory dump.\n");
+    puts("echo     - out text serial line.\n");
+    puts("fatinfo  - print information about filesystem.\n");
+    puts("fatload  - load binary file from a dos filesystem.\n");
+    puts("fatls    - list files in a directory (default /).\n");
+    puts("go       - run task sets.\n");
+    puts("recvlog  - receive log file over serial line(xmodem mode\n");
+    puts("sendlog  - send log file over serial line(xmodem mode)\n");
+    puts("tsetload - load task sets form fat file system.\n");
+  }
+  /* dump helpメッセージ */
+  else if (!strncmp(buf, " dump", 5)) {
+    puts("dump - memory dump\n\n");
+    puts("Usage:\n");
+    puts("dump address length\n");
   }
   /* echo helpメッセージ */
   else if (!strncmp(buf, " echo", 5)) {
     puts("echo - out text serial line\n\n");
     puts("Usage:\n");
     puts("echo [arg...]\n");
-    puts("  out [arg...] serial line\n");
+    puts("  - out [arg...] serial line\n");
   }
-  /* sendlog helpメッセージ */
-  else if (!strncmp(buf, " sendlog", 8)) {
-    puts("sendlog - send log file over serial line(xmodem mode)\n");
+  /* fatinfo helpメッセージ */
+  else if (!strncmp(buf, " fatinfo", 8)) {
+    puts("fatinfo - print information about filesystem\n\n");
+    puts("Usage:\n");
+    puts("fatinfo <interface> <dev[:part]>\n");
+    puts("  - print information about filesystem from 'dev' on 'interface'\n");
   }
-  /* recvlog helpメッセージ */
-  else if (!strncmp(buf, " recvlog", 8)) {
-    puts("recvlog - recv log file over serial line(xmodem mode)\n");
+  /* fatload helpメッセージ */
+  else if (!strncmp(buf, " fatload", 8)) {
+    puts("fatload - load binary file from a dos filesystem\n\n");
+    puts("Usage:\n");
+    puts("fatload <interface> <dev[:part]>  <addr> <filename> [bytes]\n");
+    puts("  - load binary file 'filename' from 'dev' on 'interface'\n");
+    puts("    to address 'addr' from dos filesystem\n");
   }
-  /* dump helpメッセージ */
-  else if (!strncmp(buf, " dump", 5)) {
-    puts("dump - memory dump\n");
+  /* fatls helpメッセージ */
+  else if (!strncmp(buf, " fatls", 6)) {
+    puts("fatls - list files in a directory (default /)\n\n");
+    puts("Usage:\n");
+    puts("fatls <interface> <dev[:part]> [directory]\n");
+    puts("  - list files from 'dev' on 'interface' in a 'directory'\n");
   }
   /* go helpメッセージ */
   else if (!strncmp(buf, " go", 3)) {
     puts("go - run task sets.\n\n");
     puts("Usage:\n");
     puts("go <tsk_set>\n");
-    puts("  start the <tsk_set> that is specified in the argument\n");
+    puts("  - start the <tsk_set> that is specified in the argument\n");
+  }
+  /* recvlog helpメッセージ */
+  else if (!strncmp(buf, " recvlog", 8)) {
+    puts("recvlog - recv log file over serial line(xmodem mode)\n\n");
+    puts("Usage:\n");
+    puts("recvlog <file_name>\n");
+  }
+  /* sendlog helpメッセージ */
+  else if (!strncmp(buf, " sendlog", 8)) {
+    puts("sendlog - send log file over serial line(xmodem mode)\n\n");
+    puts("Usage:\n");
+    puts("sendlog <file_name>\n");
+  }
+  /* tsetload helpメッセージ */
+  else if (!strncmp(buf, " tsetload", 9)) {
+    puts("tsetload - load task sets form fat file system.\n\n");
+    puts("Usage:\n");
+    puts("tset_load <tsk_set>\n");
+    puts("  - fatload the <tsk_set> that is specified in the argument\n");
   }
   /* tsk_set3 helpメッセージ */
   else if (!strncmp(buf, " tsk_set3", 9)) {

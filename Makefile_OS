@@ -47,7 +47,7 @@ CFLAGS += -Os
 
 CFLAGS += -DKERNEL
 CFLAGS += -DLOG
-CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_KERNEL -DKERNEL_COMMAND -DKERNEL_TASK_MANAGE -DKERNEL_SYSCALL
+CFLAGS += -DDEBUG_LEVEL1
 CFLAGS += -DKERNEL_MSG
 CFLAGS += -DCONFIG_MMC -DCONFIG_RELOC_FIXUP_WORKS -DCONFIG_DOS_PARTITION -D__LITTLE_ENDIAN
 #CFLAGS += クロック入力?
@@ -179,7 +179,7 @@ image : $(TARGET).bin
 	@echo Creating uboot-image $(TARGET)
 	tools/u-boot/mkimage \
 	-A arm -O linux -T kernel -C none \
-	-n "Angstrom/2.6.32/beagleboard" -a 0x80200000 -e 0x80200000 \
+	-n "Angstrom/2.6.32/beagleboard" -a 0x80400000 -e 0x80400000 \
 	-d $(TARGET).bin $(TARGET)
 
 

@@ -44,7 +44,7 @@ CFLAGS += -I.
 #CFLAGS += -g# デバッガ対応(Jtag+openOCD+remoteGDB)
 #CFLAGS += -Os
 
-CFLAGS += -DDEBUG_LEVEL1 -DKERNEL_SYSCALL
+CFLAGS += -DDEBUG_LEVEL1
 
 
 LFLAGS += -static -T

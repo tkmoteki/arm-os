@@ -23,5 +23,3 @@ clean :
 exe :
 	cp bin/kernel.bin ~
 	sudo chmod 777 /dev/ttyUSB0
-	minicom -o
-
